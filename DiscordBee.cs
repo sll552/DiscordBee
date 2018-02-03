@@ -51,8 +51,8 @@ namespace MusicBeePlugin
 
       DiscordRpc.Initialize("409394531948298250", ref _discordHandlers, true, null);
 
-      _discordUpdateTimer.AutoReset = true;
-      _discordUpdateTimer.Interval = 2000;
+      _discordUpdateTimer.AutoReset = false;
+      _discordUpdateTimer.Interval = 1000;
       _discordUpdateTimer.Elapsed += DiscordUpdateTimerOnElapsed;
 
       Debug.WriteLine(_about.Name + " loaded");
@@ -63,6 +63,7 @@ namespace MusicBeePlugin
     private void DiscordUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
     {
       DiscordRpc.UpdatePresence(ref _discordPresence);
+      _discordUpdateTimer.Stop();
     }
 
     private void SpectateCallback(string secret)
@@ -128,33 +129,12 @@ namespace MusicBeePlugin
       switch (type)
       {
         case NotificationType.PluginStartup:
-          UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
-          break;
         case NotificationType.TrackChanged:
-          UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
-          break;
-        case NotificationType.TrackChanging:
-          break;
         case NotificationType.PlayStateChanged:
           UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
-          switch (_mbApiInterface.Player_GetPlayState())
-          {
-            case PlayState.Undefined:
-            case PlayState.Loading:
-            case PlayState.Paused:
-            case PlayState.Stopped:
-              _discordUpdateTimer.Stop();
-              // update to show stopped state but dont send updates anymore
-              DiscordUpdateTimerOnElapsed(null,null);
-              break;
-            case PlayState.Playing:
-              _discordUpdateTimer.Start();
-              break;
-            default:
-              throw new ArgumentOutOfRangeException();
-          }
           break;
-        case NotificationType.AutoDjStarted:
+       case NotificationType.TrackChanging:
+          break;case NotificationType.AutoDjStarted:
           break;
         case NotificationType.AutoDjStopped:
           break;
@@ -276,6 +256,8 @@ namespace MusicBeePlugin
       }
       _discordPresence.partyMax = trackcnt;
       _discordPresence.partySize = trackno;
+
+      if (!_discordUpdateTimer.Enabled) _discordUpdateTimer.Start();
     }
   }
 }

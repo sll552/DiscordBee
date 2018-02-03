@@ -11,6 +11,8 @@ You need to add MusicBee to Discord so it recognises it as a running "Game".
 This can be done by starting MusicBee and then in Discord -> Settings -> Games 
 under the "No Game detected" message press "Add it!" and select MusicBee from the dropdown.
 
+The Discord API has a 15s rate limit, so it can take up to 15s for a status change to actually show in Discord.
+
 ## Screenshots
 ![Small presence](https://i.imgur.com/DUuVlsg.png)
 ![Profile](https://i.imgur.com/vnBq4rp.png)
