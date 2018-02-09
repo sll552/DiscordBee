@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -12,7 +13,7 @@ namespace MusicBeePlugin
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
     private DiscordRpc.EventHandlers _discordHandlers;
-    private DiscordRpc.RichPresence _discordPresence;
+    private DiscordRpc.RichPresence _discordPresence = new DiscordRpc.RichPresence();
     private readonly Timer _discordUpdateTimer = new Timer();
 
     public const string DiscordRpcDll = "discord-rpc-w32";
@@ -34,7 +35,7 @@ namespace MusicBeePlugin
       _about.MinApiRevision = MinApiRevision;
       _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
       _about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
-      
+
       var curdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
       if (!File.Exists(curdir + "\\" + DiscordRpcDll + ".dll"))
       {
@@ -62,7 +63,11 @@ namespace MusicBeePlugin
 
     private void DiscordUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
     {
-      DiscordRpc.UpdatePresence(ref _discordPresence);
+      var presencestruct = _discordPresence.GetStruct();
+      DiscordRpc.UpdatePresence(ref presencestruct);
+      // Give it some time to get callbacks ready
+      Thread.Sleep(500);
+      DiscordRpc.RunCallbacks();
       _discordUpdateTimer.Stop();
     }
 
@@ -88,13 +93,13 @@ namespace MusicBeePlugin
     private void ErrorCallback(int errorCode, string message)
     {
       _discordUpdateTimer.Stop();
-      Debug.WriteLine("Errored: " + errorCode + "Msg: " + message );
+      Debug.WriteLine("Errored: " + errorCode + " Msg: " + message);
     }
 
     private void DisconnectedCallback(int errorCode, string message)
     {
       _discordUpdateTimer.Stop();
-      Debug.WriteLine("Disconnected: " + errorCode + "Msg: " + message);
+      Debug.WriteLine("Disconnected: " + errorCode + " Msg: " + message);
     }
 
     public bool Configure(IntPtr panelHandle)
@@ -113,6 +118,7 @@ namespace MusicBeePlugin
     public void Close(PluginCloseReason reason)
     {
       _discordUpdateTimer.Stop();
+      _discordPresence.FreeMem();
       DiscordRpc.Shutdown();
     }
 
@@ -133,8 +139,9 @@ namespace MusicBeePlugin
         case NotificationType.PlayStateChanged:
           UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
           break;
-       case NotificationType.TrackChanging:
-          break;case NotificationType.AutoDjStarted:
+        case NotificationType.TrackChanging:
+          break;
+        case NotificationType.AutoDjStarted:
           break;
         case NotificationType.AutoDjStopped:
           break;
@@ -209,9 +216,9 @@ namespace MusicBeePlugin
         _discordPresence.smallImageText = name;
       }
 
-      _discordPresence.state = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle).Trim();
+      _discordPresence.state = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle);
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
-      _discordPresence.startTimestamp = (long) (Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
+      _discordPresence.startTimestamp = (long)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
 
       switch (playerGetPlayState)
       {
@@ -234,13 +241,13 @@ namespace MusicBeePlugin
           break;
       }
 
-      _discordPresence.details = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist).Trim();
+      _discordPresence.details = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist);
       var album = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Album);
       if (!string.IsNullOrEmpty(album))
       {
-         _discordPresence.details += " - " + album.Trim();
+        _discordPresence.details += " - " + album;
       }
-     
+
       _discordPresence.partyId = "aaaaa";
 
       var trackcnt = 0;
