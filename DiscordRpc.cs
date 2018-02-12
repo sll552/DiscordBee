@@ -82,13 +82,20 @@ namespace MusicBeePlugin
     public static extern void RunCallbacks();
 
     [DllImport(Plugin.DiscordRpcDll, EntryPoint = "Discord_UpdatePresence", CallingConvention = CallingConvention.Cdecl)]
-    public static extern void UpdatePresence(ref RichPresenceStruct presence);
+    private static extern void UpdatePresenceNative(ref RichPresenceStruct presence);
 
     [DllImport(Plugin.DiscordRpcDll, EntryPoint = "Discord_ClearPresence", CallingConvention = CallingConvention.Cdecl)]
     public static extern void ClearPresence();
 
     [DllImport(Plugin.DiscordRpcDll, EntryPoint = "Discord_Respond", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Respond(string userId, Reply reply);
+
+    public static void UpdatePresence(RichPresence presence)
+    {
+      var presencestruct = presence.GetStruct();
+      UpdatePresenceNative(ref presencestruct);
+      presence.FreeMem();
+    }
 
     public class RichPresence
     {
@@ -119,7 +126,7 @@ namespace MusicBeePlugin
       {
         IntPtr StrToPtr(string input, int maxbytes)
         {
-          if (input == null) return IntPtr.Zero;
+          if (string.IsNullOrEmpty(input)) return IntPtr.Zero;
           var convstr = StrClampBytes(input, maxbytes);
           var convbytecnt = Encoding.UTF8.GetByteCount(convstr);
           var buffer = Marshal.AllocHGlobal(convbytecnt);

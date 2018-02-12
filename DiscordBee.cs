@@ -63,8 +63,7 @@ namespace MusicBeePlugin
 
     private void DiscordUpdateTimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
     {
-      var presencestruct = _discordPresence.GetStruct();
-      DiscordRpc.UpdatePresence(ref presencestruct);
+      DiscordRpc.UpdatePresence(_discordPresence);
       // Give it some time to get callbacks ready
       Thread.Sleep(500);
       DiscordRpc.RunCallbacks();
