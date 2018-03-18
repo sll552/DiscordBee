@@ -4,6 +4,8 @@ MusicBee plugin that updates your Discord status with the currently playing trac
 ## Installation
 Just copy all plugin files into your MusicBee Plugins directory (usually "C:\Program Files (x86)\MusicBee\Plugins").
 Make sure the "discord-rpc-w32.dll" is present in the Plugins folder, otherwise the plugin won't load.
+### Microsoft Store Version of MusicBee
+If you are using the Store version of MusicBee please use the "Add Plugin" button in MusicBee -> Settings -> Plugins and select the latest release .zip. It may display an error message (something like "... intialise Method not found ..."), ignore it and restart MusicBee. The Plugin should be loaded now.
 
 ## Usage
 You need to add MusicBee to Discord so it recognises it as a running "Game".
