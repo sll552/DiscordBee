@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiscordRpc.cs" />
+    <Compile Include="LayoutHandler.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="DiscordBee.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
