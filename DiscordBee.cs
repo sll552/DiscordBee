@@ -75,7 +75,7 @@ namespace MusicBeePlugin
       // not relevant
     }
 
-    private void RequestCallback(ref DiscordRpc.JoinRequest request)
+    private void RequestCallback(ref DiscordRpc.DiscordUser discordUser)
     {
       // not relevant
     }
@@ -85,7 +85,7 @@ namespace MusicBeePlugin
       // not relevant
     }
 
-    private void ReadyCallback()
+    private void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
     {
     }
 

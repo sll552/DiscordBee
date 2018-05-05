@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -9,7 +8,7 @@ namespace MusicBeePlugin
   public class DiscordRpc
   {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void ReadyCallback();
+    public delegate void ReadyCallback(ref DiscordUser connectedUser);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void DisconnectedCallback(int errorCode, string message);
@@ -24,7 +23,7 @@ namespace MusicBeePlugin
     public delegate void SpectateCallback(string secret);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void RequestCallback(ref JoinRequest request);
+    public delegate void RequestCallback(ref DiscordUser request);
 
     public struct EventHandlers
     {
@@ -57,7 +56,7 @@ namespace MusicBeePlugin
     }
 
     [Serializable]
-    public struct JoinRequest
+    public struct DiscordUser
     {
       public string userId;
       public string username;
@@ -89,6 +88,9 @@ namespace MusicBeePlugin
 
     [DllImport(Plugin.DiscordRpcDll, EntryPoint = "Discord_Respond", CallingConvention = CallingConvention.Cdecl)]
     public static extern void Respond(string userId, Reply reply);
+
+    [DllImport(Plugin.DiscordRpcDll, EntryPoint = "Discord_UpdateHandlers", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void UpdateHandlers(ref EventHandlers handlers);
 
     public static void UpdatePresence(RichPresence presence)
     {
@@ -124,17 +126,6 @@ namespace MusicBeePlugin
       /// <returns><see cref="RichPresenceStruct"/> reprensentation of this instance</returns>
       internal RichPresenceStruct GetStruct()
       {
-        IntPtr StrToPtr(string input, int maxbytes)
-        {
-          if (string.IsNullOrEmpty(input)) return IntPtr.Zero;
-          var convstr = StrClampBytes(input, maxbytes);
-          var convbytecnt = Encoding.UTF8.GetByteCount(convstr);
-          var buffer = Marshal.AllocHGlobal(convbytecnt);
-          _buffers.Add(buffer);
-          Marshal.Copy(Encoding.UTF8.GetBytes(convstr), 0, buffer, convbytecnt);
-          return buffer;
-        }
-
         if (_buffers.Count > 0)
         {
           FreeMem();
@@ -160,6 +151,23 @@ namespace MusicBeePlugin
       }
 
       /// <summary>
+      /// Returns a pointer to a representation of the given string with a size of maxbytes
+      /// </summary>
+      /// <param name="input">String to convert</param>
+      /// <param name="maxbytes">Max number of bytes to use</param>
+      /// <returns>Pointer to the UTF-8 representation of <see cref="input"/></returns>
+      private IntPtr StrToPtr(string input, int maxbytes)
+      {
+        if (string.IsNullOrEmpty(input)) return IntPtr.Zero;
+        var convstr = StrClampBytes(input, maxbytes);
+        var convbytecnt = Encoding.UTF8.GetByteCount(convstr);
+        var buffer = Marshal.AllocHGlobal(convbytecnt);
+        _buffers.Add(buffer);
+        Marshal.Copy(Encoding.UTF8.GetBytes(convstr), 0, buffer, convbytecnt);
+        return buffer;
+      }
+
+      /// <summary>
       /// Convert string to UTF-8 and add null termination
       /// </summary>
       /// <param name="toconv">string to convert</param>
@@ -168,7 +176,7 @@ namespace MusicBeePlugin
       {
         var str = toconv.Trim();
         var bytes = Encoding.Default.GetBytes(str);
-        if (bytes.Length > 0 && bytes.Last() != 0)
+        if (bytes.Length > 0 && bytes[bytes.Length - 1] != 0)
         {
           str += "\0\0";
         }
@@ -195,7 +203,7 @@ namespace MusicBeePlugin
         Array.Copy(strbytes, 0, newstrbytes, 0, maxbytes - 1);
         newstrbytes[newstrbytes.Length - 1] = 0;
         newstrbytes[newstrbytes.Length - 2] = 0;
-        
+
         return Encoding.UTF8.GetString(newstrbytes);
       }
 
@@ -206,11 +214,10 @@ namespace MusicBeePlugin
       {
         for (var i = _buffers.Count - 1; i >= 0; i--)
         {
-           Marshal.FreeHGlobal(_buffers[i]);
+          Marshal.FreeHGlobal(_buffers[i]);
           _buffers.RemoveAt(i);
         }
       }
     }
   }
 }
-
