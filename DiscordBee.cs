@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
@@ -15,6 +17,7 @@ namespace MusicBeePlugin
     private DiscordRpc.EventHandlers _discordHandlers;
     private DiscordRpc.RichPresence _discordPresence = new DiscordRpc.RichPresence();
     private readonly Timer _discordUpdateTimer = new Timer();
+    private LayoutHandler _layoutHandler;
 
     public const string DiscordRpcDll = "discord-rpc-w32";
 
@@ -56,6 +59,9 @@ namespace MusicBeePlugin
       _discordUpdateTimer.Interval = 1000;
       _discordUpdateTimer.Elapsed += DiscordUpdateTimerOnElapsed;
 
+      // Match least number of chars possible but min 1
+      _layoutHandler = new LayoutHandler(new Regex("{(.+?)}"));
+
       Debug.WriteLine(_about.Name + " loaded");
 
       return _about;
@@ -87,6 +93,7 @@ namespace MusicBeePlugin
 
     private void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
     {
+      // not relevant
     }
 
     private void ErrorCallback(int errorCode, string message)
@@ -205,6 +212,18 @@ namespace MusicBeePlugin
       }
     }
 
+    private Dictionary<string, string> GenerateMetaDataDictionary()
+    {
+      var ret = new Dictionary<string, string>(Enum.GetNames(typeof(MetaDataType)).Length);
+
+      foreach (MetaDataType elem in Enum.GetValues(typeof(MetaDataType)))
+      {
+        ret.Add(elem.ToString(), _mbApiInterface.NowPlaying_GetFileTag(elem));
+      }
+
+      return ret;
+    }
+
     private void UpdateDiscordPresence(PlayState playerGetPlayState)
     {
       void SetImage(string name)
@@ -215,23 +234,23 @@ namespace MusicBeePlugin
         _discordPresence.smallImageText = name;
       }
 
-      _discordPresence.state = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackTitle);
+      var metaDataDict = GenerateMetaDataDictionary();
+
+      _discordPresence.state = _layoutHandler.Render("{TrackTitle}", metaDataDict, "./-_");
+
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
       _discordPresence.startTimestamp = (long)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
 
       switch (playerGetPlayState)
       {
         case PlayState.Playing:
-          //_discordPresence.state += " Playing";
           SetImage("play");
           break;
         case PlayState.Stopped:
-          //_discordPresence.state += " Stopped";
           SetImage("stop");
           _discordPresence.startTimestamp = 0;
           break;
         case PlayState.Paused:
-          //_discordPresence.state += " Paused";
           SetImage("pause");
           _discordPresence.startTimestamp = 0;
           break;
@@ -240,13 +259,7 @@ namespace MusicBeePlugin
           break;
       }
 
-      _discordPresence.details = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Artist);
-      var album = _mbApiInterface.NowPlaying_GetFileTag(MetaDataType.Album);
-      if (!string.IsNullOrEmpty(album))
-      {
-        _discordPresence.details += " - " + album;
-      }
-
+      _discordPresence.details = _layoutHandler.Render("{Artist} - {Album}", metaDataDict, "./-_");
       _discordPresence.partyId = "aaaaa";
 
       var trackcnt = 0;
