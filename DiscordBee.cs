@@ -19,6 +19,7 @@ namespace MusicBeePlugin
     private readonly Timer _discordUpdateTimer = new Timer();
     private LayoutHandler _layoutHandler;
     private Settings _settings;
+    private SettingsWindow _settingsWindow;
 
     public const string DiscordRpcDll = "discord-rpc-w32";
 
@@ -54,6 +55,7 @@ namespace MusicBeePlugin
       }
 
       _settings = Settings.GetInstance(settingsFilePath);
+      _settingsWindow = new SettingsWindow();
 
       _discordHandlers.disconnectedCallback += DisconnectedCallback;
       _discordHandlers.errorCallback += ErrorCallback;
@@ -119,7 +121,8 @@ namespace MusicBeePlugin
 
     public bool Configure(IntPtr panelHandle)
     {
-      return false;
+      _settingsWindow.Show();
+      return true;
     }
 
     // called by MusicBee when the user clicks Apply or Save in the MusicBee Preferences screen.
