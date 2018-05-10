@@ -15,9 +15,10 @@ namespace MusicBeePlugin
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
     private DiscordRpc.EventHandlers _discordHandlers;
-    private DiscordRpc.RichPresence _discordPresence = new DiscordRpc.RichPresence();
+    private readonly DiscordRpc.RichPresence _discordPresence = new DiscordRpc.RichPresence();
     private readonly Timer _discordUpdateTimer = new Timer();
     private LayoutHandler _layoutHandler;
+    private Settings _settings;
 
     public const string DiscordRpcDll = "discord-rpc-w32";
 
@@ -45,6 +46,14 @@ namespace MusicBeePlugin
         Debug.WriteLine("DiscordRPC library could not be found");
         return null;
       }
+
+      var settingsFilePath = _mbApiInterface.Setting_GetPersistentStoragePath() + _about.Name + "\\" + _about.Name + ".settings";
+      if (Path.GetDirectoryName(settingsFilePath) != null && !Directory.Exists(Path.GetDirectoryName(settingsFilePath)))
+      {
+        Directory.CreateDirectory(Path.GetDirectoryName(settingsFilePath) ?? throw new InvalidOperationException());
+      }
+
+      _settings = Settings.GetInstance(settingsFilePath);
 
       _discordHandlers.disconnectedCallback += DisconnectedCallback;
       _discordHandlers.errorCallback += ErrorCallback;
@@ -117,7 +126,7 @@ namespace MusicBeePlugin
     // its up to you to figure out whether anything has changed and needs updating
     public void SaveSettings()
     {
-
+      _settings.Save();
     }
 
     // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
@@ -131,6 +140,7 @@ namespace MusicBeePlugin
     // uninstall this plugin - clean up any persisted files
     public void Uninstall()
     {
+      _settings.Delete();
     }
 
     // receive event notifications from MusicBee
@@ -226,17 +236,17 @@ namespace MusicBeePlugin
 
     private void UpdateDiscordPresence(PlayState playerGetPlayState)
     {
+      var metaDataDict = GenerateMetaDataDictionary();
+
       void SetImage(string name)
       {
         _discordPresence.largeImageKey = "logo";
-        _discordPresence.largeImageText = "MusicBee";
+        _discordPresence.largeImageText = _layoutHandler.Render(_settings.ImageText, metaDataDict, _settings.Seperator);
         _discordPresence.smallImageKey = name;
         _discordPresence.smallImageText = name;
       }
 
-      var metaDataDict = GenerateMetaDataDictionary();
-
-      _discordPresence.state = _layoutHandler.Render("{TrackTitle}", metaDataDict, "./-_");
+      _discordPresence.state = _layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Seperator);
 
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
       _discordPresence.startTimestamp = (long)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
@@ -259,15 +269,15 @@ namespace MusicBeePlugin
           break;
       }
 
-      _discordPresence.details = _layoutHandler.Render("{Artist} - {Album}", metaDataDict, "./-_");
+      _discordPresence.details = _layoutHandler.Render(_settings.PresenceDetails, metaDataDict, _settings.Seperator);
       _discordPresence.partyId = "aaaaa";
 
       var trackcnt = 0;
       var trackno = 0;
       try
       {
-        trackcnt = int.Parse(_mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackCount));
-        trackno = int.Parse(_mbApiInterface.NowPlaying_GetFileTag(MetaDataType.TrackNo));
+        trackcnt = int.Parse(_layoutHandler.Render(_settings.PresenceTrackCnt, metaDataDict, _settings.Seperator));
+        trackno = int.Parse(_layoutHandler.Render(_settings.PresenceTrackNo, metaDataDict, _settings.Seperator));
       }
       catch (Exception)
       {
