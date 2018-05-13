@@ -49,13 +49,9 @@ namespace MusicBeePlugin
       }
 
       var settingsFilePath = _mbApiInterface.Setting_GetPersistentStoragePath() + _about.Name + "\\" + _about.Name + ".settings";
-      if (Path.GetDirectoryName(settingsFilePath) != null && !Directory.Exists(Path.GetDirectoryName(settingsFilePath)))
-      {
-        Directory.CreateDirectory(Path.GetDirectoryName(settingsFilePath) ?? throw new InvalidOperationException());
-      }
 
       _settings = Settings.GetInstance(settingsFilePath);
-      _settingsWindow = new SettingsWindow();
+      _settingsWindow = new SettingsWindow(this, _settings);
 
       _discordHandlers.disconnectedCallback += DisconnectedCallback;
       _discordHandlers.errorCallback += ErrorCallback;
@@ -71,7 +67,7 @@ namespace MusicBeePlugin
       _discordUpdateTimer.Elapsed += DiscordUpdateTimerOnElapsed;
 
       // Match least number of chars possible but min 1
-      _layoutHandler = new LayoutHandler(new Regex("{(.+?)}"));
+      _layoutHandler = new LayoutHandler(new Regex("\\[(.+?)\\]"));
 
       Debug.WriteLine(_about.Name + " loaded");
 
@@ -225,7 +221,7 @@ namespace MusicBeePlugin
       }
     }
 
-    private Dictionary<string, string> GenerateMetaDataDictionary()
+    public Dictionary<string, string> GenerateMetaDataDictionary()
     {
       var ret = new Dictionary<string, string>(Enum.GetNames(typeof(MetaDataType)).Length);
 

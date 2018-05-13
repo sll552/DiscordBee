@@ -20,7 +20,6 @@ namespace MusicBeePlugin
     private string Clean(string input, Dictionary<string, string> values, string seperators)
     {
       var emptyValues = new Dictionary<string, string>();
-      var escseperators = Regex.Escape(seperators);
 
       foreach (var entry in values)
       {
@@ -61,7 +60,7 @@ namespace MusicBeePlugin
         {
           input = input.Replace(match.Value, values[match.Groups[1].Captures[0].Value]);
         }
-        catch (System.Collections.Generic.KeyNotFoundException e)
+        catch (KeyNotFoundException)
         {
           // ignored
         }

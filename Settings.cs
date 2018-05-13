@@ -1,58 +1,68 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Xml;
-using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 namespace MusicBeePlugin
 {
+  [DataContract]
   public class Settings
   {
-    [XmlIgnore] private string FilePath { get; set; }
+    private string FilePath { get; set; }
 
     // Don't serialize properties so only user set changes are serialized and not default values
+
     #region Settings
-    private string _seperator;
-    [XmlIgnore]
+
+    [DataMember] private string _seperator;
+
     public string Seperator
     {
       get => string.IsNullOrEmpty(_seperator) ? "./-_" : _seperator;
       set => _seperator = value;
     }
-    private string _imagetext;
-    [XmlIgnore]
+
+    [DataMember] private string _imagetext;
+
     public string ImageText
     {
       get => string.IsNullOrEmpty(_imagetext) ? "MusicBee" : _imagetext;
       set => _imagetext = value;
     }
-    private string _presenceState;
-    [XmlIgnore]
+
+    [DataMember] private string _presenceState;
+
     public string PresenceState
     {
-      get => string.IsNullOrEmpty(_presenceState) ? "{TrackTitle}" : _presenceState;
+      get => string.IsNullOrEmpty(_presenceState) ? "[TrackTitle]" : _presenceState;
       set => _presenceState = value;
     }
-    private string _presenceDetails;
-    [XmlIgnore]
+
+    [DataMember] private string _presenceDetails;
+
     public string PresenceDetails
     {
-      get => string.IsNullOrEmpty(_presenceDetails) ? "{Artist} - {Album}" : _presenceDetails;
+      get => string.IsNullOrEmpty(_presenceDetails) ? "[Artist] - [Album]" : _presenceDetails;
       set => _presenceDetails = value;
     }
-    private string _presenceTrackCnt;
-    [XmlIgnore]
+
+    [DataMember] private string _presenceTrackCnt;
+
     public string PresenceTrackCnt
     {
-      get => string.IsNullOrEmpty(_presenceTrackCnt) ? "{TrackCount}" : _presenceTrackCnt;
+      get => string.IsNullOrEmpty(_presenceTrackCnt) ? "[TrackCount]" : _presenceTrackCnt;
       set => _presenceTrackCnt = value;
     }
-    private string _presenceTrackNo;
-    [XmlIgnore]
+
+    [DataMember] private string _presenceTrackNo;
+
     public string PresenceTrackNo
     {
-      get => string.IsNullOrEmpty(_presenceTrackNo) ? "{TrackNo}" : _presenceTrackNo;
+      get => string.IsNullOrEmpty(_presenceTrackNo) ? "[TrackNo]" : _presenceTrackNo;
       set => _presenceTrackNo = value;
     }
+
     #endregion
 
     public static Settings GetInstance(string filePath)
@@ -67,17 +77,40 @@ namespace MusicBeePlugin
       {
         newSettings = new Settings();
       }
+
       newSettings.FilePath = filePath;
 
       return newSettings;
     }
 
+    public bool IsDirty()
+    {
+      var fields = GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+      foreach (var fieldInfo in fields)
+      {
+        if (fieldInfo.FieldType != typeof(string) || !fieldInfo.Name.StartsWith("_")) continue;
+        if (!string.IsNullOrEmpty(fieldInfo.GetValue(this) as string))
+        {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     public void Save()
     {
-      using (var writer = new StreamWriter(FilePath))
+      if (!IsDirty()) return;
+      if (Path.GetDirectoryName(FilePath) != null && !Directory.Exists(Path.GetDirectoryName(FilePath)))
       {
-        var serializer = new XmlSerializer(GetType());
-        serializer.Serialize(writer, this);
+        Directory.CreateDirectory(Path.GetDirectoryName(FilePath) ?? throw new InvalidOperationException());
+      }
+
+      using (var writer = XmlWriter.Create(FilePath))
+      {
+        var serializer = new DataContractSerializer(GetType());
+        serializer.WriteObject(writer, this);
         writer.Flush();
       }
     }
@@ -86,8 +119,8 @@ namespace MusicBeePlugin
     {
       using (var stream = File.OpenRead(filePath))
       {
-        var serializer = new XmlSerializer(typeof(Settings));
-        return serializer.Deserialize(stream) as Settings;
+        var serializer = new DataContractSerializer(typeof(Settings));
+        return serializer.ReadObject(stream) as Settings;
       }
     }
 
@@ -97,10 +130,12 @@ namespace MusicBeePlugin
       {
         File.Delete(FilePath);
       }
+
       if (Path.GetDirectoryName(FilePath) != null && Directory.Exists(Path.GetDirectoryName(FilePath)))
       {
         Directory.Delete(Path.GetDirectoryName(FilePath) ?? throw new InvalidOperationException());
       }
+
       Clear();
     }
 
