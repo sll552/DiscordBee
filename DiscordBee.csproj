@@ -73,14 +73,29 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DiscordRpc.cs" />
+    <Compile Include="LayoutHandler.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="DiscordBee.cs" />
+    <Compile Include="PlaceholderTableWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlaceholderTableWindow.Designer.cs">
+      <DependentUpon>PlaceholderTableWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsWindow.Designer.cs">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -112,6 +127,14 @@
     <Content Include="discord-rpc-w32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="PlaceholderTableWindow.resx">
+      <DependentUpon>PlaceholderTableWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsWindow.resx">
+      <DependentUpon>SettingsWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
