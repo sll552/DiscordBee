@@ -53,12 +53,11 @@ namespace MusicBeePlugin
       _settings = Settings.GetInstance(settingsFilePath);
       _settingsWindow = new SettingsWindow(this, _settings);
 
-      _discordHandlers.disconnectedCallback += DisconnectedCallback;
-      _discordHandlers.errorCallback += ErrorCallback;
-      _discordHandlers.readyCallback += ReadyCallback;
-      _discordHandlers.joinCallback += JoinCallback;
-      _discordHandlers.requestCallback += RequestCallback;
-      _discordHandlers.spectateCallback += SpectateCallback;
+      _discordHandlers = new DiscordRpc.EventHandlers
+      {
+        disconnectedCallback = DisconnectedCallback,
+        errorCallback = ErrorCallback
+      };
 
       DiscordRpc.Initialize("409394531948298250", ref _discordHandlers, true, null);
 
@@ -81,26 +80,6 @@ namespace MusicBeePlugin
       Thread.Sleep(500);
       DiscordRpc.RunCallbacks();
       _discordUpdateTimer.Stop();
-    }
-
-    private void SpectateCallback(string secret)
-    {
-      // not relevant
-    }
-
-    private void RequestCallback(ref DiscordRpc.DiscordUser discordUser)
-    {
-      // not relevant
-    }
-
-    private void JoinCallback(string secret)
-    {
-      // not relevant
-    }
-
-    private void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
-    {
-      // not relevant
     }
 
     private void ErrorCallback(int errorCode, string message)
