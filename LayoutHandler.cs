@@ -56,13 +56,10 @@ namespace MusicBeePlugin
       {
         // complete match is group 0 so we neeed exactly 2 groups to be able to replace correctly
         if (match.Groups.Count != 2) continue;
-        try
+        var key = match.Groups[1].Captures[0].Value;
+        if (values.ContainsKey(key))
         {
-          input = input.Replace(match.Value, values[match.Groups[1].Captures[0].Value]);
-        }
-        catch (KeyNotFoundException)
-        {
-          // ignored
+          input = input.Replace(match.Value, values[key]);
         }
       }
       return input;
