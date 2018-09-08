@@ -264,6 +264,19 @@ namespace MusicBeePlugin
       _discordPresence.partyMax = trackcnt;
       _discordPresence.partySize = trackno;
 
+      // Discord allows only strings with a min length of 2 or the update fails
+      // so add some exotic space (Mongolian vovel seperator) to the string if it is smaller 
+      foreach (var presField in _discordPresence.GetType().GetFields())
+      {
+        if (presField.FieldType != typeof(string)) continue;
+
+        var value = presField.GetValue(_discordPresence) as string;
+        if (!string.IsNullOrEmpty(value) && value.Length < 2)
+        {
+          presField.SetValue(_discordPresence, value + "\u180E");
+        }
+      }
+
       if (!_discordUpdateTimer.Enabled) _discordUpdateTimer.Start();
     }
   }
