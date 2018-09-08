@@ -44,6 +44,7 @@
       this.buttonRestoreDefaults = new System.Windows.Forms.Button();
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
+      this.checkBoxPresenceUpdate = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -204,6 +205,7 @@
       // 
       // splitContainer2.Panel1
       // 
+      this.splitContainer2.Panel1.Controls.Add(this.checkBoxPresenceUpdate);
       this.splitContainer2.Panel1.Controls.Add(this.textBoxSeperator);
       this.splitContainer2.Panel1.Controls.Add(this.label5);
       // 
@@ -273,6 +275,17 @@
       this.buttonPlaceholders.UseVisualStyleBackColor = true;
       this.buttonPlaceholders.Click += new System.EventHandler(this.buttonPlaceholders_Click);
       // 
+      // checkBoxPresenceUpdate
+      // 
+      this.checkBoxPresenceUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.checkBoxPresenceUpdate.AutoSize = true;
+      this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(272, 5);
+      this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
+      this.checkBoxPresenceUpdate.Size = new System.Drawing.Size(220, 17);
+      this.checkBoxPresenceUpdate.TabIndex = 5;
+      this.checkBoxPresenceUpdate.Text = "Show presence when no music is playing";
+      this.checkBoxPresenceUpdate.UseVisualStyleBackColor = true;
+      // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,5 +330,6 @@
     private System.Windows.Forms.TextBox textBoxSeperator;
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Button buttonRestoreDefaults;
+    private System.Windows.Forms.CheckBox checkBoxPresenceUpdate;
   }
 }

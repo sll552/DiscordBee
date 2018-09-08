@@ -18,6 +18,7 @@ namespace MusicBeePlugin
       _defaultSettings = new Settings();
       InitializeComponent();
       UpdateValues(_settings);
+      Text += " (v" + parent.GetVersionString() + ")";
 
       FormClosing += OnFormClosing;
       Shown += OnShown;
@@ -52,6 +53,7 @@ namespace MusicBeePlugin
       textBoxState.Text = settings.PresenceState;
       textBoxImage.Text = settings.ImageText;
       textBoxSeperator.Text = settings.Seperator;
+      checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
     }
 
     private void buttonPlaceholders_Click(object sender, EventArgs e)
@@ -72,32 +74,40 @@ namespace MusicBeePlugin
       if (textBoxTrackNo.Text != _defaultSettings.PresenceTrackNo)
       {
         _settings.PresenceTrackNo = textBoxTrackNo.Text;
+        _defaultsRestored = false;
       }
 
       if (textBoxTrackCnt.Text != _defaultSettings.PresenceTrackCnt)
       {
         _settings.PresenceTrackCnt = textBoxTrackCnt.Text;
+        _defaultsRestored = false;
       }
 
       if (textBoxDetails.Text != _defaultSettings.PresenceDetails)
       {
         _settings.PresenceDetails = textBoxDetails.Text;
+        _defaultsRestored = false;
       }
 
       if (textBoxState.Text != _defaultSettings.PresenceState)
       {
         _settings.PresenceState = textBoxState.Text;
+        _defaultsRestored = false;
       }
 
       if (textBoxImage.Text != _defaultSettings.ImageText)
       {
         _settings.ImageText = textBoxImage.Text;
+        _defaultsRestored = false;
       }
 
       if (textBoxSeperator.Text != _defaultSettings.Seperator)
       {
         _settings.Seperator = textBoxSeperator.Text;
+        _defaultsRestored = false;
       }
+
+     _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
 
       if (_defaultsRestored)
       {
