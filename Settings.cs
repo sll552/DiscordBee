@@ -63,6 +63,21 @@ namespace MusicBeePlugin
       set => _presenceTrackNo = value;
     }
 
+    [DataMember] private bool? _updatePresenceWhenStopped;
+
+    public bool UpdatePresenceWhenStopped
+    {
+      get => !_updatePresenceWhenStopped.HasValue || _updatePresenceWhenStopped.Value;
+      set
+      {
+        // preserve deserialized value or null when no change
+        if (UpdatePresenceWhenStopped != value)
+        {
+          _updatePresenceWhenStopped = value;
+        }
+      }
+    }
+
     #endregion
 
     public static Settings GetInstance(string filePath)
@@ -89,8 +104,13 @@ namespace MusicBeePlugin
 
       foreach (var fieldInfo in fields)
       {
-        if (fieldInfo.FieldType != typeof(string) || !fieldInfo.Name.StartsWith("_")) continue;
-        if (!string.IsNullOrEmpty(fieldInfo.GetValue(this) as string))
+
+        if (!fieldInfo.Name.StartsWith("_")) continue;
+        if (fieldInfo.FieldType == typeof(string) && !string.IsNullOrEmpty(fieldInfo.GetValue(this) as string))
+        {
+          return true;
+        }
+        if (fieldInfo.FieldType == typeof(bool?) && fieldInfo.GetValue(this) != null)
         {
           return true;
         }
@@ -148,6 +168,18 @@ namespace MusicBeePlugin
         if (propertyInfo.PropertyType == typeof(string) && propertyInfo.Name != "FilePath")
         {
           propertyInfo.SetValue(this, string.Empty, null);
+        }
+      }
+
+      // field is used for boolean settings because nullable is used internally and property would be non-nullable
+      var fields = GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+      foreach (var fieldInfo in fields)
+      {
+        if (!fieldInfo.Name.StartsWith("_")) continue;
+        if (fieldInfo.FieldType == typeof(bool?))
+        {
+          fieldInfo.SetValue(this, null);
         }
       }
     }
