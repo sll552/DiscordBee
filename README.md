@@ -21,7 +21,7 @@ under the "No Game detected" message press "Add it!" and select MusicBee from th
 The Discord API has a 15s rate limit, so it can take up to 15s for a status change to actually show in Discord.
 
 ## Configuration
-![Settings](https://i.imgur.com/vQgkTlf.png)
+![Settings](https://i.imgur.com/42bu4Et.png)
 
 You can configure what is displayed in your profile by opening the plugin settings in MusicBee "Edit -> Preferences -> Plugins -> DiscordBee -> Configure".
 
