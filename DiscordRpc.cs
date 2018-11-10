@@ -199,12 +199,11 @@ namespace MusicBeePlugin
           return str;
         }
 
-        var newstrbytes = new byte[] { };
-        Array.Copy(strbytes, 0, newstrbytes, 0, maxbytes - 1);
-        newstrbytes[newstrbytes.Length - 1] = 0;
-        newstrbytes[newstrbytes.Length - 2] = 0;
+        Array.Resize(ref strbytes, maxbytes);
+        strbytes[strbytes.Length - 1] = 0;
+        strbytes[strbytes.Length - 2] = 0;
 
-        return Encoding.UTF8.GetString(newstrbytes);
+        return Encoding.UTF8.GetString(strbytes);
       }
 
       /// <summary>
