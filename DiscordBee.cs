@@ -237,10 +237,9 @@ namespace MusicBeePlugin
       }
 
       _discordPresence.Details = padString(_layoutHandler.Render(_settings.PresenceDetails, metaDataDict, _settings.Seperator));
-      _discordPresence.Party.ID = "aaaa";
 
-      var trackcnt = 0;
-      var trackno = 0;
+      var trackcnt = -1;
+      var trackno = -1;
       try
       {
         trackcnt = int.Parse(_layoutHandler.Render(_settings.PresenceTrackCnt, metaDataDict, _settings.Seperator));
@@ -250,8 +249,20 @@ namespace MusicBeePlugin
       {
         // ignored
       }
-      _discordPresence.Party.Max = trackcnt;
-      _discordPresence.Party.Size = trackno;
+
+      if (trackcnt < trackno || trackcnt <= 0 || trackno <= 0)
+      {
+        _discordPresence.Party = null;
+      }
+      else
+      {
+        _discordPresence.Party = new Party
+        {
+          ID = "aaaa",
+          Max = trackcnt,
+          Size = trackno
+        };
+      }
 
       if (!_settings.UpdatePresenceWhenStopped && (playerGetPlayState == PlayState.Paused || playerGetPlayState == PlayState.Stopped))
       {
