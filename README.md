@@ -41,6 +41,6 @@ If you are unhappy with your changes, you can always restore the defaults and sa
 Feel free to send pull requests or open issues. The project is a Visual Studio 2017 Solution. 
 
 ## Libraries and Assets used
- - [Discord RPC](https://github.com/discordapp/discord-rpc)
+ - [Discord RPC Sharp](https://github.com/Lachee/discord-rpc-csharp)
  - [Icons](https://www.iconfinder.com/iconsets/media-player-long-shadow)
  - [MusicBee Logo](https://github.com/Avik-B/musicbee-website/blob/master/img/mb_icon_touch.png)
