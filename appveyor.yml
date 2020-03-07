@@ -1,0 +1,32 @@
+version: '{build}'
+image: Visual Studio 2019
+configuration: Release
+platform: Any CPU
+before_build:
+- ps: nuget restore
+build:
+  project: DiscordBee.sln
+  verbosity: minimal
+after_build:
+- ps: >-
+    if ($env:APPVEYOR_REPO_TAG -eq "false") {
+      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH-$env:APPVEYOR_BUILD_NUMBER.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*", "-xr!*.pdb"
+    } else {
+      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_REPO_TAG_NAME.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*", "-xr!*.pdb"
+    }
+artifacts:
+- path: bin/$(configuration)/**/*
+  name: Plugin
+- path: '*$(configuration)-*.zip'
+  name: Plugin-Package
+deploy:
+- provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  auth_token:
+    secure: LysQJDZI6QxPEZjmKWGdXP4/8Xj/blgvoRVG6OOPq/K/WqPyFVa72BNjHkcn+iAo
+  artifact: Plugin-Package
+  draft: false
+  force_update: true
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
