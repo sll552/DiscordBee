@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Text;
 using DiscordRPC;
 using DiscordRPC.Logging;
 
@@ -195,12 +196,33 @@ namespace MusicBeePlugin
       var metaDataDict = GenerateMetaDataDictionary();
 
       // Discord allows only strings with a min length of 2 or the update fails
-      // so add some exotic space (Mongolian vovel seperator) to the string if it is smaller 
+      // so add some exotic space (Mongolian vovel seperator) to the string if it is smaller
+      // Discord also disallows strings bigger than 128bytes so handle that as well
       string padString(string input)
       {
-        if (!string.IsNullOrEmpty(input) && input.Length < 2)
+        if (!string.IsNullOrEmpty(input))
         {
-          return input + "\u180E";
+          if (input.Length < 2)
+          {
+            return input + "\u180E";
+          }
+          if (Encoding.UTF8.GetBytes(input).Length > 128)
+          {
+            byte[] buffer = new byte[128];
+            char[] inputChars = input.ToCharArray();
+            Encoding.UTF8.GetEncoder().Convert(
+                chars: inputChars,
+                charIndex: 0,
+                charCount: inputChars.Length,
+                bytes: buffer,
+                byteIndex: 0,
+                byteCount: buffer.Length,
+                flush: false,
+                charsUsed: out int charsUsed,
+                bytesUsed: out int bytesUsed,
+                completed: out bool completed);
+            return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
+          }
         }
         return input;
       }
