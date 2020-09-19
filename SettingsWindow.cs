@@ -54,6 +54,7 @@ namespace MusicBeePlugin
       textBoxImage.Text = settings.ImageText;
       textBoxSeperator.Text = settings.Seperator;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
+      checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
     }
 
     private void buttonPlaceholders_Click(object sender, EventArgs e)
@@ -107,7 +108,8 @@ namespace MusicBeePlugin
         _defaultsRestored = false;
       }
 
-     _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
+      _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
+      _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
 
       if (_defaultsRestored)
       {

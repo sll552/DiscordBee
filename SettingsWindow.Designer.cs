@@ -39,12 +39,13 @@
       this.label1 = new System.Windows.Forms.Label();
       this.textBoxImage = new System.Windows.Forms.TextBox();
       this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+      this.checkBoxShowRemainingTime = new System.Windows.Forms.CheckBox();
+      this.checkBoxPresenceUpdate = new System.Windows.Forms.CheckBox();
       this.textBoxSeperator = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
       this.buttonRestoreDefaults = new System.Windows.Forms.Button();
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
-      this.checkBoxPresenceUpdate = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -81,7 +82,7 @@
       // 
       this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
       this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
-      this.splitContainer1.Size = new System.Drawing.Size(507, 186);
+      this.splitContainer1.Size = new System.Drawing.Size(507, 207);
       this.splitContainer1.SplitterDistance = 114;
       this.splitContainer1.TabIndex = 0;
       // 
@@ -147,8 +148,8 @@
       // 
       // textBoxState
       // 
-      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxState.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxState.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -160,8 +161,8 @@
       // 
       // textBoxDetails
       // 
-      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxDetails.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -205,6 +206,7 @@
       // 
       // splitContainer2.Panel1
       // 
+      this.splitContainer2.Panel1.Controls.Add(this.checkBoxShowRemainingTime);
       this.splitContainer2.Panel1.Controls.Add(this.checkBoxPresenceUpdate);
       this.splitContainer2.Panel1.Controls.Add(this.textBoxSeperator);
       this.splitContainer2.Panel1.Controls.Add(this.label5);
@@ -214,14 +216,35 @@
       this.splitContainer2.Panel2.Controls.Add(this.buttonRestoreDefaults);
       this.splitContainer2.Panel2.Controls.Add(this.buttonSaveClose);
       this.splitContainer2.Panel2.Controls.Add(this.buttonPlaceholders);
-      this.splitContainer2.Size = new System.Drawing.Size(501, 62);
-      this.splitContainer2.SplitterDistance = 28;
+      this.splitContainer2.Size = new System.Drawing.Size(501, 83);
+      this.splitContainer2.SplitterDistance = 49;
       this.splitContainer2.TabIndex = 3;
+      // 
+      // checkBoxShowRemainingTime
+      // 
+      this.checkBoxShowRemainingTime.AutoSize = true;
+      this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(248, 28);
+      this.checkBoxShowRemainingTime.Name = "checkBoxShowRemainingTime";
+      this.checkBoxShowRemainingTime.Size = new System.Drawing.Size(223, 17);
+      this.checkBoxShowRemainingTime.TabIndex = 6;
+      this.checkBoxShowRemainingTime.Text = "Show Remaining Instead of Elapsed Time";
+      this.checkBoxShowRemainingTime.UseVisualStyleBackColor = true;
+      // 
+      // checkBoxPresenceUpdate
+      // 
+      this.checkBoxPresenceUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.checkBoxPresenceUpdate.AutoSize = true;
+      this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(248, 5);
+      this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
+      this.checkBoxPresenceUpdate.Size = new System.Drawing.Size(220, 17);
+      this.checkBoxPresenceUpdate.TabIndex = 5;
+      this.checkBoxPresenceUpdate.Text = "Show presence when no music is playing";
+      this.checkBoxPresenceUpdate.UseVisualStyleBackColor = true;
       // 
       // textBoxSeperator
       // 
       this.textBoxSeperator.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBoxSeperator.Location = new System.Drawing.Point(76, 1);
+      this.textBoxSeperator.Location = new System.Drawing.Point(76, 12);
       this.textBoxSeperator.Name = "textBoxSeperator";
       this.textBoxSeperator.Size = new System.Drawing.Size(87, 25);
       this.textBoxSeperator.TabIndex = 4;
@@ -230,7 +253,7 @@
       // 
       this.label5.AutoSize = true;
       this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label5.Location = new System.Drawing.Point(3, 5);
+      this.label5.Location = new System.Drawing.Point(3, 16);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(70, 15);
       this.label5.TabIndex = 0;
@@ -275,26 +298,15 @@
       this.buttonPlaceholders.UseVisualStyleBackColor = true;
       this.buttonPlaceholders.Click += new System.EventHandler(this.buttonPlaceholders_Click);
       // 
-      // checkBoxPresenceUpdate
-      // 
-      this.checkBoxPresenceUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.checkBoxPresenceUpdate.AutoSize = true;
-      this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(272, 5);
-      this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
-      this.checkBoxPresenceUpdate.Size = new System.Drawing.Size(220, 17);
-      this.checkBoxPresenceUpdate.TabIndex = 5;
-      this.checkBoxPresenceUpdate.Text = "Show presence when no music is playing";
-      this.checkBoxPresenceUpdate.UseVisualStyleBackColor = true;
-      // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.Color.White;
-      this.ClientSize = new System.Drawing.Size(507, 186);
+      this.ClientSize = new System.Drawing.Size(507, 207);
       this.Controls.Add(this.splitContainer1);
-      this.MaximumSize = new System.Drawing.Size(100000000, 225);
-      this.MinimumSize = new System.Drawing.Size(523, 225);
+      this.MaximumSize = new System.Drawing.Size(100000000, 246);
+      this.MinimumSize = new System.Drawing.Size(523, 246);
       this.Name = "SettingsWindow";
       this.ShowIcon = false;
       this.Text = "DiscordBee Settings";
@@ -331,5 +343,6 @@
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Button buttonRestoreDefaults;
     private System.Windows.Forms.CheckBox checkBoxPresenceUpdate;
+    private System.Windows.Forms.CheckBox checkBoxShowRemainingTime;
   }
 }

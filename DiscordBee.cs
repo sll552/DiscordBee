@@ -238,7 +238,19 @@ namespace MusicBeePlugin
       _discordPresence.State = padString(_layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Seperator));
 
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
-      _discordPresence.Timestamps.StartUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
+
+      if (_settings.ShowRemainingTime)
+      {
+        // show remaining time
+        // subtract current track position from total duration for position seeking
+        var totalRemainingDuration = _mbApiInterface.NowPlaying_GetDuration() - _mbApiInterface.Player_GetPosition();
+        _discordPresence.Timestamps.EndUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) + Math.Round(totalRemainingDuration / 1000.0));
+      }
+      else
+      {
+        // show elapsed time
+        _discordPresence.Timestamps.StartUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
+      }
 
       switch (playerGetPlayState)
       {
@@ -248,10 +260,12 @@ namespace MusicBeePlugin
         case PlayState.Stopped:
           SetImage("stop");
           _discordPresence.Timestamps.Start = null;
+          _discordPresence.Timestamps.End = null;
           break;
         case PlayState.Paused:
           SetImage("pause");
           _discordPresence.Timestamps.Start = null;
+          _discordPresence.Timestamps.End = null;
           break;
         case PlayState.Undefined:
         case PlayState.Loading:

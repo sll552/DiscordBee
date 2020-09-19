@@ -78,6 +78,21 @@ namespace MusicBeePlugin
       }
     }
 
+    [DataMember] private bool? _showRemainingTime;
+
+    public bool ShowRemainingTime
+    {
+      get => _showRemainingTime.HasValue && _showRemainingTime.Value;
+      set
+      {
+        // preserve deserialized value or null when no change
+        if (ShowRemainingTime != value)
+        {
+          _showRemainingTime = value;
+        }
+      }
+    }
+
     #endregion
 
     public static Settings GetInstance(string filePath)
