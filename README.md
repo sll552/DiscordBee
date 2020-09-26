@@ -18,7 +18,7 @@ After installing the plugin start MusicBee and your Discord status should be sho
 The Discord API has a 15s rate limit, so it can take up to 15s for a status change to actually show in Discord.
 
 ## Configuration
-![Settings](https://i.imgur.com/42bu4Et.png)
+![Settings](https://i.imgur.com/qvq0SVh.png)
 
 You can configure what is displayed in your profile by opening the plugin settings in MusicBee "Edit -> Preferences -> Plugins -> DiscordBee -> Configure".
 
@@ -40,4 +40,4 @@ Feel free to send pull requests or open issues. The project is a Visual Studio 2
 ## Libraries and Assets used
  - [Discord RPC Sharp](https://github.com/Lachee/discord-rpc-csharp)
  - [Icons](https://www.iconfinder.com/iconsets/media-player-long-shadow)
- - [MusicBee Logo](https://github.com/Avik-B/musicbee-website/blob/master/img/mb_icon_touch.png)
+ - [MusicBee Logo](https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:MusicBee_Logo.png)
