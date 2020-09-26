@@ -19,7 +19,7 @@ namespace MusicBeePlugin
 
     public string Seperator
     {
-      get => string.IsNullOrEmpty(_seperator) ? "./-_" : _seperator;
+      get => _seperator == null ? "./-_" : _seperator;
       set => _seperator = value;
     }
 
@@ -27,7 +27,7 @@ namespace MusicBeePlugin
 
     public string ImageText
     {
-      get => string.IsNullOrEmpty(_imagetext) ? "MusicBee" : _imagetext;
+      get => _imagetext == null ? "MusicBee" : _imagetext;
       set => _imagetext = value;
     }
 
@@ -35,7 +35,7 @@ namespace MusicBeePlugin
 
     public string PresenceState
     {
-      get => string.IsNullOrEmpty(_presenceState) ? "[TrackTitle]" : _presenceState;
+      get => _presenceState == null ? "[TrackTitle]" : _presenceState;
       set => _presenceState = value;
     }
 
@@ -43,7 +43,7 @@ namespace MusicBeePlugin
 
     public string PresenceDetails
     {
-      get => string.IsNullOrEmpty(_presenceDetails) ? "[Artist] - [Album]" : _presenceDetails;
+      get => _presenceDetails == null ? "[Artist] - [Album]" : _presenceDetails;
       set => _presenceDetails = value;
     }
 
@@ -51,7 +51,7 @@ namespace MusicBeePlugin
 
     public string PresenceTrackCnt
     {
-      get => string.IsNullOrEmpty(_presenceTrackCnt) ? "[TrackCount]" : _presenceTrackCnt;
+      get => _presenceTrackCnt == null ? "[TrackCount]" : _presenceTrackCnt;
       set => _presenceTrackCnt = value;
     }
 
@@ -59,7 +59,7 @@ namespace MusicBeePlugin
 
     public string PresenceTrackNo
     {
-      get => string.IsNullOrEmpty(_presenceTrackNo) ? "[TrackNo]" : _presenceTrackNo;
+      get => _presenceTrackNo == null ? "[TrackNo]" : _presenceTrackNo;
       set => _presenceTrackNo = value;
     }
 
@@ -121,7 +121,7 @@ namespace MusicBeePlugin
       {
 
         if (!fieldInfo.Name.StartsWith("_")) continue;
-        if (fieldInfo.FieldType == typeof(string) && !string.IsNullOrEmpty(fieldInfo.GetValue(this) as string))
+        if (fieldInfo.FieldType == typeof(string) && !(fieldInfo.GetValue(this) as string == null))
         {
           return true;
         }
@@ -182,7 +182,7 @@ namespace MusicBeePlugin
       {
         if (propertyInfo.PropertyType == typeof(string) && propertyInfo.Name != "FilePath")
         {
-          propertyInfo.SetValue(this, string.Empty, null);
+          propertyInfo.SetValue(this, null, null);
         }
       }
 
