@@ -41,7 +41,7 @@ namespace MusicBeePlugin
       _settings = Settings.GetInstance(settingsFilePath);
       _settingsWindow = new SettingsWindow(this, _settings);
 
-      _discordClient = new DiscordRpcClient("409394531948298250");
+      _discordClient = new DiscordRpcClient(_settings.Rpc);
       _discordClient.OnError += ErrorCallback;
       _discordClient.OnClose += DisconnectedCallback;
       _discordClient.Logger = new DebugLogger(LogLevel.Trace);

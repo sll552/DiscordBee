@@ -63,6 +63,14 @@ namespace MusicBeePlugin
       set => _presenceTrackNo = value;
     }
 
+    [DataMember] private string _Rpc;
+
+    public string Rpc
+    {
+        get => _Rpc == null ? "409394531948298250" : _Rpc;
+        set => _Rpc = value;
+    }
+
     [DataMember] private bool? _updatePresenceWhenStopped;
 
     public bool UpdatePresenceWhenStopped
