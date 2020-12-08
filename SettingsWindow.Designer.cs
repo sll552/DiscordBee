@@ -39,9 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxImage = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.textBoxRpc = new System.Windows.Forms.TextBox();
+            this.checkBoxAdvanced = new System.Windows.Forms.CheckBox();
+            this.textBoxRpcId = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.checkBoxShowRemainingTime = new System.Windows.Forms.CheckBox();
             this.checkBoxPresenceUpdate = new System.Windows.Forms.CheckBox();
             this.textBoxSeperator = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -84,7 +84,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
-            this.splitContainer1.Size = new System.Drawing.Size(507, 241);
+            this.splitContainer1.Size = new System.Drawing.Size(507, 211);
             this.splitContainer1.SplitterDistance = 114;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -208,9 +208,9 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.textBoxRpc);
+            this.splitContainer2.Panel1.Controls.Add(this.checkBoxAdvanced);
+            this.splitContainer2.Panel1.Controls.Add(this.textBoxRpcId);
             this.splitContainer2.Panel1.Controls.Add(this.label6);
-            this.splitContainer2.Panel1.Controls.Add(this.checkBoxShowRemainingTime);
             this.splitContainer2.Panel1.Controls.Add(this.checkBoxPresenceUpdate);
             this.splitContainer2.Panel1.Controls.Add(this.textBoxSeperator);
             this.splitContainer2.Panel1.Controls.Add(this.label5);
@@ -220,43 +220,44 @@
             this.splitContainer2.Panel2.Controls.Add(this.buttonRestoreDefaults);
             this.splitContainer2.Panel2.Controls.Add(this.buttonSaveClose);
             this.splitContainer2.Panel2.Controls.Add(this.buttonPlaceholders);
-            this.splitContainer2.Size = new System.Drawing.Size(501, 117);
-            this.splitContainer2.SplitterDistance = 83;
+            this.splitContainer2.Size = new System.Drawing.Size(501, 87);
+            this.splitContainer2.SplitterDistance = 53;
             this.splitContainer2.TabIndex = 3;
             // 
-            // textBoxRpc
+            // checkBoxAdvanced
             // 
-            this.textBoxRpc.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxRpc.Location = new System.Drawing.Point(89, 48);
-            this.textBoxRpc.Name = "textBoxRpc";
-            this.textBoxRpc.Size = new System.Drawing.Size(156, 25);
-            this.textBoxRpc.TabIndex = 8;
+            this.checkBoxAdvanced.AutoSize = true;
+            this.checkBoxAdvanced.Location = new System.Drawing.Point(9, 32);
+            this.checkBoxAdvanced.Name = "checkBoxAdvanced";
+            this.checkBoxAdvanced.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxAdvanced.TabIndex = 8;
+            this.checkBoxAdvanced.Text = "Advanced Settings";
+            this.checkBoxAdvanced.UseVisualStyleBackColor = true;
+            this.checkBoxAdvanced.CheckedChanged += new System.EventHandler(this.checkBoxAdvanced_CheckedChanged);
+            // 
+            // textBoxRpcId
+            // 
+            this.textBoxRpcId.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxRpcId.Location = new System.Drawing.Point(73, 61);
+            this.textBoxRpcId.Name = "textBoxRpcId";
+            this.textBoxRpcId.Size = new System.Drawing.Size(87, 25);
+            this.textBoxRpcId.TabIndex = 7;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(3, 52);
+            this.label6.Location = new System.Drawing.Point(3, 65);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(80, 15);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Custom RPC:";
-            // 
-            // checkBoxShowRemainingTime
-            // 
-            this.checkBoxShowRemainingTime.AutoSize = true;
-            this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(248, 28);
-            this.checkBoxShowRemainingTime.Name = "checkBoxShowRemainingTime";
-            this.checkBoxShowRemainingTime.Size = new System.Drawing.Size(223, 17);
-            this.checkBoxShowRemainingTime.TabIndex = 6;
-            this.checkBoxShowRemainingTime.Text = "Show Remaining Instead of Elapsed Time";
-            this.checkBoxShowRemainingTime.UseVisualStyleBackColor = true;
+            this.label6.Size = new System.Drawing.Size(50, 15);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "RPC ID:";
             // 
             // checkBoxPresenceUpdate
             // 
             this.checkBoxPresenceUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxPresenceUpdate.AutoSize = true;
-            this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(248, 5);
+            this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(272, 5);
             this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
             this.checkBoxPresenceUpdate.Size = new System.Drawing.Size(220, 17);
             this.checkBoxPresenceUpdate.TabIndex = 5;
@@ -266,7 +267,7 @@
             // textBoxSeperator
             // 
             this.textBoxSeperator.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxSeperator.Location = new System.Drawing.Point(76, 12);
+            this.textBoxSeperator.Location = new System.Drawing.Point(76, 1);
             this.textBoxSeperator.Name = "textBoxSeperator";
             this.textBoxSeperator.Size = new System.Drawing.Size(87, 25);
             this.textBoxSeperator.TabIndex = 4;
@@ -275,7 +276,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(3, 16);
+            this.label5.Location = new System.Drawing.Point(3, 5);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(70, 15);
             this.label5.TabIndex = 0;
@@ -325,10 +326,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(507, 241);
+            this.ClientSize = new System.Drawing.Size(507, 211);
             this.Controls.Add(this.splitContainer1);
-            this.MaximumSize = new System.Drawing.Size(100000000, 300);
-            this.MinimumSize = new System.Drawing.Size(523, 280);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(100000000, 250);
+            this.MinimumSize = new System.Drawing.Size(523, 225);
             this.Name = "SettingsWindow";
             this.ShowIcon = false;
             this.Text = "DiscordBee Settings";
@@ -365,8 +367,8 @@
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.Button buttonRestoreDefaults;
     private System.Windows.Forms.CheckBox checkBoxPresenceUpdate;
-    private System.Windows.Forms.CheckBox checkBoxShowRemainingTime;
-        private System.Windows.Forms.TextBox textBoxRpc;
+        private System.Windows.Forms.TextBox textBoxRpcId;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBoxAdvanced;
     }
 }

@@ -45,6 +45,20 @@ namespace MusicBeePlugin
       e.Cancel = true;
     }
 
+    private void checkBoxAdvanced_CheckedChanged(object sender, EventArgs e)
+    {
+            if (checkBoxAdvanced.Checked)
+            {
+                this.MaximumSize = new System.Drawing.Size(100000000, 290);
+                this.Height = 290;
+            }
+            else
+            {
+                this.MaximumSize = new System.Drawing.Size(100000000, 250);
+                this.Height = 250;
+            }
+    }
+
     private void UpdateValues(Settings settings)
     {
       textBoxTrackNo.Text = settings.PresenceTrackNo;
@@ -53,9 +67,8 @@ namespace MusicBeePlugin
       textBoxState.Text = settings.PresenceState;
       textBoxImage.Text = settings.ImageText;
       textBoxSeperator.Text = settings.Seperator;
-      textBoxRpc.Text = settings.Rpc;
+      textBoxRpcId.Text = settings.RpcId;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
-      checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
     }
 
     private void buttonPlaceholders_Click(object sender, EventArgs e)
@@ -109,14 +122,13 @@ namespace MusicBeePlugin
         _defaultsRestored = false;
       }
 
-      if (textBoxRpc.Text != _defaultSettings.Rpc)
+      if (textBoxRpcId.Text != _defaultSettings.RpcId)
       {
-        _settings.Rpc = textBoxRpc.Text;
-        _defaultsRestored = false;
+          _settings.RpcId = textBoxRpcId.Text;
+          _defaultsRestored = false;
       }
 
-            _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
-      _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
+      _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
 
       if (_defaultsRestored)
       {
