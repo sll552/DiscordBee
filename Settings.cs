@@ -19,7 +19,7 @@ namespace MusicBeePlugin
 
     public string Seperator
     {
-      get => _seperator == null ? "./-_" : _seperator;
+      get => string.IsNullOrEmpty(_seperator) ? "./-_" : _seperator;
       set => _seperator = value;
     }
 
@@ -27,7 +27,7 @@ namespace MusicBeePlugin
 
     public string ImageText
     {
-      get => _imagetext == null ? "MusicBee" : _imagetext;
+      get => string.IsNullOrEmpty(_imagetext) ? "MusicBee" : _imagetext;
       set => _imagetext = value;
     }
 
@@ -35,7 +35,7 @@ namespace MusicBeePlugin
 
     public string PresenceState
     {
-      get => _presenceState == null ? "[TrackTitle]" : _presenceState;
+      get => string.IsNullOrEmpty(_presenceState) ? "[TrackTitle]" : _presenceState;
       set => _presenceState = value;
     }
 
@@ -43,7 +43,7 @@ namespace MusicBeePlugin
 
     public string PresenceDetails
     {
-      get => _presenceDetails == null ? "[Artist] - [Album]" : _presenceDetails;
+      get => string.IsNullOrEmpty(_presenceDetails) ? "[Artist] - [Album]" : _presenceDetails;
       set => _presenceDetails = value;
     }
 
@@ -51,7 +51,7 @@ namespace MusicBeePlugin
 
     public string PresenceTrackCnt
     {
-      get => _presenceTrackCnt == null ? "[TrackCount]" : _presenceTrackCnt;
+      get => string.IsNullOrEmpty(_presenceTrackCnt) ? "[TrackCount]" : _presenceTrackCnt;
       set => _presenceTrackCnt = value;
     }
 
@@ -59,16 +59,16 @@ namespace MusicBeePlugin
 
     public string PresenceTrackNo
     {
-      get => _presenceTrackNo == null ? "[TrackNo]" : _presenceTrackNo;
+      get => string.IsNullOrEmpty(_presenceTrackNo) ? "[TrackNo]" : _presenceTrackNo;
       set => _presenceTrackNo = value;
     }
 
-    [DataMember] private string _Rpc;
+    [DataMember] private string _rpcId;
 
-    public string Rpc
+    public string RpcId
     {
-        get => _Rpc == null ? "409394531948298250" : _Rpc;
-        set => _Rpc = value;
+        get => string.IsNullOrEmpty(_rpcId) ? "409394531948298250" : _rpcId;
+        set => _rpcId = value;
     }
 
     [DataMember] private bool? _updatePresenceWhenStopped;
@@ -82,21 +82,6 @@ namespace MusicBeePlugin
         if (UpdatePresenceWhenStopped != value)
         {
           _updatePresenceWhenStopped = value;
-        }
-      }
-    }
-
-    [DataMember] private bool? _showRemainingTime;
-
-    public bool ShowRemainingTime
-    {
-      get => _showRemainingTime.HasValue && _showRemainingTime.Value;
-      set
-      {
-        // preserve deserialized value or null when no change
-        if (ShowRemainingTime != value)
-        {
-          _showRemainingTime = value;
         }
       }
     }
@@ -129,7 +114,7 @@ namespace MusicBeePlugin
       {
 
         if (!fieldInfo.Name.StartsWith("_")) continue;
-        if (fieldInfo.FieldType == typeof(string) && !(fieldInfo.GetValue(this) as string == null))
+        if (fieldInfo.FieldType == typeof(string) && !string.IsNullOrEmpty(fieldInfo.GetValue(this) as string))
         {
           return true;
         }
@@ -190,7 +175,7 @@ namespace MusicBeePlugin
       {
         if (propertyInfo.PropertyType == typeof(string) && propertyInfo.Name != "FilePath")
         {
-          propertyInfo.SetValue(this, null, null);
+          propertyInfo.SetValue(this, string.Empty, null);
         }
       }
 
