@@ -30,7 +30,7 @@ namespace MusicBeePlugin
       _about.Type = PluginType.General;
       _about.VersionMajor = 1;  // your plugin version
       _about.VersionMinor = 4;
-      _about.Revision = 0;
+      _about.Revision = 1;
       _about.MinInterfaceVersion = MinInterfaceVersion;
       _about.MinApiRevision = MinApiRevision;
       _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
@@ -44,6 +44,7 @@ namespace MusicBeePlugin
       _discordClient = new DiscordRpcClient("409394531948298250");
       _discordClient.OnError += ErrorCallback;
       _discordClient.OnClose += DisconnectedCallback;
+      _discordClient.SkipIdenticalPresence = true;
       _discordClient.Logger = new DebugLogger(LogLevel.Trace);
       _discordClient.Initialize();
 
@@ -187,6 +188,8 @@ namespace MusicBeePlugin
       {
         ret.Add(elem.ToString(), _mbApiInterface.NowPlaying_GetFileTag(elem));
       }
+      ret.Add("PlayState", _mbApiInterface.Player_GetPlayState().ToString());
+      ret.Add("Volume", Convert.ToInt32(_mbApiInterface.Player_GetVolume() * 100.0f).ToString());
 
       return ret;
     }
@@ -230,9 +233,9 @@ namespace MusicBeePlugin
       void SetImage(string name)
       {
         _discordPresence.Assets.LargeImageKey = "logo";
-        _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.ImageText, metaDataDict, _settings.Seperator));
+        _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
         _discordPresence.Assets.SmallImageKey = padString(name);
-        _discordPresence.Assets.SmallImageText = padString(name);
+        _discordPresence.Assets.SmallImageText = padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator)); ;
       }
 
       _discordPresence.State = padString(_layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Seperator));

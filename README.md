@@ -18,7 +18,7 @@ After installing the plugin start MusicBee and your Discord status should be sho
 The Discord API has a 15s rate limit, so it can take up to 15s for a status change to actually show in Discord.
 
 ## Configuration
-![Settings](https://i.imgur.com/qvq0SVh.png)
+![Settings](https://i.imgur.com/VhJM71N.png)
 
 You can configure what is displayed in your profile by opening the plugin settings in MusicBee "Edit -> Preferences -> Plugins -> DiscordBee -> Configure".
 
@@ -31,13 +31,12 @@ You can also change which characters are treated as seperators. Seperator charac
 If you are unhappy with your changes, you can always restore the defaults and save again.
 
 ## Screenshots
-![Small presence](https://i.imgur.com/DUuVlsg.png)
-![Profile](https://i.imgur.com/vnBq4rp.png)
+![Small presence](https://i.imgur.com/zRfqSki.png)
+![Profile](https://i.imgur.com/jhcBP3k.png)
 
 ## Contributing
-Feel free to send pull requests or open issues. The project is a Visual Studio 2017 Solution. 
+Feel free to send pull requests or open issues. The project is a Visual Studio 2019 Solution. 
 
 ## Libraries and Assets used
  - [Discord RPC Sharp](https://github.com/Lachee/discord-rpc-csharp)
- - [Icons](https://www.iconfinder.com/iconsets/media-player-long-shadow)
  - [MusicBee Logo](https://ru.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:MusicBee_Logo.png)
