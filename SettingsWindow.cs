@@ -51,7 +51,8 @@ namespace MusicBeePlugin
       textBoxTrackCnt.Text = settings.PresenceTrackCnt;
       textBoxDetails.Text = settings.PresenceDetails;
       textBoxState.Text = settings.PresenceState;
-      textBoxImage.Text = settings.ImageText;
+      textBoxLargeImage.Text = settings.LargeImageText;
+      textBoxSmallImage.Text = settings.SmallImageText;
       textBoxSeperator.Text = settings.Seperator;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
@@ -96,9 +97,15 @@ namespace MusicBeePlugin
         _defaultsRestored = false;
       }
 
-      if (textBoxImage.Text != _defaultSettings.ImageText)
+      if (textBoxLargeImage.Text != _defaultSettings.LargeImageText)
       {
-        _settings.ImageText = textBoxImage.Text;
+        _settings.LargeImageText = textBoxLargeImage.Text;
+        _defaultsRestored = false;
+      }
+
+      if (textBoxSmallImage.Text != _defaultSettings.SmallImageText)
+      {
+        _settings.SmallImageText = textBoxSmallImage.Text;
         _defaultsRestored = false;
       }
 

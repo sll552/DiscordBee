@@ -23,12 +23,20 @@ namespace MusicBeePlugin
       set => _seperator = value;
     }
 
-    [DataMember] private string _imagetext;
+    [DataMember] private string _largeImageText;
 
-    public string ImageText
+    public string LargeImageText
     {
-      get => _imagetext == null ? "MusicBee" : _imagetext;
-      set => _imagetext = value;
+      get => _largeImageText == null ? "MusicBee" : _largeImageText;
+      set => _largeImageText = value;
+    }
+
+    [DataMember] private string _smallImageText;
+
+    public string SmallImageText
+    {
+      get => _smallImageText == null ? "[Volume]%" : _smallImageText;
+      set => _smallImageText = value;
     }
 
     [DataMember] private string _presenceState;

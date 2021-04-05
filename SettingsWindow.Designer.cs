@@ -37,7 +37,7 @@
       this.textBoxState = new System.Windows.Forms.TextBox();
       this.textBoxDetails = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.textBoxImage = new System.Windows.Forms.TextBox();
+      this.textBoxLargeImage = new System.Windows.Forms.TextBox();
       this.splitContainer2 = new System.Windows.Forms.SplitContainer();
       this.checkBoxShowRemainingTime = new System.Windows.Forms.CheckBox();
       this.checkBoxPresenceUpdate = new System.Windows.Forms.CheckBox();
@@ -46,6 +46,7 @@
       this.buttonRestoreDefaults = new System.Windows.Forms.Button();
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
+      this.textBoxSmallImage = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -68,6 +69,7 @@
       // splitContainer1.Panel1
       // 
       this.splitContainer1.Panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
+      this.splitContainer1.Panel1.Controls.Add(this.textBoxSmallImage);
       this.splitContainer1.Panel1.Controls.Add(this.label4);
       this.splitContainer1.Panel1.Controls.Add(this.textBoxTrackCnt);
       this.splitContainer1.Panel1.Controls.Add(this.label3);
@@ -76,7 +78,7 @@
       this.splitContainer1.Panel1.Controls.Add(this.textBoxState);
       this.splitContainer1.Panel1.Controls.Add(this.textBoxDetails);
       this.splitContainer1.Panel1.Controls.Add(this.label1);
-      this.splitContainer1.Panel1.Controls.Add(this.textBoxImage);
+      this.splitContainer1.Panel1.Controls.Add(this.textBoxLargeImage);
       // 
       // splitContainer1.Panel2
       // 
@@ -148,8 +150,8 @@
       // 
       // textBoxState
       // 
-      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-      | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxState.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxState.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -161,8 +163,8 @@
       // 
       // textBoxDetails
       // 
-      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-      | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxDetails.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -183,17 +185,17 @@
       this.label1.TabIndex = 1;
       this.label1.Text = "MusicBee";
       // 
-      // textBoxImage
+      // textBoxLargeImage
       // 
-      this.textBoxImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
-      this.textBoxImage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBoxImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
-      this.textBoxImage.Location = new System.Drawing.Point(12, 12);
-      this.textBoxImage.Multiline = true;
-      this.textBoxImage.Name = "textBoxImage";
-      this.textBoxImage.Size = new System.Drawing.Size(90, 90);
-      this.textBoxImage.TabIndex = 0;
-      this.textBoxImage.Text = "Large Image Text";
+      this.textBoxLargeImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
+      this.textBoxLargeImage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxLargeImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
+      this.textBoxLargeImage.Location = new System.Drawing.Point(12, 12);
+      this.textBoxLargeImage.Multiline = true;
+      this.textBoxLargeImage.Name = "textBoxLargeImage";
+      this.textBoxLargeImage.Size = new System.Drawing.Size(90, 60);
+      this.textBoxLargeImage.TabIndex = 0;
+      this.textBoxLargeImage.Text = "Large Image Text";
       // 
       // splitContainer2
       // 
@@ -225,9 +227,9 @@
       this.checkBoxShowRemainingTime.AutoSize = true;
       this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(248, 28);
       this.checkBoxShowRemainingTime.Name = "checkBoxShowRemainingTime";
-      this.checkBoxShowRemainingTime.Size = new System.Drawing.Size(223, 17);
+      this.checkBoxShowRemainingTime.Size = new System.Drawing.Size(212, 17);
       this.checkBoxShowRemainingTime.TabIndex = 6;
-      this.checkBoxShowRemainingTime.Text = "Show Remaining Instead of Elapsed Time";
+      this.checkBoxShowRemainingTime.Text = "Show remaining instead of elapsed time";
       this.checkBoxShowRemainingTime.UseVisualStyleBackColor = true;
       // 
       // checkBoxPresenceUpdate
@@ -298,6 +300,17 @@
       this.buttonPlaceholders.UseVisualStyleBackColor = true;
       this.buttonPlaceholders.Click += new System.EventHandler(this.buttonPlaceholders_Click);
       // 
+      // textBoxSmallImage
+      // 
+      this.textBoxSmallImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
+      this.textBoxSmallImage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxSmallImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
+      this.textBoxSmallImage.Location = new System.Drawing.Point(12, 74);
+      this.textBoxSmallImage.Name = "textBoxSmallImage";
+      this.textBoxSmallImage.Size = new System.Drawing.Size(90, 25);
+      this.textBoxSmallImage.TabIndex = 9;
+      this.textBoxSmallImage.Text = "Small Image Text";
+      // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -327,7 +340,7 @@
     #endregion
 
     private System.Windows.Forms.SplitContainer splitContainer1;
-    private System.Windows.Forms.TextBox textBoxImage;
+    private System.Windows.Forms.TextBox textBoxLargeImage;
     private System.Windows.Forms.Button buttonSaveClose;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Button buttonPlaceholders;
@@ -344,5 +357,6 @@
     private System.Windows.Forms.Button buttonRestoreDefaults;
     private System.Windows.Forms.CheckBox checkBoxPresenceUpdate;
     private System.Windows.Forms.CheckBox checkBoxShowRemainingTime;
+    private System.Windows.Forms.TextBox textBoxSmallImage;
   }
 }
