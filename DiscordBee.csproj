@@ -76,8 +76,10 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SortableBindingList.cs" />
     <Compile Include="LayoutHandler.cs" />
     <Compile Include="MusicBeeInterface.cs" />
     <Compile Include="DiscordBee.cs" />
