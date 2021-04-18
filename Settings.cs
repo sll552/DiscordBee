@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Xml;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace MusicBeePlugin
 {
@@ -10,6 +11,7 @@ namespace MusicBeePlugin
   public class Settings
   {
     private string FilePath { get; set; }
+    public bool IsDirty { get; private set; } = false;
 
     // Don't serialize properties so only user set changes are serialized and not default values
 
@@ -20,7 +22,7 @@ namespace MusicBeePlugin
     public string Seperator
     {
       get => _seperator == null ? "./-_" : _seperator;
-      set => _seperator = value;
+      set => setIfChanged("_seperator", value);
     }
 
     [DataMember] private string _largeImageText;
@@ -28,7 +30,7 @@ namespace MusicBeePlugin
     public string LargeImageText
     {
       get => _largeImageText == null ? "MusicBee" : _largeImageText;
-      set => _largeImageText = value;
+      set => setIfChanged("_largeImageText", value);
     }
 
     [DataMember] private string _smallImageText;
@@ -36,7 +38,7 @@ namespace MusicBeePlugin
     public string SmallImageText
     {
       get => _smallImageText == null ? "[Volume]%" : _smallImageText;
-      set => _smallImageText = value;
+      set => setIfChanged("_smallImageText", value);
     }
 
     [DataMember] private string _presenceState;
@@ -44,7 +46,7 @@ namespace MusicBeePlugin
     public string PresenceState
     {
       get => _presenceState == null ? "[TrackTitle]" : _presenceState;
-      set => _presenceState = value;
+      set => setIfChanged("_presenceState", value);
     }
 
     [DataMember] private string _presenceDetails;
@@ -52,7 +54,7 @@ namespace MusicBeePlugin
     public string PresenceDetails
     {
       get => _presenceDetails == null ? "[Artist] - [Album]" : _presenceDetails;
-      set => _presenceDetails = value;
+      set => setIfChanged("_presenceDetails", value);
     }
 
     [DataMember] private string _presenceTrackCnt;
@@ -60,7 +62,7 @@ namespace MusicBeePlugin
     public string PresenceTrackCnt
     {
       get => _presenceTrackCnt == null ? "[TrackCount]" : _presenceTrackCnt;
-      set => _presenceTrackCnt = value;
+      set => setIfChanged("_presenceTrackCnt", value);
     }
 
     [DataMember] private string _presenceTrackNo;
@@ -68,7 +70,7 @@ namespace MusicBeePlugin
     public string PresenceTrackNo
     {
       get => _presenceTrackNo == null ? "[TrackNo]" : _presenceTrackNo;
-      set => _presenceTrackNo = value;
+      set => setIfChanged("_presenceTrackNo", value);
     }
 
     [DataMember] private bool? _updatePresenceWhenStopped;
@@ -76,14 +78,7 @@ namespace MusicBeePlugin
     public bool UpdatePresenceWhenStopped
     {
       get => !_updatePresenceWhenStopped.HasValue || _updatePresenceWhenStopped.Value;
-      set
-      {
-        // preserve deserialized value or null when no change
-        if (UpdatePresenceWhenStopped != value)
-        {
-          _updatePresenceWhenStopped = value;
-        }
-      }
+      set => setIfChanged("_updatePresenceWhenStopped", value);
     }
 
     [DataMember] private bool? _showRemainingTime;
@@ -91,14 +86,15 @@ namespace MusicBeePlugin
     public bool ShowRemainingTime
     {
       get => _showRemainingTime.HasValue && _showRemainingTime.Value;
-      set
-      {
-        // preserve deserialized value or null when no change
-        if (ShowRemainingTime != value)
-        {
-          _showRemainingTime = value;
-        }
-      }
+      set => setIfChanged("_showRemainingTime", value);
+    }
+
+    [DataMember] private bool? _textOnly;
+
+    public bool TextOnly
+    {
+      get => _textOnly.HasValue && _textOnly.Value;
+      set => setIfChanged("_textOnly", value);
     }
 
     #endregion
@@ -121,30 +117,37 @@ namespace MusicBeePlugin
       return newSettings;
     }
 
-    public bool IsDirty()
+    private void setIfChanged<T>(string fieldName,T value)
     {
-      var fields = GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+      FieldInfo target = GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
-      foreach (var fieldInfo in fields)
+      if (target != null)
       {
-
-        if (!fieldInfo.Name.StartsWith("_")) continue;
-        if (fieldInfo.FieldType == typeof(string) && !(fieldInfo.GetValue(this) as string == null))
+        PropertyInfo targetProp = GetType().GetProperty(getPropertyNameForField(target.Name), BindingFlags.Instance | BindingFlags.Public);
+        if (targetProp != null)
         {
-          return true;
-        }
-        if (fieldInfo.FieldType == typeof(bool?) && fieldInfo.GetValue(this) != null)
-        {
-          return true;
+          if (!targetProp.GetValue(this, null).Equals(value))
+          {
+            target.SetValue(this,value);
+            IsDirty = true;
+          }
         }
       }
+    }
 
-      return false;
+    private string getPropertyNameForField(string field)
+    {
+      if (field.StartsWith("_"))
+      {
+        string tmp = field.Remove(0, 1);
+        return tmp.First().ToString().ToUpper() + tmp.Substring(1);
+      }
+      return null;
     }
 
     public void Save()
     {
-      if (!IsDirty()) return;
+      if (!IsDirty) return;
       if (Path.GetDirectoryName(FilePath) != null && !Directory.Exists(Path.GetDirectoryName(FilePath)))
       {
         Directory.CreateDirectory(Path.GetDirectoryName(FilePath) ?? throw new InvalidOperationException());
@@ -182,7 +185,7 @@ namespace MusicBeePlugin
       Clear();
     }
 
-    private void Clear()
+    public void Clear()
     {
       var properties = GetType().GetProperties();
 
@@ -205,6 +208,8 @@ namespace MusicBeePlugin
           fieldInfo.SetValue(this, null);
         }
       }
+
+      IsDirty = false;
     }
   }
 }
