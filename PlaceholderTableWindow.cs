@@ -19,7 +19,7 @@ namespace MusicBeePlugin
       dataGridView1.Refresh();
 
       dataGridView1.AutoGenerateColumns = true;
-      dataGridView1.DataSource = newData.ToList();
+      dataGridView1.DataSource = newData.ToList().ToSortableBindingList();
       dataGridView1.Refresh();
       var lastcol =
         dataGridView1.Columns.GetLastColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
@@ -28,6 +28,10 @@ namespace MusicBeePlugin
         lastcol.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
       }
 
+      foreach (DataGridViewColumn col in dataGridView1.Columns)
+      {
+        col.SortMode = DataGridViewColumnSortMode.Automatic;
+      }
     }
   }
 }
