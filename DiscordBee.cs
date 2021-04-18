@@ -157,9 +157,9 @@ namespace MusicBeePlugin
                 byteIndex: 0,
                 byteCount: buffer.Length,
                 flush: false,
-                charsUsed: out int charsUsed,
+                charsUsed: out _,
                 bytesUsed: out int bytesUsed,
-                completed: out bool completed);
+                completed: out _);
             return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
           }
         }
@@ -168,6 +168,14 @@ namespace MusicBeePlugin
 
       void SetImage(string name)
       {
+        if (_settings.TextOnly)
+        {
+          _discordPresence.Assets.LargeImageKey = null;
+          _discordPresence.Assets.LargeImageText = null;
+          _discordPresence.Assets.SmallImageKey = null;
+          _discordPresence.Assets.SmallImageText = null;
+          return;
+        }
         _discordPresence.Assets.LargeImageKey = "logo";
         _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
         _discordPresence.Assets.SmallImageKey = padString(name);
@@ -249,7 +257,7 @@ namespace MusicBeePlugin
       }
     }
   }
-  public class DebugLogger : DiscordRPC.Logging.ILogger
+  public class DebugLogger : ILogger
   {
     public LogLevel Level { get; set; }
 

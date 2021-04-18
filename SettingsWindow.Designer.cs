@@ -29,6 +29,7 @@
     private void InitializeComponent()
     {
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.textBoxSmallImage = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.textBoxTrackCnt = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
@@ -46,7 +47,7 @@
       this.buttonRestoreDefaults = new System.Windows.Forms.Button();
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
-      this.textBoxSmallImage = new System.Windows.Forms.TextBox();
+      this.checkBoxTextOnly = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -84,9 +85,20 @@
       // 
       this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
       this.splitContainer1.Panel2.Padding = new System.Windows.Forms.Padding(3);
-      this.splitContainer1.Size = new System.Drawing.Size(507, 207);
+      this.splitContainer1.Size = new System.Drawing.Size(507, 231);
       this.splitContainer1.SplitterDistance = 114;
       this.splitContainer1.TabIndex = 0;
+      // 
+      // textBoxSmallImage
+      // 
+      this.textBoxSmallImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
+      this.textBoxSmallImage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxSmallImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
+      this.textBoxSmallImage.Location = new System.Drawing.Point(12, 74);
+      this.textBoxSmallImage.Name = "textBoxSmallImage";
+      this.textBoxSmallImage.Size = new System.Drawing.Size(90, 25);
+      this.textBoxSmallImage.TabIndex = 9;
+      this.textBoxSmallImage.Text = "Small Image Text";
       // 
       // label4
       // 
@@ -208,6 +220,7 @@
       // 
       // splitContainer2.Panel1
       // 
+      this.splitContainer2.Panel1.Controls.Add(this.checkBoxTextOnly);
       this.splitContainer2.Panel1.Controls.Add(this.checkBoxShowRemainingTime);
       this.splitContainer2.Panel1.Controls.Add(this.checkBoxPresenceUpdate);
       this.splitContainer2.Panel1.Controls.Add(this.textBoxSeperator);
@@ -218,8 +231,8 @@
       this.splitContainer2.Panel2.Controls.Add(this.buttonRestoreDefaults);
       this.splitContainer2.Panel2.Controls.Add(this.buttonSaveClose);
       this.splitContainer2.Panel2.Controls.Add(this.buttonPlaceholders);
-      this.splitContainer2.Size = new System.Drawing.Size(501, 83);
-      this.splitContainer2.SplitterDistance = 49;
+      this.splitContainer2.Size = new System.Drawing.Size(501, 107);
+      this.splitContainer2.SplitterDistance = 73;
       this.splitContainer2.TabIndex = 3;
       // 
       // checkBoxShowRemainingTime
@@ -300,26 +313,25 @@
       this.buttonPlaceholders.UseVisualStyleBackColor = true;
       this.buttonPlaceholders.Click += new System.EventHandler(this.buttonPlaceholders_Click);
       // 
-      // textBoxSmallImage
+      // checkBoxTextOnly
       // 
-      this.textBoxSmallImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
-      this.textBoxSmallImage.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBoxSmallImage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
-      this.textBoxSmallImage.Location = new System.Drawing.Point(12, 74);
-      this.textBoxSmallImage.Name = "textBoxSmallImage";
-      this.textBoxSmallImage.Size = new System.Drawing.Size(90, 25);
-      this.textBoxSmallImage.TabIndex = 9;
-      this.textBoxSmallImage.Text = "Small Image Text";
+      this.checkBoxTextOnly.AutoSize = true;
+      this.checkBoxTextOnly.Location = new System.Drawing.Point(248, 51);
+      this.checkBoxTextOnly.Name = "checkBoxTextOnly";
+      this.checkBoxTextOnly.Size = new System.Drawing.Size(172, 17);
+      this.checkBoxTextOnly.TabIndex = 7;
+      this.checkBoxTextOnly.Text = "Remove images from presence";
+      this.checkBoxTextOnly.UseVisualStyleBackColor = true;
       // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.Color.White;
-      this.ClientSize = new System.Drawing.Size(507, 207);
+      this.ClientSize = new System.Drawing.Size(507, 231);
       this.Controls.Add(this.splitContainer1);
-      this.MaximumSize = new System.Drawing.Size(100000000, 246);
-      this.MinimumSize = new System.Drawing.Size(523, 246);
+      this.MaximumSize = new System.Drawing.Size(100000000, 270);
+      this.MinimumSize = new System.Drawing.Size(523, 270);
       this.Name = "SettingsWindow";
       this.ShowIcon = false;
       this.Text = "DiscordBee Settings";
@@ -358,5 +370,6 @@
     private System.Windows.Forms.CheckBox checkBoxPresenceUpdate;
     private System.Windows.Forms.CheckBox checkBoxShowRemainingTime;
     private System.Windows.Forms.TextBox textBoxSmallImage;
+    private System.Windows.Forms.CheckBox checkBoxTextOnly;
   }
 }

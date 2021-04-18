@@ -8,14 +8,12 @@ namespace MusicBeePlugin
     private readonly Plugin _parent;
     private PlaceholderTableWindow _placeholderTableWindow;
     private readonly Settings _settings;
-    private readonly Settings _defaultSettings;
     private bool _defaultsRestored;
 
     public SettingsWindow(Plugin parent, Settings settings)
     {
       _parent = parent;
       _settings = settings;
-      _defaultSettings = new Settings();
       InitializeComponent();
       UpdateValues(_settings);
       Text += " (v" + parent.GetVersionString() + ")";
@@ -56,6 +54,7 @@ namespace MusicBeePlugin
       textBoxSeperator.Text = settings.Seperator;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
+      checkBoxTextOnly.Checked = settings.TextOnly;
     }
 
     private void buttonPlaceholders_Click(object sender, EventArgs e)
@@ -67,58 +66,25 @@ namespace MusicBeePlugin
 
     private void buttonRestoreDefaults_Click(object sender, EventArgs e)
     {
-      UpdateValues(_defaultSettings);
+      _settings.Clear();
+      UpdateValues(_settings);
       _defaultsRestored = true;
     }
 
     private void buttonSaveClose_Click(object sender, EventArgs e)
     {
-      if (textBoxTrackNo.Text != _defaultSettings.PresenceTrackNo)
-      {
-        _settings.PresenceTrackNo = textBoxTrackNo.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxTrackCnt.Text != _defaultSettings.PresenceTrackCnt)
-      {
-        _settings.PresenceTrackCnt = textBoxTrackCnt.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxDetails.Text != _defaultSettings.PresenceDetails)
-      {
-        _settings.PresenceDetails = textBoxDetails.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxState.Text != _defaultSettings.PresenceState)
-      {
-        _settings.PresenceState = textBoxState.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxLargeImage.Text != _defaultSettings.LargeImageText)
-      {
-        _settings.LargeImageText = textBoxLargeImage.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxSmallImage.Text != _defaultSettings.SmallImageText)
-      {
-        _settings.SmallImageText = textBoxSmallImage.Text;
-        _defaultsRestored = false;
-      }
-
-      if (textBoxSeperator.Text != _defaultSettings.Seperator)
-      {
-        _settings.Seperator = textBoxSeperator.Text;
-        _defaultsRestored = false;
-      }
-
+      _settings.PresenceTrackNo = textBoxTrackNo.Text;
+      _settings.PresenceTrackCnt = textBoxTrackCnt.Text;
+      _settings.PresenceDetails = textBoxDetails.Text;
+      _settings.PresenceState = textBoxState.Text;
+      _settings.LargeImageText = textBoxLargeImage.Text;
+      _settings.SmallImageText = textBoxSmallImage.Text;
+      _settings.Seperator = textBoxSeperator.Text;
       _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
       _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
+      _settings.TextOnly = checkBoxTextOnly.Checked;
 
-      if (_defaultsRestored)
+      if (_defaultsRestored && !_settings.IsDirty)
       {
         _settings.Delete();
         _defaultsRestored = false;
