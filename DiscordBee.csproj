@@ -69,6 +69,9 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -142,7 +145,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Debug copy /Y "$(TargetDir)*.*" "C:\Program Files (x86)\MusicBee\Plugins\"</PostBuildEvent>
+    <PostBuildEvent>@echo on
+if $(ConfigurationName) == Debug powershell -Command "Start-Process cmd -ArgumentList('/K', 'copy /Y \"$(TargetDir)*.*\" \"C:\Program Files (x86)\MusicBee\Plugins\"')" -Verb RunAs</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
