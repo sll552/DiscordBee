@@ -1,17 +1,33 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Xml;
-
 namespace MusicBeePlugin
 {
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+  using System.Linq;
+  using System.Reflection;
+  using System.Runtime.Serialization;
+  using System.Xml;
+
   [DataContract]
   public class Settings
   {
     private string FilePath { get; set; }
-    public bool IsDirty { get; private set; } = false;
+    public bool IsDirty { get; private set; }
+
+    public static readonly IReadOnlyDictionary<string, string> defaults = new Dictionary<string, string>()
+    {
+      {"Seperator", "./-_"},
+      {"LargeImageText", "MusicBee"},
+      {"SmallImageText", "[Volume]%"},
+      {"PresenceState", "[TrackTitle]"},
+      {"PresenceDetails", "[Artist] - [Album]"},
+      {"PresenceTrackCnt", "[TrackCount]"},
+      {"PresenceTrackNo", "[TrackNo]"},
+      {"DiscordAppId", "409394531948298250"}, // prod
+      //{"DiscordAppId", "408977077799354379"}, // dev
+    };
+
+    public event EventHandler<SettingChangedEventArgs> SettingChanged;
 
     // Don't serialize properties so only user set changes are serialized and not default values
 
@@ -21,7 +37,7 @@ namespace MusicBeePlugin
 
     public string Seperator
     {
-      get => _seperator == null ? "./-_" : _seperator;
+      get => _seperator == null ? defaults["Seperator"] : _seperator;
       set => setIfChanged("_seperator", value);
     }
 
@@ -29,7 +45,7 @@ namespace MusicBeePlugin
 
     public string LargeImageText
     {
-      get => _largeImageText == null ? "MusicBee" : _largeImageText;
+      get => _largeImageText == null ? defaults["LargeImageText"] : _largeImageText;
       set => setIfChanged("_largeImageText", value);
     }
 
@@ -37,7 +53,7 @@ namespace MusicBeePlugin
 
     public string SmallImageText
     {
-      get => _smallImageText == null ? "[Volume]%" : _smallImageText;
+      get => _smallImageText == null ? defaults["SmallImageText"] : _smallImageText;
       set => setIfChanged("_smallImageText", value);
     }
 
@@ -45,7 +61,7 @@ namespace MusicBeePlugin
 
     public string PresenceState
     {
-      get => _presenceState == null ? "[TrackTitle]" : _presenceState;
+      get => _presenceState == null ? defaults["PresenceState"] : _presenceState;
       set => setIfChanged("_presenceState", value);
     }
 
@@ -53,7 +69,7 @@ namespace MusicBeePlugin
 
     public string PresenceDetails
     {
-      get => _presenceDetails == null ? "[Artist] - [Album]" : _presenceDetails;
+      get => _presenceDetails == null ? defaults["PresenceDetails"] : _presenceDetails;
       set => setIfChanged("_presenceDetails", value);
     }
 
@@ -61,7 +77,7 @@ namespace MusicBeePlugin
 
     public string PresenceTrackCnt
     {
-      get => _presenceTrackCnt == null ? "[TrackCount]" : _presenceTrackCnt;
+      get => _presenceTrackCnt == null ? defaults["PresenceTrackCnt"] : _presenceTrackCnt;
       set => setIfChanged("_presenceTrackCnt", value);
     }
 
@@ -69,8 +85,24 @@ namespace MusicBeePlugin
 
     public string PresenceTrackNo
     {
-      get => _presenceTrackNo == null ? "[TrackNo]" : _presenceTrackNo;
+      get => _presenceTrackNo == null ? defaults["PresenceTrackNo"] : _presenceTrackNo;
       set => setIfChanged("_presenceTrackNo", value);
+    }
+
+    [DataMember] private string _discordAppId;
+
+    public string DiscordAppId
+    {
+      get => _discordAppId == null ? defaults["DiscordAppId"] : _discordAppId;
+      set
+      {
+        if (value != null && value.Equals(defaults["DiscordAppId"]))
+        {
+          _discordAppId = null;
+          return;
+        }
+        setIfChanged("_discordAppId", value);
+      }
     }
 
     [DataMember] private bool? _updatePresenceWhenStopped;
@@ -95,6 +127,30 @@ namespace MusicBeePlugin
     {
       get => _textOnly.HasValue && _textOnly.Value;
       set => setIfChanged("_textOnly", value);
+    }
+
+    [DataMember] private bool? _uploadArtwork;
+
+    public bool UploadArtwork
+    {
+      get => _uploadArtwork.HasValue && _uploadArtwork.Value;
+      set
+      {
+        if (!DiscordAppId.Equals(defaults["DiscordAppId"]))
+        {
+          setIfChanged("_uploadArtwork", value);
+        }
+        else
+        {
+          var eventArgs = new SettingChangedEventArgs();
+          eventArgs.SettingProperty = "UploadArtwork";
+          eventArgs.OldValue = _uploadArtwork;
+          eventArgs.NewValue = null;
+          _uploadArtwork = null;
+          IsDirty = true;
+          OnSettingChanged(eventArgs);
+        }
+      }
     }
 
     #endregion
@@ -124,13 +180,16 @@ namespace MusicBeePlugin
       if (target != null)
       {
         PropertyInfo targetProp = GetType().GetProperty(getPropertyNameForField(target.Name), BindingFlags.Instance | BindingFlags.Public);
-        if (targetProp != null)
+        object old = targetProp.GetValue(this, null);
+        if (targetProp != null && !old.Equals(value))
         {
-          if (!targetProp.GetValue(this, null).Equals(value))
-          {
-            target.SetValue(this, value);
-            IsDirty = true;
-          }
+          target.SetValue(this, value);
+          IsDirty = true;
+          var eventArgs = new SettingChangedEventArgs();
+          eventArgs.SettingProperty = targetProp.Name;
+          eventArgs.OldValue = old;
+          eventArgs.NewValue = value;
+          OnSettingChanged(eventArgs);
         }
       }
     }
@@ -187,9 +246,7 @@ namespace MusicBeePlugin
 
     public void Clear()
     {
-      var properties = GetType().GetProperties();
-
-      foreach (var propertyInfo in properties)
+      foreach (var propertyInfo in GetType().GetProperties())
       {
         if (propertyInfo.PropertyType == typeof(string) && propertyInfo.Name != "FilePath")
         {
@@ -198,9 +255,7 @@ namespace MusicBeePlugin
       }
 
       // field is used for boolean settings because nullable is used internally and property would be non-nullable
-      var fields = GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
-
-      foreach (var fieldInfo in fields)
+      foreach (var fieldInfo in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
       {
         if (!fieldInfo.Name.StartsWith("_")) continue;
         if (fieldInfo.FieldType == typeof(bool?))
@@ -210,6 +265,22 @@ namespace MusicBeePlugin
       }
 
       IsDirty = false;
+    }
+
+    protected virtual void OnSettingChanged(SettingChangedEventArgs e)
+    {
+      EventHandler<SettingChangedEventArgs> handler = SettingChanged;
+      if (handler != null)
+      {
+        handler(this, e);
+      }
+    }
+
+    public class SettingChangedEventArgs : EventArgs
+    {
+      public string SettingProperty { get; set; }
+      public object OldValue { get; set; }
+      public object NewValue { get; set; }
     }
   }
 }
