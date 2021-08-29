@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 namespace MusicBeePlugin
 {
