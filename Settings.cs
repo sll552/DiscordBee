@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using System.Xml;
-using System.Runtime.Serialization;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace MusicBeePlugin
 {
@@ -117,7 +117,7 @@ namespace MusicBeePlugin
       return newSettings;
     }
 
-    private void setIfChanged<T>(string fieldName,T value)
+    private void setIfChanged<T>(string fieldName, T value)
     {
       FieldInfo target = GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -128,7 +128,7 @@ namespace MusicBeePlugin
         {
           if (!targetProp.GetValue(this, null).Equals(value))
           {
-            target.SetValue(this,value);
+            target.SetValue(this, value);
             IsDirty = true;
           }
         }

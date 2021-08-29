@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using System.Text;
 using DiscordRPC;
 using DiscordRPC.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MusicBeePlugin
 {

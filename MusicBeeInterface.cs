@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
 
 namespace MusicBeePlugin
 {
@@ -415,6 +414,7 @@ namespace MusicBeePlugin
     {
       TrackTitle = 65,
       Album = 30,
+      AlbumUniqueId = 108,
       AlbumArtist = 31,        // displayed album artist
       AlbumArtistRaw = 34,     // stored album artist
       Artist = 32,             // displayed artist
@@ -447,6 +447,7 @@ namespace MusicBeePlugin
       Custom14 = 132,
       Custom15 = 133,
       Custom16 = 134,
+      Decade = 105,
       DiscNo = 52,
       DiscCount = 54,
       Encoder = 55,
@@ -494,7 +495,15 @@ namespace MusicBeePlugin
       Virtual23 = 155,
       Virtual24 = 156,
       Virtual25 = 157,
+      Virtual26 = 185,
+      Virtual27 = 186,
+      Virtual28 = 187,
+      Virtual29 = 188,
+      Virtual30 = 189,
+      Virtual31 = 190,
+      Virtual32 = 191,
       Year = 88,
+      YearOnly = 35,
       SortTitle = 163,
       SortAlbum = 164,
       SortAlbumArtist = 165,
@@ -508,7 +517,8 @@ namespace MusicBeePlugin
       Language = 173,
       OriginalArtist = 174,
       OriginalYear = 175,
-      OriginalTitle = 177
+      OriginalTitle = 177,
+      InstrumentsPerformers = 182
     }
 
     public enum FileCodec

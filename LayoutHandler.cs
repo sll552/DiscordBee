@@ -25,7 +25,7 @@ namespace MusicBeePlugin
       {
         if (string.IsNullOrWhiteSpace(entry.Value))
         {
-          emptyValues.Add(entry.Key,entry.Value);
+          emptyValues.Add(entry.Key, entry.Value);
         }
       }
       input = Replace(input, emptyValues);
@@ -45,7 +45,7 @@ namespace MusicBeePlugin
         // remove seperators and whitespace at the end
         input = Regex.Replace(input, "\\s*[" + escsep + "]+\\s*$", "");
       }
-      
+
       return input;
     }
 
@@ -72,7 +72,7 @@ namespace MusicBeePlugin
     /// <param name="values">Value disctionary to use</param>
     /// <param name="seperators">The seperators used in this string, these will be used as character class in Regex</param>
     /// <returns></returns>
-    public string Render(string layoutStr, Dictionary<string,string> values, string seperators)
+    public string Render(string layoutStr, Dictionary<string, string> values, string seperators)
     {
       return Replace(Clean(layoutStr, values, seperators), values);
     }
