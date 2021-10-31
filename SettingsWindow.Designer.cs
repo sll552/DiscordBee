@@ -1,4 +1,4 @@
-﻿namespace MusicBeePlugin
+namespace MusicBeePlugin
 {
   partial class SettingsWindow
   {
@@ -47,6 +47,9 @@
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
       this.panel2 = new System.Windows.Forms.Panel();
+      this.checkBoxArtworkUpload = new System.Windows.Forms.CheckBox();
+      this.labelDiscordAppId = new System.Windows.Forms.Label();
+      this.textBoxDiscordAppId = new System.Windows.Forms.TextBox();
       this.panel3 = new System.Windows.Forms.Panel();
       this.panel4 = new System.Windows.Forms.Panel();
       this.panel2.SuspendLayout();
@@ -127,8 +130,8 @@
       // 
       // textBoxState
       // 
-      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-      | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxState.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxState.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -140,8 +143,8 @@
       // 
       // textBoxDetails
       // 
-      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-      | System.Windows.Forms.AnchorStyles.Right)));
+      this.textBoxDetails.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.textBoxDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(137)))), ((int)(((byte)(218)))));
       this.textBoxDetails.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(230)))), ((int)(((byte)(246)))));
@@ -177,7 +180,7 @@
       // checkBoxTextOnly
       // 
       this.checkBoxTextOnly.AutoSize = true;
-      this.checkBoxTextOnly.Location = new System.Drawing.Point(222, 64);
+      this.checkBoxTextOnly.Location = new System.Drawing.Point(266, 64);
       this.checkBoxTextOnly.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxTextOnly.Name = "checkBoxTextOnly";
       this.checkBoxTextOnly.Padding = new System.Windows.Forms.Padding(2);
@@ -189,7 +192,7 @@
       // checkBoxShowRemainingTime
       // 
       this.checkBoxShowRemainingTime.AutoSize = true;
-      this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(222, 35);
+      this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(266, 35);
       this.checkBoxShowRemainingTime.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowRemainingTime.Name = "checkBoxShowRemainingTime";
       this.checkBoxShowRemainingTime.Padding = new System.Windows.Forms.Padding(2);
@@ -201,7 +204,7 @@
       // checkBoxPresenceUpdate
       // 
       this.checkBoxPresenceUpdate.AutoSize = true;
-      this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(222, 6);
+      this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(266, 6);
       this.checkBoxPresenceUpdate.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
       this.checkBoxPresenceUpdate.Padding = new System.Windows.Forms.Padding(2);
@@ -277,6 +280,9 @@
       // 
       this.panel2.AutoSize = true;
       this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.panel2.Controls.Add(this.checkBoxArtworkUpload);
+      this.panel2.Controls.Add(this.labelDiscordAppId);
+      this.panel2.Controls.Add(this.textBoxDiscordAppId);
       this.panel2.Controls.Add(this.label5);
       this.panel2.Controls.Add(this.textBoxSeperator);
       this.panel2.Controls.Add(this.checkBoxShowRemainingTime);
@@ -288,6 +294,39 @@
       this.panel2.Name = "panel2";
       this.panel2.Size = new System.Drawing.Size(509, 100);
       this.panel2.TabIndex = 1;
+      // 
+      // checkBoxArtworkUpload
+      // 
+      this.checkBoxArtworkUpload.AutoSize = true;
+      this.checkBoxArtworkUpload.BackColor = System.Drawing.Color.White;
+      this.checkBoxArtworkUpload.Location = new System.Drawing.Point(17, 64);
+      this.checkBoxArtworkUpload.Margin = new System.Windows.Forms.Padding(4);
+      this.checkBoxArtworkUpload.Name = "checkBoxArtworkUpload";
+      this.checkBoxArtworkUpload.Padding = new System.Windows.Forms.Padding(2);
+      this.checkBoxArtworkUpload.Size = new System.Drawing.Size(249, 21);
+      this.checkBoxArtworkUpload.TabIndex = 10;
+      this.checkBoxArtworkUpload.Text = "Upload album covers (requires custom App ID)";
+      this.checkBoxArtworkUpload.UseVisualStyleBackColor = false;
+      this.checkBoxArtworkUpload.CheckedChanged += new System.EventHandler(this.checkBoxArtworkUpload_CheckedChanged);
+      // 
+      // labelDiscordAppId
+      // 
+      this.labelDiscordAppId.AutoSize = true;
+      this.labelDiscordAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.labelDiscordAppId.Location = new System.Drawing.Point(14, 36);
+      this.labelDiscordAppId.Name = "labelDiscordAppId";
+      this.labelDiscordAppId.Size = new System.Drawing.Size(91, 15);
+      this.labelDiscordAppId.TabIndex = 8;
+      this.labelDiscordAppId.Text = "Discord App ID:";
+      // 
+      // textBoxDiscordAppId
+      // 
+      this.textBoxDiscordAppId.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxDiscordAppId.Location = new System.Drawing.Point(108, 32);
+      this.textBoxDiscordAppId.Name = "textBoxDiscordAppId";
+      this.textBoxDiscordAppId.Size = new System.Drawing.Size(151, 25);
+      this.textBoxDiscordAppId.TabIndex = 9;
+      this.textBoxDiscordAppId.TextChanged += new System.EventHandler(this.textBoxDiscordAppId_TextChanged);
       // 
       // panel3
       // 
@@ -371,5 +410,8 @@
     private System.Windows.Forms.Panel panel2;
     private System.Windows.Forms.Panel panel3;
     private System.Windows.Forms.Panel panel4;
+    private System.Windows.Forms.Label labelDiscordAppId;
+    private System.Windows.Forms.TextBox textBoxDiscordAppId;
+    private System.Windows.Forms.CheckBox checkBoxArtworkUpload;
   }
 }
