@@ -30,9 +30,9 @@ namespace MusicBeePlugin
       _about.Author = "Stefan Lengauer";
       _about.TargetApplication = "";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
       _about.Type = PluginType.General;
-      _about.VersionMajor = 1;  // your plugin version
-      _about.VersionMinor = 4;
-      _about.Revision = 2;
+      _about.VersionMajor = 2;  // your plugin version
+      _about.VersionMinor = 0;
+      _about.Revision = 0;
       _about.MinInterfaceVersion = MinInterfaceVersion;
       _about.MinApiRevision = MinApiRevision;
       _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
