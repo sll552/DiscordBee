@@ -7,15 +7,17 @@ namespace MusicBeePlugin
   using System.Text;
   using DiscordRPC;
   using MusicBeePlugin.DiscordTools;
+  using System.Timers;
 
   public partial class Plugin
   {
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
-    private DiscordTools.DiscordClient _discordClient = new DiscordTools.DiscordClient();
+    private DiscordClient _discordClient = new DiscordClient();
     private LayoutHandler _layoutHandler;
     private Settings _settings;
     private SettingsWindow _settingsWindow;
+    private Timer _updateTimer = new Timer(500);
 
 
     public PluginInfo Initialise(IntPtr apiInterfacePtr)
@@ -48,9 +50,19 @@ namespace MusicBeePlugin
       // Match least number of chars possible but min 1
       _layoutHandler = new LayoutHandler(new Regex("\\[(.+?)\\]"));
 
+      _updateTimer.Elapsed += _updateTimer_Elapsed;
+      _updateTimer.AutoReset = false;
+      _updateTimer.Stop();
+
       Debug.WriteLine(_about.Name + " loaded");
 
       return _about;
+    }
+
+    private void _updateTimer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+      UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
+      _updateTimer.Stop();
     }
 
     private void _SettingChangedCallback(object sender, Settings.SettingChangedEventArgs e)
@@ -116,6 +128,13 @@ namespace MusicBeePlugin
         case NotificationType.TrackChanged:
         case NotificationType.PlayStateChanged:
           UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
+          break;
+        // When changing the volume this event is fired for every change so with high frequency, we need to deal with that because the UI thread blocks as long as this handler is running
+        case NotificationType.VolumeLevelChanged:
+          if (!_updateTimer.Enabled)
+          {
+            _updateTimer.Start();
+          }
           break;
       }
     }
