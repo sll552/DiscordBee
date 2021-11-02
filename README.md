@@ -38,6 +38,8 @@ If you are unhappy with your changes, you can always restore the defaults and sa
 ### Album Covers
 
 For displaying album covers instead of the MusicBee logo you have to register your own Discord Application.
+**Attention**:
+For this to work your Discord account needs to have two-factor authentication enabled! After doing so log out of Discord (App -> Settings -> Log Out) and restart Discord to log back in. 
 
 Got to https://discord.com/developers/applications/ and login using the account that the plugin is used with.
 Create a new application with a name of your choice using the button on the top right. After doing so you will get an overview of your new application, here you can copy your application ID.
