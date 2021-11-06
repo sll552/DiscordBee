@@ -8,9 +8,9 @@ namespace MusicBeePlugin.DiscordTools
 
   class LevelDbReader
   {
-    private string _discordDir = null;
-    private string _levelDbDir = null;
-    private string _token = null;
+    private string _discordDir;
+    private string _levelDbDir;
+    private string _token;
 
     public string Token { get => _token; private set { } }
 
@@ -26,14 +26,29 @@ namespace MusicBeePlugin.DiscordTools
     {
       DirectoryInfo directoryRoot = new DirectoryInfo(_levelDbDir);
 
-      foreach (var file in directoryRoot.GetFiles("*.ldb").OrderBy(f => f.LastWriteTime))
+      var dbFiles = directoryRoot.GetFiles("*.ldb").ToList();
+      dbFiles.AddRange(directoryRoot.GetFiles("*.log").ToList());
+      foreach (var file in dbFiles.OrderBy(f => f.LastWriteTime))
       {
-        string fileOut = file.OpenText().ReadToEnd();
+        string fileOut = "";
+
+        using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        using (var sr = new StreamReader(fs, System.Text.Encoding.UTF8))
+        {
+          fileOut = sr.ReadToEnd();
+        }
+        
         Match mfaMatch = Regex.Match(fileOut, @"mfa\.[\w-]{84}");
+        Match tokenMatch = Regex.Match(fileOut, @"[\w-]{24}\.[\w-]{6}\.[\w-]{27}");
 
         if (mfaMatch.Success)
         {
           _token = mfaMatch.Value;
+          break;
+        }
+        if (tokenMatch.Success)
+        {
+          _token = tokenMatch.Value;
           break;
         }
       }
