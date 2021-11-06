@@ -54,6 +54,8 @@ After reaching a certain number of assets DiscordBee will automatically remove o
 The API used to upload assets for the Discord application is inconsistent which leads to high delays for newly uploaded assets. It can take up to 10-15 minutes for assets to be available after the upload finished. This includes the asset list in the Discord Developer Dashboard.
 So if you don't see any assets in the dashboard or in your discord client after enabling this feature it is mostly due to these issues. There seems to be no way to circumvent this and other developers have also reported this to Discord ([Topic](https://support.discord.com/hc/en-us/community/posts/360050294314-Assets-not-saving-in-Rich-Presence-tab), [Issue](https://github.com/discord/discord-api-docs/issues/2220), [Discussion](https://github.com/discord/discord-api-docs/discussions/3279)).
 
+When switching Discord accounts you have to delete `%APPDATA%/discord/Local Storage/leveldb` otherwise the new token cannot be reliably extracted. So log out with your old account, close Discord, delete the folder, open Discord and log in with your new account.
+
 ## Screenshots
 
 ![Small presence](Screenshots/small_presence.png)
