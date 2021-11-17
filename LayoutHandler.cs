@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
 namespace MusicBeePlugin
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Text.RegularExpressions;
+
   class LayoutHandler
   {
     private readonly Regex _layoutElementRegex;

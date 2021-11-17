@@ -1,8 +1,8 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace MusicBeePlugin
 {
+  using System;
+  using System.Runtime.InteropServices;
+
   public partial class Plugin
   {
     public const short PluginInfoVersion = 1;

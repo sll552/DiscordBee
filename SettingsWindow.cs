@@ -1,8 +1,8 @@
-﻿using System;
-using System.Windows.Forms;
-
 namespace MusicBeePlugin
 {
+  using System;
+  using System.Windows.Forms;
+
   public partial class SettingsWindow : Form
   {
     private readonly Plugin _parent;
@@ -52,9 +52,13 @@ namespace MusicBeePlugin
       textBoxLargeImage.Text = settings.LargeImageText;
       textBoxSmallImage.Text = settings.SmallImageText;
       textBoxSeperator.Text = settings.Seperator;
+      textBoxDiscordAppId.Text = settings.DiscordAppId.Equals(Settings.defaults["DiscordAppId"]) ? "" : settings.DiscordAppId;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
       checkBoxTextOnly.Checked = settings.TextOnly;
+      checkBoxArtworkUpload.Checked = settings.UploadArtwork;
+
+      ValidateInputs();
     }
 
     private void buttonPlaceholders_Click(object sender, EventArgs e)
@@ -73,6 +77,11 @@ namespace MusicBeePlugin
 
     private void buttonSaveClose_Click(object sender, EventArgs e)
     {
+      if (!ValidateInputs())
+      {
+        return;
+      }
+
       _settings.PresenceTrackNo = textBoxTrackNo.Text;
       _settings.PresenceTrackCnt = textBoxTrackCnt.Text;
       _settings.PresenceDetails = textBoxDetails.Text;
@@ -80,9 +89,12 @@ namespace MusicBeePlugin
       _settings.LargeImageText = textBoxLargeImage.Text;
       _settings.SmallImageText = textBoxSmallImage.Text;
       _settings.Seperator = textBoxSeperator.Text;
+      _settings.DiscordAppId = string.IsNullOrWhiteSpace(textBoxDiscordAppId.Text) ? null : textBoxDiscordAppId.Text;
       _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
       _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
       _settings.TextOnly = checkBoxTextOnly.Checked;
+      _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
+
 
       if (_defaultsRestored && !_settings.IsDirty)
       {
@@ -92,6 +104,61 @@ namespace MusicBeePlugin
 
       _settings.Save();
       Hide();
+    }
+
+    private bool ValidateInputs()
+    {
+      bool ContainsDigitsOnly(string s)
+      {
+        foreach (char c in s)
+        {
+          if (c < '0' || c > '9')
+            return false;
+        }
+        return true;
+      }
+
+      bool validateDiscordId()
+      {
+        if (textBoxDiscordAppId.Text.Length != Settings.defaults["DiscordAppId"].Length
+          || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
+          || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
+        {
+          textBoxDiscordAppId.BackColor = System.Drawing.Color.PaleVioletRed;
+          return false;
+        }
+        textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+        return true;
+      }
+
+      if (checkBoxArtworkUpload.Checked && !validateDiscordId())
+      {
+        return false;
+      }
+
+      if (textBoxDiscordAppId.Text.Length > 0 && !validateDiscordId())
+      {
+        return false;
+      }
+
+      ResetErrorIndications();
+
+      return true;
+    }
+
+    private void ResetErrorIndications()
+    {
+      textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+    }
+
+    private void textBoxDiscordAppId_TextChanged(object sender, EventArgs e)
+    {
+      ValidateInputs();
+    }
+
+    private void checkBoxArtworkUpload_CheckedChanged(object sender, EventArgs e)
+    {
+      ValidateInputs();
     }
   }
 }

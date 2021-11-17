@@ -9,6 +9,7 @@ charset = utf-8
 trim_trailing_whitespace = true
 end_of_line=lf
 insert_final_newline=true
+csharp_using_directive_placement=inside_namespace:warning
 
 # Xml files
 [*.xml]

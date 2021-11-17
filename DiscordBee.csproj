@@ -81,12 +81,17 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DiscordTools\AssetManager.cs" />
+    <Compile Include="DiscordTools\DiscordClient.cs" />
+    <Compile Include="DiscordTools\ProcessCommandLine.cs" />
+    <Compile Include="DiscordTools\LevelDbReader.cs" />
     <Compile Include="SortableBindingList.cs" />
     <Compile Include="LayoutHandler.cs" />
     <Compile Include="MusicBeeInterface.cs" />
@@ -148,6 +153,12 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\MusicBee_Logo.png" />
+    <EmbeddedResource Include="Resources\Icons\pause_white.png" />
+    <EmbeddedResource Include="Resources\Icons\play_white.png" />
+    <EmbeddedResource Include="Resources\Icons\stop_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
