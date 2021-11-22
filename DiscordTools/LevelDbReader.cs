@@ -39,7 +39,7 @@ namespace MusicBeePlugin.DiscordTools
         }
         
         Match mfaMatch = Regex.Match(fileOut, @"mfa\.[\w-]{84}");
-        Match tokenMatch = Regex.Match(fileOut, @"[\w-]{24}\.[\w-]{6}\.[\w-]{27}");
+        Match tokenMatch = Regex.Match(fileOut, @"\x22([\w-]{24}\.[\w-]{6}\.[\w-]{27})\x22");
 
         if (mfaMatch.Success)
         {
@@ -48,7 +48,7 @@ namespace MusicBeePlugin.DiscordTools
         }
         if (tokenMatch.Success)
         {
-          _token = tokenMatch.Value;
+          _token = tokenMatch.Groups[1].Value;
           break;
         }
       }
