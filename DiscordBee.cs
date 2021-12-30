@@ -111,7 +111,7 @@ namespace MusicBeePlugin
     // you need to set about.ReceiveNotificationFlags = PlayerEvents to receive all notifications, and not just the startup event
     public void ReceiveNotification(string sourceFileUrl, NotificationType type)
     {
-      Debug.WriteLine("DiscordBee: Recieved Notification {0}", type);
+      Debug.WriteLine("DiscordBee: Received Notification {0}", type);
       Debug.WriteLine("    DiscordRpcClient IsConnected: {0}", _discordClient.IsConnected);
 
       // perform some action depending on the notification type
@@ -128,6 +128,8 @@ namespace MusicBeePlugin
         case NotificationType.TrackChanged:
         case NotificationType.PlayStateChanged:
           UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
+          if (type == NotificationType.TrackChanged)
+            UploadQueuedTracks();
           break;
         // When changing the volume this event is fired for every change so with high frequency, we need to deal with that because the UI thread blocks as long as this handler is running
         case NotificationType.VolumeLevelChanged:
@@ -136,6 +138,31 @@ namespace MusicBeePlugin
             _updateTimer.Start();
           }
           break;
+        case NotificationType.PlayingTracksChanged:
+          UploadQueuedTracks();
+          break;
+      }
+    }
+
+    private void UploadQueuedTracks()
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        int nextPlayingIndex = _mbApiInterface.NowPlayingList_GetCurrentIndex();
+        string fileUrl = _mbApiInterface.NowPlayingList_GetListFileUrl(nextPlayingIndex + 1 + i);
+        if (string.IsNullOrEmpty(fileUrl))
+        {
+          return;
+        }
+
+        string artwork = _mbApiInterface.Library_GetArtwork(fileUrl, 0);
+        if (string.IsNullOrEmpty(artwork))
+        {
+          continue;
+        }
+
+        Debug.WriteLine("DiscordBee: Uploading artwork (if not cached) for " + fileUrl);
+        _discordClient.UploadArtwork(artwork);
       }
     }
 

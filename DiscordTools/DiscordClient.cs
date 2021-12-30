@@ -114,6 +114,34 @@ namespace MusicBeePlugin.DiscordTools
       IsConnected = false;
     }
 
+    public void UploadArtwork(string artworkData)
+    {
+      // Clone the string
+      var _tmpHash = new StringBuilder(_currentArtworkHash).ToString();
+
+      if (IsConnected)
+      {
+        if (_assetManager?.initialised == true)
+        {
+          var assetId = _assetManager.GetCachedAsset(artworkData);
+          if (assetId == null)
+          {
+            assetId = AssetManager.ASSET_LOGO;
+            _ = _assetManager.UploadAsset(artworkData).ContinueWith(
+              t =>
+              {
+                var id = t.Result;
+                if (id == null)
+                { // this most likely means another task is already uploading this asset.
+                return;
+                }
+              }, TaskContinuationOptions.OnlyOnRanToCompletion
+            );
+          }
+        }
+      }
+    }
+
     public void SetPresence(RichPresence desired, string artworkData)
     {
       _discordPresence = desired.Clone();
