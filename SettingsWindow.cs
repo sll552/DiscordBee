@@ -54,8 +54,10 @@ namespace MusicBeePlugin
       textBoxSeperator.Text = settings.Seperator;
       textBoxDiscordAppId.Text = settings.DiscordAppId.Equals(Settings.defaults["DiscordAppId"]) ? "" : settings.DiscordAppId;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
+      checkBoxShowTime.Checked = settings.ShowTime;
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
       checkBoxTextOnly.Checked = settings.TextOnly;
+      checkBoxShowPlayState.Checked = settings.ShowPlayState;
       checkBoxArtworkUpload.Checked = settings.UploadArtwork;
 
       ValidateInputs();
@@ -91,8 +93,10 @@ namespace MusicBeePlugin
       _settings.Seperator = textBoxSeperator.Text;
       _settings.DiscordAppId = string.IsNullOrWhiteSpace(textBoxDiscordAppId.Text) ? null : textBoxDiscordAppId.Text;
       _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
+      _settings.ShowTime = checkBoxShowTime.Checked;
       _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
       _settings.TextOnly = checkBoxTextOnly.Checked;
+      _settings.ShowPlayState = checkBoxShowPlayState.Checked;
       _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
 
 

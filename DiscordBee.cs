@@ -206,29 +206,34 @@ namespace MusicBeePlugin
           _discordPresence.Assets.LargeImageText = null;
           _discordPresence.Assets.SmallImageKey = null;
           _discordPresence.Assets.SmallImageText = null;
-          return;
         }
-        _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
-        _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
-        _discordPresence.Assets.SmallImageKey = padString(name);
-        _discordPresence.Assets.SmallImageText = padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator)); ;
+        else
+        {
+          _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
+          _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
+          _discordPresence.Assets.SmallImageKey = _settings.ShowPlayState ? padString(name) : null;
+          _discordPresence.Assets.SmallImageText = _settings.ShowPlayState ? padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator)) : null;
+        }
       }
 
       _discordPresence.State = padString(_layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Seperator));
 
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
 
-      if (_settings.ShowRemainingTime)
+      if (_settings.ShowTime)
       {
-        // show remaining time
-        // subtract current track position from total duration for position seeking
-        var totalRemainingDuration = _mbApiInterface.NowPlaying_GetDuration() - _mbApiInterface.Player_GetPosition();
-        _discordPresence.Timestamps.EndUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) + Math.Round(totalRemainingDuration / 1000.0));
-      }
-      else
-      {
-        // show elapsed time
-        _discordPresence.Timestamps.StartUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
+        if (_settings.ShowRemainingTime)
+        {
+          // show remaining time
+          // subtract current track position from total duration for position seeking
+          var totalRemainingDuration = _mbApiInterface.NowPlaying_GetDuration() - _mbApiInterface.Player_GetPosition();
+          _discordPresence.Timestamps.EndUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) + Math.Round(totalRemainingDuration / 1000.0));
+        }
+        else
+        {
+          // show elapsed time
+          _discordPresence.Timestamps.StartUnixMilliseconds = (ulong)(Math.Round(t.TotalSeconds) - Math.Round(_mbApiInterface.Player_GetPosition() / 1000.0));
+        }
       }
 
       switch (playerGetPlayState)

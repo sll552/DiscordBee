@@ -113,6 +113,14 @@ namespace MusicBeePlugin
       set => setIfChanged("_updatePresenceWhenStopped", value);
     }
 
+    [DataMember] private bool? _showTime;
+
+    public bool ShowTime
+    {
+      get => _showTime.HasValue && _showTime.Value;
+      set => setIfChanged("_showTime", value);
+    }
+
     [DataMember] private bool? _showRemainingTime;
 
     public bool ShowRemainingTime
@@ -127,6 +135,14 @@ namespace MusicBeePlugin
     {
       get => _textOnly.HasValue && _textOnly.Value;
       set => setIfChanged("_textOnly", value);
+    }
+
+    [DataMember] private bool? _showPlayState;
+
+    public bool ShowPlayState
+    {
+      get => _showPlayState.HasValue && _showPlayState.Value;
+      set => setIfChanged("_showPlayState", value);
     }
 
     [DataMember] private bool? _uploadArtwork;
