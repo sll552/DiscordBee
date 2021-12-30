@@ -54,6 +54,7 @@ namespace MusicBeePlugin
             this.textBoxDiscordAppId = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.checkBoxShowOnlyNonPlayingState = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -294,6 +295,7 @@ namespace MusicBeePlugin
             // 
             this.panel2.AutoSize = true;
             this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel2.Controls.Add(this.checkBoxShowOnlyNonPlayingState);
             this.panel2.Controls.Add(this.checkBoxShowPlayState);
             this.panel2.Controls.Add(this.checkBoxShowTime);
             this.panel2.Controls.Add(this.checkBoxArtworkUpload);
@@ -309,7 +311,7 @@ namespace MusicBeePlugin
             this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel2.MinimumSize = new System.Drawing.Size(0, 154);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(764, 179);
+            this.panel2.Size = new System.Drawing.Size(764, 225);
             this.panel2.TabIndex = 1;
             // 
             // checkBoxShowPlayState
@@ -384,7 +386,7 @@ namespace MusicBeePlugin
             this.panel3.Controls.Add(this.buttonPlaceholders);
             this.panel3.Controls.Add(this.buttonSaveClose);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 342);
+            this.panel3.Location = new System.Drawing.Point(0, 388);
             this.panel3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel3.MinimumSize = new System.Drawing.Size(0, 46);
             this.panel3.Name = "panel3";
@@ -412,13 +414,27 @@ namespace MusicBeePlugin
             this.panel4.Size = new System.Drawing.Size(764, 163);
             this.panel4.TabIndex = 1;
             // 
+            // checkBoxShowOnlyNonPlayingState
+            // 
+            this.checkBoxShowOnlyNonPlayingState.AutoSize = true;
+            this.checkBoxShowOnlyNonPlayingState.Checked = true;
+            this.checkBoxShowOnlyNonPlayingState.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowOnlyNonPlayingState.Location = new System.Drawing.Point(26, 182);
+            this.checkBoxShowOnlyNonPlayingState.Margin = new System.Windows.Forms.Padding(6);
+            this.checkBoxShowOnlyNonPlayingState.Name = "checkBoxShowOnlyNonPlayingState";
+            this.checkBoxShowOnlyNonPlayingState.Padding = new System.Windows.Forms.Padding(3);
+            this.checkBoxShowOnlyNonPlayingState.Size = new System.Drawing.Size(308, 30);
+            this.checkBoxShowOnlyNonPlayingState.TabIndex = 13;
+            this.checkBoxShowOnlyNonPlayingState.Text = "Don\'t show playing state when playing";
+            this.checkBoxShowOnlyNonPlayingState.UseVisualStyleBackColor = true;
+            // 
             // SettingsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(764, 388);
+            this.ClientSize = new System.Drawing.Size(764, 434);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel4);
@@ -465,5 +481,6 @@ namespace MusicBeePlugin
     private System.Windows.Forms.CheckBox checkBoxArtworkUpload;
     private System.Windows.Forms.CheckBox checkBoxShowTime;
     private System.Windows.Forms.CheckBox checkBoxShowPlayState;
+    private System.Windows.Forms.CheckBox checkBoxShowOnlyNonPlayingState;
   }
 }

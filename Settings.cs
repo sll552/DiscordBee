@@ -145,6 +145,14 @@ namespace MusicBeePlugin
       set => setIfChanged("_showPlayState", value);
     }
 
+    [DataMember] private bool? _showOnlyNonPlayingState;
+
+    public bool ShowOnlyNonPlayingState
+    {
+      get => _showOnlyNonPlayingState.HasValue && _showOnlyNonPlayingState.Value;
+      set => setIfChanged("_showOnlyNonPlayingState", value);
+    }
+
     [DataMember] private bool? _uploadArtwork;
 
     public bool UploadArtwork

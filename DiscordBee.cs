@@ -198,7 +198,7 @@ namespace MusicBeePlugin
         return input;
       }
 
-      void SetImage(string name)
+      void SetImage(string name, bool forceHideSmallImage = false)
       {
         if (_settings.TextOnly)
         {
@@ -211,8 +211,17 @@ namespace MusicBeePlugin
         {
           _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
           _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
-          _discordPresence.Assets.SmallImageKey = _settings.ShowPlayState ? padString(name) : null;
-          _discordPresence.Assets.SmallImageText = _settings.ShowPlayState ? padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator)) : null;
+
+          if (_settings.ShowPlayState && !forceHideSmallImage)
+          {
+            _discordPresence.Assets.SmallImageKey = padString(name);
+            _discordPresence.Assets.SmallImageText = padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator));
+          }
+          else
+          {
+            _discordPresence.Assets.SmallImageKey = null;
+            _discordPresence.Assets.SmallImageText = null;
+          }
         }
       }
 
@@ -239,7 +248,7 @@ namespace MusicBeePlugin
       switch (playerGetPlayState)
       {
         case PlayState.Playing:
-          SetImage(AssetManager.ASSET_PLAY);
+          SetImage(AssetManager.ASSET_PLAY, _settings.ShowOnlyNonPlayingState);
           break;
         case PlayState.Stopped:
           SetImage(AssetManager.ASSET_STOP);

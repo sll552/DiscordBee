@@ -58,6 +58,7 @@ namespace MusicBeePlugin
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
       checkBoxTextOnly.Checked = settings.TextOnly;
       checkBoxShowPlayState.Checked = settings.ShowPlayState;
+      checkBoxShowOnlyNonPlayingState.Checked = settings.ShowOnlyNonPlayingState;
       checkBoxArtworkUpload.Checked = settings.UploadArtwork;
 
       ValidateInputs();
@@ -97,8 +98,8 @@ namespace MusicBeePlugin
       _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
       _settings.TextOnly = checkBoxTextOnly.Checked;
       _settings.ShowPlayState = checkBoxShowPlayState.Checked;
+      _settings.ShowOnlyNonPlayingState = checkBoxShowOnlyNonPlayingState.Checked;
       _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
-
 
       if (_defaultsRestored && !_settings.IsDirty)
       {
