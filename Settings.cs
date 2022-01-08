@@ -20,7 +20,7 @@ namespace MusicBeePlugin
       {"LargeImageText", "MusicBee"},
       {"SmallImageText", "[Volume]%"},
       {"PresenceState", "[TrackTitle]"},
-      {"PresenceDetails", "[Artist] - [Album]"},
+      {"PresenceDetails", "[AlbumArtist] - [Album]"},
       {"PresenceTrackCnt", "[TrackCount]"},
       {"PresenceTrackNo", "[TrackNo]"},
       {"DiscordAppId", "409394531948298250"}, // prod
