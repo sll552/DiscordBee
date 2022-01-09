@@ -146,7 +146,7 @@ namespace MusicBeePlugin
 
     private void UploadQueuedTracks()
     {
-      for (int i = 0; i < 4; i++)
+      for (int i = 0; i < 5; i++)
       {
         int nextPlayingIndex = _mbApiInterface.NowPlayingList_GetCurrentIndex();
         string fileUrl = _mbApiInterface.NowPlayingList_GetListFileUrl(nextPlayingIndex + 1 + i);

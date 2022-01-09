@@ -116,29 +116,24 @@ namespace MusicBeePlugin.DiscordTools
 
     public void UploadArtwork(string artworkData)
     {
-      // Clone the string
-      var _tmpHash = new StringBuilder(_currentArtworkHash).ToString();
-
-      if (IsConnected)
+      if (IsConnected && _assetManager?.initialised == true)
       {
-        if (_assetManager?.initialised == true)
-        {
-          var assetId = _assetManager.GetCachedAsset(artworkData);
-          if (assetId == null)
+        _ = _assetManager.UploadAsset(artworkData).ContinueWith(
+          t =>
           {
-            assetId = AssetManager.ASSET_LOGO;
-            _ = _assetManager.UploadAsset(artworkData).ContinueWith(
-              t =>
-              {
-                var id = t.Result;
-                if (id == null)
-                { // this most likely means another task is already uploading this asset.
-                return;
-                }
-              }, TaskContinuationOptions.OnlyOnRanToCompletion
-            );
-          }
-        }
+            var id = t.Result;
+            if (id == null)
+            { // this most likely means another task is already uploading this asset.
+              return;
+            }
+            // Update Cover if it matches current song
+            if (id.Equals(_currentArtworkHash))
+            {
+              _discordPresence.Assets.LargeImageKey = id;
+              UpdatePresence();
+            }
+          }, TaskContinuationOptions.OnlyOnRanToCompletion
+        );
       }
     }
 
@@ -146,8 +141,6 @@ namespace MusicBeePlugin.DiscordTools
     {
       _discordPresence = desired.Clone();
       _currentArtworkHash = AssetManager.GetHash(artworkData ?? "");
-      // Clone the string
-      var _tmpHash = new StringBuilder(_currentArtworkHash).ToString();
 
       // do preprocessing here
       if (IsConnected)
@@ -158,22 +151,7 @@ namespace MusicBeePlugin.DiscordTools
           if (assetId == null)
           {
             assetId = AssetManager.ASSET_LOGO;
-            _ = _assetManager.UploadAsset(artworkData).ContinueWith(
-              t =>
-              {
-                var id = t.Result;
-                if (id == null)
-                { // this most likely means another task is already uploading this asset.
-                  return;
-                }
-                // Only update the cover if it is still the same as when the upload started
-                if (_tmpHash.Equals(_currentArtworkHash))
-                {
-                  _discordPresence.Assets.LargeImageKey = id;
-                  UpdatePresence();
-                }
-              }, TaskContinuationOptions.OnlyOnRanToCompletion
-            );
+            UploadArtwork(artworkData);
           }
           _discordPresence.Assets.LargeImageKey = assetId;
         }

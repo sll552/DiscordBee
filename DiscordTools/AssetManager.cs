@@ -10,7 +10,9 @@ namespace MusicBeePlugin.DiscordTools
   using System.Drawing.Imaging;
   using System.IO;
   using System.Linq;
+  using System.Net.Cache;
   using System.Net.Http;
+  using System.Net.Http.Headers;
   using System.Reflection;
   using System.Security.Cryptography;
   using System.Text;
@@ -26,12 +28,15 @@ namespace MusicBeePlugin.DiscordTools
 
     private const int MAX_ASSETS = 270;
 
-    private string _authToken;
-    private string _discordAppId;
+    private readonly string _authToken;
+    private readonly string _discordAppId;
     private readonly string _discordAssetApiUrl;
     // Needs to be something that produces at max 32 byte hashes, does not need to be cryptographically perfect
-    private static HashAlgorithm _hashAlgorithm = MD5.Create();
-    private readonly HttpClient _httpClient = new HttpClient();
+    private static readonly HashAlgorithm _hashAlgorithm = MD5.Create();
+    private readonly HttpClient _httpClient = new HttpClient(new WebRequestHandler()
+    {
+      CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache)
+    });
     private readonly ConcurrentDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
     private readonly ConcurrentDictionary<string, string> _uploadInProgress = new ConcurrentDictionary<string, string>();
     private readonly IReadOnlyDictionary<string, string> _baseAssets = new Dictionary<string, string>()
@@ -54,6 +59,11 @@ namespace MusicBeePlugin.DiscordTools
       _httpClient.DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36");
       _httpClient.DefaultRequestHeaders.Add("origin", "discordapp.com");
       _httpClient.DefaultRequestHeaders.Add("cache-control", "no-cache");
+      _httpClient.DefaultRequestHeaders.Add("pragma", "no-cache");
+      _httpClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
+      {
+        NoCache = true
+      };
 
     }
 
