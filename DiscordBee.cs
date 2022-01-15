@@ -48,7 +48,7 @@ namespace MusicBeePlugin
       _discordClient.DiscordId = _settings.DiscordAppId;
 
       // Match least number of chars possible but min 1
-      _layoutHandler = new LayoutHandler(new Regex("\\[(.+?)\\]"));
+      _layoutHandler = new LayoutHandler(new Regex("\\[([^[]+?)\\]"));
 
       _updateTimer.Elapsed += _updateTimer_Elapsed;
       _updateTimer.AutoReset = false;
