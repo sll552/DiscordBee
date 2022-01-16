@@ -227,7 +227,10 @@ namespace MusicBeePlugin.DiscordTools
         Debug.WriteLine($"Resizing image to fit asset requirements {data.Substring(0, 30)}", "DiscordBee");
         imageData = ImageToBase64(ResizeImage(input, 1024, 1024), ImageFormat.Png);
       }
-      if (string.IsNullOrEmpty(imageData)) imageData = ImageToBase64(input, ImageFormat.Png);
+      if (string.IsNullOrEmpty(imageData))
+      {
+        imageData = ImageToBase64(input, ImageFormat.Png);
+      }
 
       input.Dispose();
 

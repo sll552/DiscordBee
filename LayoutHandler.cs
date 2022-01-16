@@ -32,7 +32,11 @@ namespace MusicBeePlugin
       // remove excess whitespace
       input = Regex.Replace(input, "\\s+", " ");
 
-      if (string.IsNullOrEmpty(seperators)) return input;
+      if (string.IsNullOrEmpty(seperators))
+      {
+        return input;
+      }
+
       foreach (var sep in seperators)
       {
         var escsep = Regex.Escape(sep.ToString());
@@ -55,7 +59,11 @@ namespace MusicBeePlugin
       foreach (Match match in matches)
       {
         // complete match is group 0 so we neeed exactly 2 groups to be able to replace correctly
-        if (match.Groups.Count != 2) continue;
+        if (match.Groups.Count != 2)
+        {
+          continue;
+        }
+
         var key = match.Groups[1].Captures[0].Value;
         if (values.ContainsKey(key))
         {

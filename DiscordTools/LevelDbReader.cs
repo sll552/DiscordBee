@@ -37,7 +37,7 @@ namespace MusicBeePlugin.DiscordTools
         {
           fileOut = sr.ReadToEnd();
         }
-        
+
         Match mfaMatch = Regex.Match(fileOut, @"mfa\.[\w-]{84}");
         Match tokenMatch = Regex.Match(fileOut, @"\x22([\w-]{24}\.[\w-]{6}\.[\w-]{27})\x22");
 

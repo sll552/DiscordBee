@@ -1,12 +1,12 @@
 namespace MusicBeePlugin
 {
+  using DiscordRPC;
+  using MusicBeePlugin.DiscordTools;
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
-  using System.Text.RegularExpressions;
   using System.Text;
-  using DiscordRPC;
-  using MusicBeePlugin.DiscordTools;
+  using System.Text.RegularExpressions;
   using System.Timers;
 
   public partial class Plugin
