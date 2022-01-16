@@ -230,7 +230,11 @@ namespace MusicBeePlugin
 
     public void Save()
     {
-      if (!IsDirty) return;
+      if (!IsDirty)
+      {
+        return;
+      }
+
       if (Path.GetDirectoryName(FilePath) != null && !Directory.Exists(Path.GetDirectoryName(FilePath)))
       {
         Directory.CreateDirectory(Path.GetDirectoryName(FilePath) ?? throw new InvalidOperationException());
@@ -281,7 +285,11 @@ namespace MusicBeePlugin
       // field is used for boolean settings because nullable is used internally and property would be non-nullable
       foreach (var fieldInfo in GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
       {
-        if (!fieldInfo.Name.StartsWith("_")) continue;
+        if (!fieldInfo.Name.StartsWith("_"))
+        {
+          continue;
+        }
+
         if (fieldInfo.FieldType == typeof(bool?))
         {
           fieldInfo.SetValue(this, null);

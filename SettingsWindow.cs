@@ -38,7 +38,11 @@ namespace MusicBeePlugin
 
     private void OnFormClosing(object sender, FormClosingEventArgs e)
     {
-      if (e.CloseReason != CloseReason.UserClosing) return;
+      if (e.CloseReason != CloseReason.UserClosing)
+      {
+        return;
+      }
+
       Hide();
       e.Cancel = true;
     }
@@ -118,7 +122,9 @@ namespace MusicBeePlugin
         foreach (char c in s)
         {
           if (c < '0' || c > '9')
+          {
             return false;
+          }
         }
         return true;
       }

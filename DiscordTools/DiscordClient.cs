@@ -155,7 +155,10 @@ namespace MusicBeePlugin.DiscordTools
 
     public void ClearPresence()
     {
-      if (IsConnected) _discordClient.ClearPresence();
+      if (IsConnected)
+      {
+        _discordClient.ClearPresence();
+      }
     }
 
     private void EnsureInit()
@@ -176,7 +179,10 @@ namespace MusicBeePlugin.DiscordTools
 
     private void ConnectionFailedCallback(object sender, ConnectionFailedMessage args)
     {
-      if (IsConnected) IsConnected = false;
+      if (IsConnected)
+      {
+        IsConnected = false;
+      }
     }
 
     private void ReadyCallback(object sender, ReadyMessage args)
@@ -217,25 +223,41 @@ namespace MusicBeePlugin.DiscordTools
 
     public void Error(string message, params object[] args)
     {
-      if (Level > LogLevel.Error) return;
+      if (Level > LogLevel.Error)
+      {
+        return;
+      }
+
       Log(message, args);
     }
 
     public void Info(string message, params object[] args)
     {
-      if (Level > LogLevel.Info) return;
+      if (Level > LogLevel.Info)
+      {
+        return;
+      }
+
       Log(message, args);
     }
 
     public void Trace(string message, params object[] args)
     {
-      if (Level > LogLevel.Trace) return;
+      if (Level > LogLevel.Trace)
+      {
+        return;
+      }
+
       Log(message, args);
     }
 
     public void Warning(string message, params object[] args)
     {
-      if (Level > LogLevel.Warning) return;
+      if (Level > LogLevel.Warning)
+      {
+        return;
+      }
+
       Log(message, args);
     }
 
