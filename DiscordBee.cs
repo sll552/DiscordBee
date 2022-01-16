@@ -150,7 +150,7 @@ namespace MusicBeePlugin
       ret.Add("PlayState", _mbApiInterface.Player_GetPlayState().ToString());
       ret.Add("Volume", Convert.ToInt32(_mbApiInterface.Player_GetVolume() * 100.0f).ToString());
       var duration = TimeSpan.FromMilliseconds(_mbApiInterface.NowPlaying_GetDuration());
-      ret.Add("Duration", String.Format("{0:D}:{1:D2}", duration.Minutes, duration.Seconds));
+      ret.Add("Duration", string.Format("{0:D}:{1:D2}", (int)Math.Floor(duration.TotalMinutes), duration.Seconds));
 
       return ret;
     }
