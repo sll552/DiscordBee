@@ -23,7 +23,7 @@ deploy:
 - provider: GitHub
   tag: $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
-    secure: SJlJq7xJ+SMLC43wkfzf15YFHmZZ+G5ZI9op1LYgjZCahxXHut1ai4yV2pP0zsXs
+    secure: bDkjepIUlFRHs/1W8BpNMCgEBqtOkbp6BOlZgUEs2h1iA/n1TVbdnRKuBburxAQY
   artifact: Plugin-Package
   draft: false
   force_update: true
