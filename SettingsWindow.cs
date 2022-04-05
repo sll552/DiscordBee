@@ -1,6 +1,7 @@
 namespace MusicBeePlugin
 {
   using System;
+  using System.Drawing;
   using System.Windows.Forms;
 
   public partial class SettingsWindow : Form
@@ -64,6 +65,9 @@ namespace MusicBeePlugin
       checkBoxShowPlayState.Checked = settings.ShowPlayState;
       checkBoxShowOnlyNonPlayingState.Checked = settings.ShowOnlyNonPlayingState;
       checkBoxArtworkUpload.Checked = settings.UploadArtwork;
+      customButtonLabel.Text = settings.ButtonLabel;
+      customButtonUrl.Text = settings.ButtonUrl;
+      customButtonToggle.Checked = settings.ShowButton;
 
       ValidateInputs();
     }
@@ -104,6 +108,9 @@ namespace MusicBeePlugin
       _settings.ShowPlayState = checkBoxShowPlayState.Checked;
       _settings.ShowOnlyNonPlayingState = checkBoxShowOnlyNonPlayingState.Checked;
       _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
+      _settings.ButtonUrl = customButtonUrl.Text;
+      _settings.ButtonLabel = customButtonLabel.Text;
+      _settings.ShowButton = customButtonToggle.Checked;
 
       if (_defaultsRestored && !_settings.IsDirty)
       {
@@ -135,10 +142,10 @@ namespace MusicBeePlugin
           || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
           || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
         {
-          textBoxDiscordAppId.BackColor = System.Drawing.Color.PaleVioletRed;
+          textBoxDiscordAppId.BackColor = Color.PaleVioletRed;
           return false;
         }
-        textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+        textBoxDiscordAppId.BackColor = Color.White;
         return true;
       }
 
@@ -152,6 +159,23 @@ namespace MusicBeePlugin
         return false;
       }
 
+      bool validateUri()
+      {
+        if (!ValidationHelpers.ValidateUri(customButtonUrl.Text))
+        {
+          customButtonUrl.BackColor = Color.PaleVioletRed;
+          return false;
+        }
+
+        customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
+        return true;
+      }
+
+      if (!validateUri())
+      {
+        return false;
+      }
+
       ResetErrorIndications();
 
       return true;
@@ -159,7 +183,8 @@ namespace MusicBeePlugin
 
     private void ResetErrorIndications()
     {
-      textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+      textBoxDiscordAppId.BackColor = Color.White;
+      customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
     }
 
     private void textBoxDiscordAppId_TextChanged(object sender, EventArgs e)
@@ -168,6 +193,11 @@ namespace MusicBeePlugin
     }
 
     private void checkBoxArtworkUpload_CheckedChanged(object sender, EventArgs e)
+    {
+      ValidateInputs();
+    }
+
+    private void customButtonUrl_TextChanged(object sender, EventArgs e)
     {
       ValidateInputs();
     }
