@@ -5,6 +5,8 @@ namespace MusicBeePlugin
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.Linq;
+  using System.Net;
   using System.Text;
   using System.Text.RegularExpressions;
   using System.Timers;
@@ -223,6 +225,37 @@ namespace MusicBeePlugin
           }
         }
         return input;
+      }
+
+      // Button Functionality
+      IEnumerable<string> uri = _settings.ButtonUrl
+        .Split('/')
+        .Select(part =>
+        {
+          var result = _layoutHandler.Render(part, metaDataDict, _settings.Seperator);
+          if (part != result && (part != "_"))
+          {
+            return WebUtility.UrlEncode(result);
+          }
+
+          return part;
+        }).ToList();
+
+      // Attempt to parse the Uri again
+      string finalUrl = string.Join("/", uri);
+      bool validationResult = Uri.TryCreate(finalUrl, UriKind.Absolute, out Uri uriValidation)
+                              && (uriValidation.Scheme == Uri.UriSchemeHttp || uriValidation.Scheme == Uri.UriSchemeHttps);
+
+      if (validationResult)
+      {
+        _discordPresence.Buttons = new Button[]
+        {
+          new Button
+          {
+            Label = padString(_settings.ButtonLabel),
+            Url = finalUrl
+          }
+        };
       }
 
       void SetImage(string name, bool forceHideSmallImage = false)

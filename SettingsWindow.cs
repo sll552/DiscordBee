@@ -64,6 +64,8 @@ namespace MusicBeePlugin
       checkBoxShowPlayState.Checked = settings.ShowPlayState;
       checkBoxShowOnlyNonPlayingState.Checked = settings.ShowOnlyNonPlayingState;
       checkBoxArtworkUpload.Checked = settings.UploadArtwork;
+      customButtonLabel.Text = settings.ButtonLabel;
+      customButtonUrl.Text = settings.ButtonUrl;
 
       ValidateInputs();
     }
@@ -104,6 +106,8 @@ namespace MusicBeePlugin
       _settings.ShowPlayState = checkBoxShowPlayState.Checked;
       _settings.ShowOnlyNonPlayingState = checkBoxShowOnlyNonPlayingState.Checked;
       _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
+      _settings.ButtonUrl = customButtonUrl.Text;
+      _settings.ButtonLabel = customButtonLabel.Text;
 
       if (_defaultsRestored && !_settings.IsDirty)
       {
@@ -149,6 +153,14 @@ namespace MusicBeePlugin
 
       if (textBoxDiscordAppId.Text.Length > 0 && !validateDiscordId())
       {
+        return false;
+      }
+
+      bool validationResult = Uri.TryCreate(customButtonUrl.Text, UriKind.Absolute, out Uri uriValidation)
+                              && (uriValidation.Scheme == Uri.UriSchemeHttp || uriValidation.Scheme == Uri.UriSchemeHttps);
+      if (!validationResult)
+      {
+        customButtonUrl.BackColor = System.Drawing.Color.PaleVioletRed;
         return false;
       }
 
