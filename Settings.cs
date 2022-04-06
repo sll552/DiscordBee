@@ -212,6 +212,14 @@ namespace MusicBeePlugin
       }
     }
 
+    [DataMember] private bool? _showButton;
+
+    public bool ShowButton
+    {
+      get => _showButton.HasValue && _showButton.Value;
+      set => setIfChanged("_showButton", value);
+    }
+
     #endregion
 
     public static Settings GetInstance(string filePath)

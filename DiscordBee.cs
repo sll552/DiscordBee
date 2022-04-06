@@ -228,31 +228,34 @@ namespace MusicBeePlugin
       }
 
       // Button Functionality
-      IEnumerable<string> uri = _settings.ButtonUrl
-        .Split('/')
-        .Select(part =>
-        {
-          var result = _layoutHandler.Render(part, metaDataDict, _settings.Seperator);
-          if (part != result && (part != "_"))
-          {
-            return WebUtility.UrlEncode(result);
-          }
-
-          return part;
-        });
-
-      // Validate the URL again.
-      string finalUrl = string.Join("/", uri);
-      if (ValidationHelpers.ValidateUri(finalUrl))
+      if (_settings.ShowButton)
       {
-        _discordPresence.Buttons = new Button[]
-        {
-          new Button
+        IEnumerable<string> uri = _settings.ButtonUrl
+          .Split('/')
+          .Select(part =>
           {
-            Label = padString(_settings.ButtonLabel),
-            Url = finalUrl
-          }
-        };
+            var result = _layoutHandler.Render(part, metaDataDict, _settings.Seperator);
+            if (part != result && (part != "_"))
+            {
+              return WebUtility.UrlEncode(result);
+            }
+
+            return part;
+          });
+
+        // Validate the URL again.
+        string finalUrl = string.Join("/", uri);
+        if (ValidationHelpers.ValidateUri(finalUrl))
+        {
+          _discordPresence.Buttons = new Button[]
+          {
+            new Button
+            {
+              Label = padString(_settings.ButtonLabel),
+              Url = finalUrl
+            }
+          };
+        }
       }
 
       void SetImage(string name, bool forceHideSmallImage = false)

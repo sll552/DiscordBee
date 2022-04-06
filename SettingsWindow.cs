@@ -66,6 +66,7 @@ namespace MusicBeePlugin
       checkBoxArtworkUpload.Checked = settings.UploadArtwork;
       customButtonLabel.Text = settings.ButtonLabel;
       customButtonUrl.Text = settings.ButtonUrl;
+      customButtonToggle.Checked = settings.ShowButton;
 
       ValidateInputs();
     }
@@ -108,6 +109,7 @@ namespace MusicBeePlugin
       _settings.UploadArtwork = checkBoxArtworkUpload.Checked;
       _settings.ButtonUrl = customButtonUrl.Text;
       _settings.ButtonLabel = customButtonLabel.Text;
+      _settings.ShowButton = customButtonToggle.Checked;
 
       if (_defaultsRestored && !_settings.IsDirty)
       {
