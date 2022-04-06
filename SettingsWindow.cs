@@ -158,9 +158,20 @@ namespace MusicBeePlugin
         return false;
       }
 
-      if (!ValidationHelpers.ValidateUri(customButtonUrl.Text))
+      bool validateUri()
       {
-        customButtonUrl.BackColor = System.Drawing.Color.PaleVioletRed;
+        if (!ValidationHelpers.ValidateUri(customButtonUrl.Text))
+        {
+          customButtonUrl.BackColor = System.Drawing.Color.PaleVioletRed;
+          return false;
+        }
+
+        customButtonUrl.BackColor = System.Drawing.Color.White;
+        return true;
+      }
+
+      if (!validateUri())
+      {
         return false;
       }
 
@@ -172,6 +183,7 @@ namespace MusicBeePlugin
     private void ResetErrorIndications()
     {
       textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+      customButtonUrl.BackColor = System.Drawing.Color.White;
     }
 
     private void textBoxDiscordAppId_TextChanged(object sender, EventArgs e)
@@ -180,6 +192,11 @@ namespace MusicBeePlugin
     }
 
     private void checkBoxArtworkUpload_CheckedChanged(object sender, EventArgs e)
+    {
+      ValidateInputs();
+    }
+
+    private void customButtonUrl_TextChanged(object sender, EventArgs e)
     {
       ValidateInputs();
     }

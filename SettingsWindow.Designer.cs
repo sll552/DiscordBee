@@ -338,6 +338,7 @@ namespace MusicBeePlugin
       this.customButtonUrl.Name = "customButtonUrl";
       this.customButtonUrl.Size = new System.Drawing.Size(331, 25);
       this.customButtonUrl.TabIndex = 17;
+      this.customButtonUrl.TextChanged += new System.EventHandler(this.customButtonUrl_TextChanged);
       // 
       // label6
       // 
