@@ -239,14 +239,11 @@ namespace MusicBeePlugin
           }
 
           return part;
-        }).ToList();
+        });
 
-      // Attempt to parse the Uri again
+      // Validate the URL again.
       string finalUrl = string.Join("/", uri);
-      bool validationResult = Uri.TryCreate(finalUrl, UriKind.Absolute, out Uri uriValidation)
-                              && (uriValidation.Scheme == Uri.UriSchemeHttp || uriValidation.Scheme == Uri.UriSchemeHttps);
-
-      if (validationResult)
+      if (ValidationHelpers.ValidateUri(finalUrl))
       {
         _discordPresence.Buttons = new Button[]
         {

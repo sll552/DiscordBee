@@ -156,9 +156,7 @@ namespace MusicBeePlugin
         return false;
       }
 
-      bool validationResult = Uri.TryCreate(customButtonUrl.Text, UriKind.Absolute, out Uri uriValidation)
-                              && (uriValidation.Scheme == Uri.UriSchemeHttp || uriValidation.Scheme == Uri.UriSchemeHttps);
-      if (!validationResult)
+      if (!ValidationHelpers.ValidateUri(customButtonUrl.Text))
       {
         customButtonUrl.BackColor = System.Drawing.Color.PaleVioletRed;
         return false;
