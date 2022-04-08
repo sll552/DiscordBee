@@ -1,6 +1,7 @@
 namespace MusicBeePlugin
 {
   using System;
+  using System.Drawing;
   using System.Windows.Forms;
 
   public partial class SettingsWindow : Form
@@ -141,10 +142,10 @@ namespace MusicBeePlugin
           || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
           || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
         {
-          textBoxDiscordAppId.BackColor = System.Drawing.Color.PaleVioletRed;
+          textBoxDiscordAppId.BackColor = Color.PaleVioletRed;
           return false;
         }
-        textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
+        textBoxDiscordAppId.BackColor = Color.White;
         return true;
       }
 
@@ -162,11 +163,11 @@ namespace MusicBeePlugin
       {
         if (!ValidationHelpers.ValidateUri(customButtonUrl.Text))
         {
-          customButtonUrl.BackColor = System.Drawing.Color.PaleVioletRed;
+          customButtonUrl.BackColor = Color.PaleVioletRed;
           return false;
         }
 
-        customButtonUrl.BackColor = System.Drawing.Color.White;
+        customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
         return true;
       }
 
@@ -182,8 +183,8 @@ namespace MusicBeePlugin
 
     private void ResetErrorIndications()
     {
-      textBoxDiscordAppId.BackColor = System.Drawing.Color.White;
-      customButtonUrl.BackColor = System.Drawing.Color.White;
+      textBoxDiscordAppId.BackColor = Color.White;
+      customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
     }
 
     private void textBoxDiscordAppId_TextChanged(object sender, EventArgs e)

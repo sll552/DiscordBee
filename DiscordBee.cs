@@ -230,7 +230,7 @@ namespace MusicBeePlugin
       // Button Functionality
       if (_settings.ShowButton)
       {
-        IEnumerable<string> uri = _settings.ButtonUrl
+        var uri = _settings.ButtonUrl
           .Split('/')
           .Select(part =>
           {
@@ -244,7 +244,7 @@ namespace MusicBeePlugin
           });
 
         // Validate the URL again.
-        string finalUrl = string.Join("/", uri);
+        var finalUrl = string.Join("/", uri);
         if (ValidationHelpers.ValidateUri(finalUrl))
         {
           _discordPresence.Buttons = new Button[]
