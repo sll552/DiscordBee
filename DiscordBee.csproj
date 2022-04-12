@@ -111,6 +111,7 @@
     <Compile Include="SettingsWindow.Designer.cs">
       <DependentUpon>SettingsWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ValidationHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

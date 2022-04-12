@@ -7,6 +7,7 @@ namespace MusicBeePlugin
   using System.Reflection;
   using System.Runtime.Serialization;
   using System.Xml;
+  using DiscordRPC;
 
   [DataContract]
   public class Settings
@@ -23,6 +24,8 @@ namespace MusicBeePlugin
       {"PresenceDetails", "[Artist] - [Album]"},
       {"PresenceTrackCnt", "[TrackCount]"},
       {"PresenceTrackNo", "[TrackNo]"},
+      {"ButtonLabel", "View Last.fm Info"},
+      {"ButtonUrl", "https://www.last.fm/music/[Artist]/_/[TrackTitle]"},
       {"DiscordAppId", "409394531948298250"}, // prod
       //{"DiscordAppId", "408977077799354379"}, // dev
     };
@@ -175,6 +178,46 @@ namespace MusicBeePlugin
           OnSettingChanged(eventArgs);
         }
       }
+    }
+
+    [DataMember] private string _buttonLabel;
+
+    public string ButtonLabel
+    {
+      get => string.IsNullOrEmpty(_buttonLabel) ? defaults["ButtonLabel"] : _buttonLabel;
+      set
+      {
+        if (value != null && value.Equals(defaults["ButtonLabel"]))
+        {
+          _buttonLabel = null;
+          return;
+        }
+        setIfChanged("_buttonLabel", value);
+      }
+    }
+
+    [DataMember] private string _buttonUrl;
+
+    public string ButtonUrl
+    {
+      get => string.IsNullOrEmpty(_buttonUrl) ? defaults["ButtonUrl"] : _buttonUrl;
+      set
+      {
+        if (value != null && value.Equals(defaults["ButtonUrl"]))
+        {
+          _buttonUrl = null;
+          return;
+        }
+        setIfChanged("_buttonUrl", value);
+      }
+    }
+
+    [DataMember] private bool? _showButton;
+
+    public bool ShowButton
+    {
+      get => _showButton.HasValue && _showButton.Value;
+      set => setIfChanged("_showButton", value);
     }
 
     #endregion
