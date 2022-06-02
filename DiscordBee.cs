@@ -5,8 +5,6 @@ namespace MusicBeePlugin
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
-  using System.Linq;
-  using System.Net;
   using System.Text;
   using System.Text.RegularExpressions;
   using System.Timers;
@@ -230,29 +228,18 @@ namespace MusicBeePlugin
       // Button Functionality
       if (_settings.ShowButton)
       {
-        var uri = _settings.ButtonUrl
-          .Split('/')
-          .Select(part =>
-          {
-            var result = _layoutHandler.Render(part, metaDataDict, _settings.Seperator);
-            if (part != result && (part != "_"))
-            {
-              return WebUtility.UrlEncode(result);
-            }
-
-            return part;
-          });
+        var uri = _layoutHandler.RenderUrl(_settings.ButtonUrl, metaDataDict, _settings.Seperator);
+        Debug.WriteLine($"Url: {uri}");
 
         // Validate the URL again.
-        var finalUrl = string.Join("/", uri);
-        if (ValidationHelpers.ValidateUri(finalUrl))
+        if (ValidationHelpers.ValidateUri(uri))
         {
           _discordPresence.Buttons = new Button[]
           {
             new Button
             {
               Label = padString(_settings.ButtonLabel),
-              Url = finalUrl
+              Url = uri
             }
           };
         }

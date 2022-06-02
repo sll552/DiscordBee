@@ -2,6 +2,7 @@ namespace MusicBeePlugin
 {
   using System;
   using System.Collections.Generic;
+  using System.Net;
   using System.Text.RegularExpressions;
 
   class LayoutHandler
@@ -83,6 +84,25 @@ namespace MusicBeePlugin
     public string Render(string layoutStr, Dictionary<string, string> values, string seperators)
     {
       return Replace(Clean(layoutStr, values, seperators), values);
+    }
+
+    /// <summary>
+    /// Renders layout elements in the URL and URL encodes it.
+    /// </summary>
+    /// <param name="url">URL with layout elements</param>
+    /// <param name="values">Value dictionary to use</param>
+    /// <param name="separators">The seperators used in this string, these will be used as character class in Regex</param>
+    /// <returns></returns>
+    public string RenderUrl(string url, Dictionary<string, string> values, string separators)
+    {
+      var finalUrl = url;
+      foreach (Match placeholder in _layoutElementRegex.Matches(url))
+      {
+        var render = WebUtility.UrlEncode(Render(placeholder.Value, values, separators));
+        finalUrl = finalUrl.Replace(placeholder.Value, render);
+      }
+
+      return finalUrl;
     }
   }
 }
