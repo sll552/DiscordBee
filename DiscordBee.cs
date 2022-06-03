@@ -228,7 +228,7 @@ namespace MusicBeePlugin
       // Button Functionality
       if (_settings.ShowButton)
       {
-        var uri = _layoutHandler.RenderUrl(_settings.ButtonUrl, metaDataDict, _settings.Seperator);
+        var uri = _layoutHandler.RenderUrl(_settings.ButtonUrl, metaDataDict);
         Debug.WriteLine($"Url: {uri}");
 
         // Validate the URL again.
