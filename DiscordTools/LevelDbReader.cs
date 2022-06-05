@@ -16,13 +16,13 @@ namespace MusicBeePlugin.DiscordTools
 
     public void Init()
     {
-      if (detectDiscordDataDir())
+      if (DetectDiscordDataDir())
       {
-        readToken();
+        ReadToken();
       }
     }
 
-    private void readToken()
+    private void ReadToken()
     {
       DirectoryInfo directoryRoot = new DirectoryInfo(_levelDbDir);
 
@@ -54,7 +54,7 @@ namespace MusicBeePlugin.DiscordTools
       }
     }
 
-    private bool detectDiscordDataDir()
+    private bool DetectDiscordDataDir()
     {
       // Try to detect running discord processes and get the data dir from commandline args (this should work with all discord flavours e.g. canary)
       Process[] processCollection = Process.GetProcesses();

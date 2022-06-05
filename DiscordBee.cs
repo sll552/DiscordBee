@@ -13,12 +13,11 @@ namespace MusicBeePlugin
   {
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
-    private DiscordClient _discordClient = new DiscordClient();
+    private readonly DiscordClient _discordClient = new DiscordClient();
     private LayoutHandler _layoutHandler;
     private Settings _settings;
     private SettingsWindow _settingsWindow;
-    private Timer _updateTimer = new Timer(500);
-
+    private readonly Timer _updateTimer = new Timer(500);
 
     public PluginInfo Initialise(IntPtr apiInterfacePtr)
     {
@@ -38,10 +37,10 @@ namespace MusicBeePlugin
       _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
       _about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
-      var settingsFilePath = _mbApiInterface.Setting_GetPersistentStoragePath() + _about.Name + "\\" + _about.Name + ".settings";
+      var settingsFilePath = $"{_mbApiInterface.Setting_GetPersistentStoragePath()}{_about.Name}\\{_about.Name}.settings";
 
       _settings = Settings.GetInstance(settingsFilePath);
-      _settings.SettingChanged += _SettingChangedCallback;
+      _settings.SettingChanged += SettingChangedCallback;
       _settingsWindow = new SettingsWindow(this, _settings);
 
       _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
@@ -50,7 +49,7 @@ namespace MusicBeePlugin
       // Match least number of chars possible but min 1
       _layoutHandler = new LayoutHandler(new Regex("\\[([^[]+?)\\]"));
 
-      _updateTimer.Elapsed += _updateTimer_Elapsed;
+      _updateTimer.Elapsed += UpdateTimerElapsedCallback;
       _updateTimer.AutoReset = false;
       _updateTimer.Stop();
 
@@ -59,13 +58,13 @@ namespace MusicBeePlugin
       return _about;
     }
 
-    private void _updateTimer_Elapsed(object sender, ElapsedEventArgs e)
+    private void UpdateTimerElapsedCallback(object sender, ElapsedEventArgs e)
     {
       UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
       _updateTimer.Stop();
     }
 
-    private void _SettingChangedCallback(object sender, Settings.SettingChangedEventArgs e)
+    private void SettingChangedCallback(object sender, Settings.SettingChangedEventArgs e)
     {
       if (e.SettingProperty.Equals("DiscordAppId"))
       {
@@ -82,7 +81,7 @@ namespace MusicBeePlugin
       return $"{_about.VersionMajor}.{_about.VersionMinor}.{_about.Revision}";
     }
 
-    public bool Configure(IntPtr panelHandle)
+    public bool Configure(IntPtr _)
     {
       _settingsWindow.Show();
       return true;
@@ -96,7 +95,7 @@ namespace MusicBeePlugin
     }
 
     // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
-    public void Close(PluginCloseReason reason)
+    public void Close(PluginCloseReason _)
     {
       _discordClient.Close();
     }
@@ -109,7 +108,7 @@ namespace MusicBeePlugin
 
     // receive event notifications from MusicBee
     // you need to set about.ReceiveNotificationFlags = PlayerEvents to receive all notifications, and not just the startup event
-    public void ReceiveNotification(string sourceFileUrl, NotificationType type)
+    public void ReceiveNotification(string _, NotificationType type)
     {
       Debug.WriteLine("DiscordBee: Received Notification {0}", type);
       Debug.WriteLine("    DiscordRpcClient IsConnected: {0}", _discordClient.IsConnected);
@@ -120,7 +119,7 @@ namespace MusicBeePlugin
         case NotificationType.PluginStartup:
           var playState = _mbApiInterface.Player_GetPlayState();
           // assuming MusicBee wasn't closed and started again in the same Discord session
-          if (_settings.UpdatePresenceWhenStopped || playState != PlayState.Paused && playState != PlayState.Stopped)
+          if (_settings.UpdatePresenceWhenStopped || (playState != PlayState.Paused && playState != PlayState.Stopped))
           {
             UpdateDiscordPresence(playState);
           }
@@ -194,7 +193,7 @@ namespace MusicBeePlugin
       };
 
       // Discord allows only strings with a min length of 2 or the update fails
-      // so add some exotic space (Mongolian vovel seperator) to the string if it is smaller
+      // so add some exotic space (Mongolian vowel separator) to the string if it is smaller
       // Discord also disallows strings bigger than 128bytes so handle that as well
       string padString(string input)
       {
@@ -257,12 +256,12 @@ namespace MusicBeePlugin
         else
         {
           _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
-          _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Seperator));
+          _discordPresence.Assets.LargeImageText = padString(_layoutHandler.Render(_settings.LargeImageText, metaDataDict, _settings.Separator));
 
           if (_settings.ShowPlayState && !forceHideSmallImage)
           {
             _discordPresence.Assets.SmallImageKey = padString(name);
-            _discordPresence.Assets.SmallImageText = padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Seperator));
+            _discordPresence.Assets.SmallImageText = padString(_layoutHandler.Render(_settings.SmallImageText, metaDataDict, _settings.Separator));
           }
           else
           {
@@ -272,7 +271,7 @@ namespace MusicBeePlugin
         }
       }
 
-      _discordPresence.State = padString(_layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Seperator));
+      _discordPresence.State = padString(_layoutHandler.Render(_settings.PresenceState, metaDataDict, _settings.Separator));
 
       var t = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1));
 
@@ -312,14 +311,14 @@ namespace MusicBeePlugin
           break;
       }
 
-      _discordPresence.Details = padString(_layoutHandler.Render(_settings.PresenceDetails, metaDataDict, _settings.Seperator));
+      _discordPresence.Details = padString(_layoutHandler.Render(_settings.PresenceDetails, metaDataDict, _settings.Separator));
 
       var trackcnt = -1;
       var trackno = -1;
       try
       {
-        trackcnt = int.Parse(_layoutHandler.Render(_settings.PresenceTrackCnt, metaDataDict, _settings.Seperator));
-        trackno = int.Parse(_layoutHandler.Render(_settings.PresenceTrackNo, metaDataDict, _settings.Seperator));
+        trackcnt = int.Parse(_layoutHandler.Render(_settings.PresenceTrackCnt, metaDataDict, _settings.Separator));
+        trackno = int.Parse(_layoutHandler.Render(_settings.PresenceTrackNo, metaDataDict, _settings.Separator));
       }
 #pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
       catch (Exception)
