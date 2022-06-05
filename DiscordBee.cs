@@ -5,6 +5,8 @@ namespace MusicBeePlugin
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
+  using System.IO;
+  using System.Reflection;
   using System.Text;
   using System.Text.RegularExpressions;
   using System.Timers;
@@ -18,6 +20,31 @@ namespace MusicBeePlugin
     private Settings _settings;
     private SettingsWindow _settingsWindow;
     private readonly Timer _updateTimer = new Timer(500);
+
+    public Plugin()
+    {
+      AppDomain.CurrentDomain.AssemblyResolve += (object _, ResolveEventArgs args) =>
+      {
+        string assemblyFile = args.Name.Contains(",")
+            ? args.Name.Substring(0, args.Name.IndexOf(','))
+            : args.Name;
+
+        assemblyFile += ".dll";
+
+        string absoluteFolder = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+        string targetPath = Path.Combine(absoluteFolder, "DiscordBee", assemblyFile);
+
+        try
+        {
+          Debug.WriteLine($"Trying to load assembly {targetPath}");
+          return Assembly.LoadFile(targetPath);
+        }
+        catch (Exception)
+        {
+          return null;
+        }
+      };
+    }
 
     public PluginInfo Initialise(IntPtr apiInterfacePtr)
     {
