@@ -12,13 +12,13 @@ namespace MusicBeePlugin
     /// <summary>
     /// Create a LayoutHandler instance
     /// </summary>
-    /// <param name="layoutElementRegex">The Regex used to determine layout elemets that will be replaced, the actual element name must be a subgroup e.g. '{(.+?)}'</param>
+    /// <param name="layoutElementRegex">The Regex used to determine layout elements that will be replaced, the actual element name must be a subgroup e.g. '{(.+?)}'</param>
     public LayoutHandler(Regex layoutElementRegex)
     {
       _layoutElementRegex = layoutElementRegex ?? throw new ArgumentNullException(nameof(layoutElementRegex));
     }
 
-    private string Clean(string input, Dictionary<string, string> values, string seperators)
+    private string Clean(string input, Dictionary<string, string> values, string separators)
     {
       var emptyValues = new Dictionary<string, string>();
 
@@ -33,21 +33,21 @@ namespace MusicBeePlugin
       // remove excess whitespace
       input = Regex.Replace(input, "\\s+", " ");
 
-      if (string.IsNullOrEmpty(seperators))
+      if (string.IsNullOrEmpty(separators))
       {
         return input;
       }
 
-      foreach (var sep in seperators)
+      foreach (var sep in separators)
       {
         var escsep = Regex.Escape(sep.ToString());
-        // remove double seperators
+        // remove double separators
         input = Regex.Replace(input, "[" + escsep + "]{2,}", sep.ToString());
-        // remove seperator with whitespace in between
+        // remove separator with whitespace in between
         input = Regex.Replace(input, "[" + escsep + "]\\s+[" + escsep + "]", sep.ToString());
-        // remove seperators and whitespace at the beginning
+        // remove separators and whitespace at the beginning
         input = Regex.Replace(input, "^\\s*[" + escsep + "]*\\s*", "");
-        // remove seperators and whitespace at the end
+        // remove separators and whitespace at the end
         input = Regex.Replace(input, "\\s*[" + escsep + "]+\\s*$", "");
       }
 
@@ -59,7 +59,7 @@ namespace MusicBeePlugin
       var matches = _layoutElementRegex.Matches(input);
       foreach (Match match in matches)
       {
-        // complete match is group 0 so we neeed exactly 2 groups to be able to replace correctly
+        // complete match is group 0 so we need exactly 2 groups to be able to replace correctly
         if (match.Groups.Count != 2)
         {
           continue;
@@ -78,12 +78,12 @@ namespace MusicBeePlugin
     /// Render the layout elements in the given string using the values from the provided dictionary
     /// </summary>
     /// <param name="layoutStr">String to render</param>
-    /// <param name="values">Value disctionary to use</param>
-    /// <param name="seperators">The seperators used in this string, these will be used as character class in Regex</param>
-    /// <returns></returns>
-    public string Render(string layoutStr, Dictionary<string, string> values, string seperators)
+    /// <param name="values">Value dictionary to use</param>
+    /// <param name="separators">The separators used in this string, these will be used as character class in Regex</param>
+    /// <returns>The rendered string</returns>
+    public string Render(string layoutStr, Dictionary<string, string> values, string separators)
     {
-      return Replace(Clean(layoutStr, values, seperators), values);
+      return Replace(Clean(layoutStr, values, separators), values);
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace MusicBeePlugin
     /// </summary>
     /// <param name="url">URL with layout elements</param>
     /// <param name="values">Value dictionary to use</param>
-    /// <returns></returns>
+    /// <returns>The rendered URL as string</returns>
     public string RenderUrl(string url, Dictionary<string, string> values)
     {
       var finalUrl = url;

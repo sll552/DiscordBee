@@ -56,7 +56,7 @@ namespace MusicBeePlugin
       textBoxState.Text = settings.PresenceState;
       textBoxLargeImage.Text = settings.LargeImageText;
       textBoxSmallImage.Text = settings.SmallImageText;
-      textBoxSeperator.Text = settings.Seperator;
+      textBoxSeparator.Text = settings.Separator;
       textBoxDiscordAppId.Text = settings.DiscordAppId.Equals(Settings.defaults["DiscordAppId"]) ? "" : settings.DiscordAppId;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
       checkBoxShowTime.Checked = settings.ShowTime;
@@ -99,7 +99,7 @@ namespace MusicBeePlugin
       _settings.PresenceState = textBoxState.Text;
       _settings.LargeImageText = textBoxLargeImage.Text;
       _settings.SmallImageText = textBoxSmallImage.Text;
-      _settings.Seperator = textBoxSeperator.Text;
+      _settings.Separator = textBoxSeparator.Text;
       _settings.DiscordAppId = string.IsNullOrWhiteSpace(textBoxDiscordAppId.Text) ? null : textBoxDiscordAppId.Text;
       _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
       _settings.ShowTime = checkBoxShowTime.Checked;

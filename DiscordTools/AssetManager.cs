@@ -64,7 +64,6 @@ namespace MusicBeePlugin.DiscordTools
       {
         NoCache = true
       };
-
     }
 
     public async Task Init()
@@ -95,10 +94,10 @@ namespace MusicBeePlugin.DiscordTools
     {
       if (_baseAssets.Keys.All(_cache.ContainsKey))
       {
-        Debug.WriteLine($"All required assets are already present, no need to upload them", "DiscordBee");
+        Debug.WriteLine("All required assets are already present, no need to upload them", "DiscordBee");
         return;
       }
-      Debug.WriteLine($"Uploading required base assets", "DiscordBee");
+      Debug.WriteLine("Uploading required base assets", "DiscordBee");
 
       var assembly = Assembly.GetExecutingAssembly();
       var tasks = new List<Task>();
@@ -229,7 +228,7 @@ namespace MusicBeePlugin.DiscordTools
     private string GetImageDataString(string data)
     {
       Image input = Base64ToImage(data);
-      string dataType = "data:image/png;base64,";
+      const string dataType = "data:image/png;base64,";
       string imageData = "";
 
       if (input.Width > 1024 || input.Width < 512 || input.Height > 1024 || input.Height < 512 || input.Width != input.Height)
@@ -301,7 +300,7 @@ namespace MusicBeePlugin.DiscordTools
     {
       if (_cache.Count > MAX_ASSETS)
       {
-        Debug.WriteLine($"Max number of assets reached -> deleting old ones", "DiscordBee");
+        Debug.WriteLine("Max number of assets reached -> deleting old ones", "DiscordBee");
         var tasks = new List<Task>();
         foreach (var cacheEntry in _cache.OrderBy(x => x.Value).Take(20))
         {
@@ -330,7 +329,7 @@ namespace MusicBeePlugin.DiscordTools
     {
       if (string.IsNullOrWhiteSpace(artworkData))
       {
-        Debug.WriteLine($"Artwork is empty -> using default", "DiscordBee");
+        Debug.WriteLine("Artwork is empty -> using default", "DiscordBee");
         return ASSET_LOGO;
       }
       var hash = GetHash(artworkData);

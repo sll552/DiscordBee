@@ -17,6 +17,7 @@ namespace MusicBeePlugin.DiscordTools
       [Flags]
       public enum OpenProcessDesiredAccessFlags : uint
       {
+        None = 0,
         PROCESS_VM_READ = 0x0010,
         PROCESS_QUERY_INFORMATION = 0x0400,
       }
@@ -159,7 +160,7 @@ namespace MusicBeePlugin.DiscordTools
             var ret = Win32Native.NtQueryInformationProcess(
               hProcess, Win32Native.PROCESS_BASIC_INFORMATION, memPBI,
               (uint)sizePBI, out var len);
-            if (0 == ret)
+            if (ret == 0)
             {
               var pbiInfo = Marshal.PtrToStructure<Win32Native.ProcessBasicInformation>(memPBI);
               if (pbiInfo.PebBaseAddress != IntPtr.Zero)

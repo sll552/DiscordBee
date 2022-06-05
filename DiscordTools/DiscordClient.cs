@@ -12,7 +12,7 @@ namespace MusicBeePlugin.DiscordTools
   {
     private DiscordRpcClient _discordClient;
     private AssetManager _assetManager;
-    private LevelDbReader _levelDbReader = new LevelDbReader();
+    private readonly LevelDbReader _levelDbReader = new LevelDbReader();
     private RichPresence _discordPresence;
     private string _discordId;
     private string _currentArtworkHash;
@@ -85,7 +85,7 @@ namespace MusicBeePlugin.DiscordTools
     private void Init()
     {
       Debug.WriteLine("Initialising new DiscordClient instance...", "DiscordBee");
-      initDiscordClient();
+      InitDiscordClient();
     }
 
     private async Task AssetManagerInit()
@@ -95,7 +95,7 @@ namespace MusicBeePlugin.DiscordTools
       await _assetManager.Init();
     }
 
-    private void initDiscordClient()
+    private void InitDiscordClient()
     {
       // Make sure we are clean
       IsConnected = false;
@@ -180,7 +180,7 @@ namespace MusicBeePlugin.DiscordTools
     private void UpdatePresence()
     {
       EnsureInit();
-      Debug.WriteLine($"Sending Presence update ...", "DiscordBee");
+      Debug.WriteLine("Sending Presence update ...", "DiscordBee");
       _discordClient.SetPresence(_discordPresence);
     }
 
