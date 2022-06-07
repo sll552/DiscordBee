@@ -3,27 +3,26 @@ namespace MusicBeePlugin.DiscordTools
   using DiscordRPC;
   using DiscordRPC.Logging;
   using DiscordRPC.Message;
+  using MusicBeePlugin.DiscordTools.Assets;
   using System;
   using System.Diagnostics;
-  using System.Text;
   using System.Threading.Tasks;
 
-  public class DiscordClient
+  public class DiscordClient : IDisposable
   {
     private DiscordRpcClient _discordClient;
     private AssetManager _assetManager;
-    private readonly LevelDbReader _levelDbReader = new LevelDbReader();
     private RichPresence _discordPresence;
     private string _discordId;
-    private string _currentArtworkHash;
-    private bool _artworkUploadEnabled;
+    private volatile string _currentArtworkHash;
+    private volatile bool _artworkUploadEnabled;
 
     public string DiscordId
     {
       get => _discordId;
       set
       {
-        if (value != _discordId && !String.IsNullOrWhiteSpace(value))
+        if (value != _discordId && !string.IsNullOrWhiteSpace(value))
         {
           _discordId = value;
           Init();
@@ -32,6 +31,7 @@ namespace MusicBeePlugin.DiscordTools
     }
 
     private bool _isConnected;
+
     public bool IsConnected
     {
       get => _isConnected;
@@ -55,7 +55,6 @@ namespace MusicBeePlugin.DiscordTools
             finally
             {
               _discordClient.Dispose();
-              _assetManager = null;
             }
           }
         }
@@ -74,10 +73,20 @@ namespace MusicBeePlugin.DiscordTools
           {
             Init();
           }
-          else if (!value)
-          {
-            _assetManager = null;
-          }
+        }
+      }
+    }
+
+    public AssetManager AssetManager
+    {
+      get => _assetManager;
+      set
+      {
+        _assetManager?.Dispose();
+        _assetManager = value;
+        if (!_assetManager.initialised)
+        {
+          Task.Run(() => _assetManager.Init());
         }
       }
     }
@@ -86,13 +95,6 @@ namespace MusicBeePlugin.DiscordTools
     {
       Debug.WriteLine("Initialising new DiscordClient instance...", "DiscordBee");
       InitDiscordClient();
-    }
-
-    private async Task AssetManagerInit()
-    {
-      _levelDbReader.Init();
-      _assetManager = new AssetManager(_levelDbReader.Token, _discordId);
-      await _assetManager.Init();
     }
 
     private void InitDiscordClient()
@@ -114,48 +116,56 @@ namespace MusicBeePlugin.DiscordTools
       IsConnected = false;
     }
 
-    public void UploadArtwork(string artworkData)
+    public async void UploadArtwork(AlbumCoverData artworkData)
     {
-      if (IsConnected && _assetManager?.initialised == true)
+      if (IsConnected && _assetManager?.initialised == true && _artworkUploadEnabled)
       {
-        _ = _assetManager.UploadAsset(artworkData).ContinueWith(
-          t =>
+        var upload = await _assetManager.UploadAsset(artworkData);
+
+        if (upload == null)
+        { // this most likely means another task is already uploading this asset.
+          return;
+        }
+        // Update Cover if it matches current song
+        if (upload.Hash?.Equals(_currentArtworkHash) == true)
+        {
+          if (upload.Success)
           {
-            var id = t.Result;
-            if (id == null)
-            { // this most likely means another task is already uploading this asset.
-              return;
-            }
-            // Update Cover if it matches current song
-            if (id.Equals(_currentArtworkHash))
-            {
-              _discordPresence.Assets.LargeImageKey = id;
-              UpdatePresence();
-            }
-          }, TaskContinuationOptions.OnlyOnRanToCompletion
-        );
+            _discordPresence.Assets.LargeImageKey = upload.Link;
+          }
+          else
+          {
+            _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
+          }
+          UpdatePresence();
+        }
       }
     }
 
-    public void SetPresence(RichPresence desired, string artworkData)
+    public void SetPresence(RichPresence desired, AlbumCoverData artworkData)
     {
       _discordPresence = desired.Clone();
-      _currentArtworkHash = AssetManager.GetHash(artworkData ?? "");
+      _currentArtworkHash = artworkData.Hash;
 
-      // do preprocessing here
       if (IsConnected)
       {
-        if (_assetManager?.initialised == true)
+        if (_artworkUploadEnabled && artworkData.HasCover && _assetManager?.initialised == true)
         {
-          var assetId = _assetManager.GetCachedAsset(artworkData);
-          if (assetId == null)
+          if (!_assetManager.IsAssetCached(artworkData))
           {
-            assetId = AssetManager.ASSET_LOGO;
-            UploadArtwork(artworkData);
+            _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
+            UpdatePresence();
           }
-          _discordPresence.Assets.LargeImageKey = assetId;
+          UploadArtwork(artworkData);
         }
-        UpdatePresence();
+        else
+        {
+          UpdatePresence();
+        }
+      }
+      else
+      {
+        EnsureInit();
       }
     }
 
@@ -196,9 +206,9 @@ namespace MusicBeePlugin.DiscordTools
     {
       Debug.WriteLine($"Ready. Connected to Discord Client with User: {args.User.Username}", "DiscordRpc");
       IsConnected = true;
-      if (_artworkUploadEnabled)
+      if (_artworkUploadEnabled && _assetManager?.initialised == false)
       {
-        _ = AssetManagerInit();
+        Task.Run(() => _assetManager.Init());
       }
       if (_discordPresence != null)
       {
@@ -219,6 +229,12 @@ namespace MusicBeePlugin.DiscordTools
     {
       Debug.WriteLine("DiscordRpc: Disconnected ({0}) - {1}", c.Code, c.Reason);
       IsConnected = false;
+    }
+
+    public void Dispose()
+    {
+      _discordClient.Dispose();
+      _assetManager?.Dispose();
     }
   }
 

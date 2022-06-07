@@ -2,6 +2,9 @@ namespace MusicBeePlugin
 {
   using DiscordRPC;
   using MusicBeePlugin.DiscordTools;
+  using MusicBeePlugin.DiscordTools.Assets;
+  using MusicBeePlugin.DiscordTools.Assets.Uploader;
+  using MusicBeePlugin.UI;
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
@@ -9,17 +12,22 @@ namespace MusicBeePlugin
   using System.Reflection;
   using System.Text;
   using System.Text.RegularExpressions;
+  using System.Threading.Tasks;
   using System.Timers;
+  using System.Windows.Forms;
+  using Button = DiscordRPC.Button;
+  using Timer = System.Timers.Timer;
 
   public partial class Plugin
   {
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
     private readonly DiscordClient _discordClient = new DiscordClient();
+    private UploaderHealth _uploaderStatusWindow;
     private LayoutHandler _layoutHandler;
     private Settings _settings;
     private SettingsWindow _settingsWindow;
-    private readonly Timer _updateTimer = new Timer(500);
+    private readonly Timer _updateTimer = new Timer(300);
 
     public Plugin()
     {
@@ -39,8 +47,9 @@ namespace MusicBeePlugin
           Debug.WriteLine($"Trying to load assembly {targetPath}");
           return Assembly.LoadFile(targetPath);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+          Debug.WriteLine($"Failed to load assembly {targetPath}: {ex.Message}");
           return null;
         }
       };
@@ -56,15 +65,18 @@ namespace MusicBeePlugin
       _about.Author = "Stefan Lengauer";
       _about.TargetApplication = "";   // current only applies to artwork, lyrics or instant messenger name that appears in the provider drop down selector or target Instant Messenger
       _about.Type = PluginType.General;
-      _about.VersionMajor = 2;  // your plugin version
-      _about.VersionMinor = 2;
-      _about.Revision = 1;
+      _about.VersionMajor = 3;  // your plugin version
+      _about.VersionMinor = 0;
+      _about.Revision = 0;
       _about.MinInterfaceVersion = MinInterfaceVersion;
       _about.MinApiRevision = MinApiRevision;
-      _about.ReceiveNotifications = (ReceiveNotificationFlags.PlayerEvents | ReceiveNotificationFlags.TagEvents);
+      _about.ReceiveNotifications = ReceiveNotificationFlags.PlayerEvents;
       _about.ConfigurationPanelHeight = 0;   // height in pixels that musicbee should reserve in a panel for config settings. When set, a handle to an empty panel will be passed to the Configure function
 
-      var settingsFilePath = $"{_mbApiInterface.Setting_GetPersistentStoragePath()}{_about.Name}\\{_about.Name}.settings";
+      var workingDir = _mbApiInterface.Setting_GetPersistentStoragePath() + _about.Name;
+      var settingsFilePath = $"{workingDir}\\{_about.Name}.settings";
+      var imgurAssetCachePath = $"{workingDir}\\{_about.Name}-Imgur.cache";
+      var imgurAlbum = $"{workingDir}\\{_about.Name}-Imgur.album";
 
       _settings = Settings.GetInstance(settingsFilePath);
       _settings.SettingChanged += SettingChangedCallback;
@@ -72,6 +84,12 @@ namespace MusicBeePlugin
 
       _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
       _discordClient.DiscordId = _settings.DiscordAppId;
+      ImgurUploader assetUploader = new ImgurUploader(imgurAlbum, "34debbc0ae4077e");
+      _discordClient.AssetManager = new AssetManager(new ResizingUploader(new CachingUploader(imgurAssetCachePath, assetUploader)));
+
+      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader>{ assetUploader });
+      ToolStripMenuItem mainMenuItem = (ToolStripMenuItem)_mbApiInterface.MB_AddMenuItem($"mnuTools/{_about.Name}", null, null);
+      mainMenuItem.DropDown.Items.Add("Uploader Health", null, ShowUploaderHealth);
 
       // Match least number of chars possible but min 1
       _layoutHandler = new LayoutHandler(new Regex("\\[([^[]+?)\\]"));
@@ -83,6 +101,11 @@ namespace MusicBeePlugin
       Debug.WriteLine(_about.Name + " loaded");
 
       return _about;
+    }
+
+    private void ShowUploaderHealth(object sender, EventArgs e)
+    {
+      _uploaderStatusWindow?.Show();
     }
 
     private void UpdateTimerElapsedCallback(object sender, ElapsedEventArgs e)
@@ -124,7 +147,7 @@ namespace MusicBeePlugin
     // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
     public void Close(PluginCloseReason _)
     {
-      _discordClient.Close();
+      _discordClient.Dispose();
     }
 
     // uninstall this plugin - clean up any persisted files
@@ -153,10 +176,6 @@ namespace MusicBeePlugin
           break;
         case NotificationType.TrackChanged:
         case NotificationType.PlayStateChanged:
-          UpdateDiscordPresence(_mbApiInterface.Player_GetPlayState());
-          if (type == NotificationType.TrackChanged)
-            UploadQueuedTracks();
-          break;
         // When changing the volume this event is fired for every change so with high frequency, we need to deal with that because the UI thread blocks as long as this handler is running
         case NotificationType.VolumeLevelChanged:
           if (!_updateTimer.Enabled)
@@ -164,41 +183,32 @@ namespace MusicBeePlugin
             _updateTimer.Start();
           }
           break;
-        case NotificationType.PlayingTracksChanged:
-          UploadQueuedTracks();
-          break;
       }
     }
 
-    private void UploadQueuedTracks()
+    private AlbumCoverData GetAlbumCoverData(string artworkData, Dictionary<string, string> metaData = null)
     {
-      for (int i = 0; i < 5; i++)
+      if (metaData == null)
       {
-        int nextPlayingIndex = _mbApiInterface.NowPlayingList_GetCurrentIndex();
-        string fileUrl = _mbApiInterface.NowPlayingList_GetListFileUrl(nextPlayingIndex + 1 + i);
-        if (string.IsNullOrEmpty(fileUrl))
-        {
-          return;
-        }
-
-        string artwork = _mbApiInterface.Library_GetArtwork(fileUrl, 0);
-        if (string.IsNullOrEmpty(artwork))
-        {
-          continue;
-        }
-
-        Debug.WriteLine("DiscordBee: Uploading artwork (if not cached) for " + fileUrl);
-        _discordClient.UploadArtwork(artwork);
+        metaData = GenerateMetaDataDictionary();
       }
+
+      if (!metaData.TryGetValue(nameof(MetaDataType.Artist), out string artist))
+      {
+        metaData.TryGetValue(nameof(MetaDataType.AlbumArtist), out artist);
+      }
+      metaData.TryGetValue(nameof(MetaDataType.Album), out string album);
+
+      return new AlbumCoverData(album, artist, artworkData);
     }
 
-    public Dictionary<string, string> GenerateMetaDataDictionary()
+    public Dictionary<string, string> GenerateMetaDataDictionary(string fileUrl = null)
     {
       var ret = new Dictionary<string, string>(Enum.GetNames(typeof(MetaDataType)).Length);
 
       foreach (MetaDataType elem in Enum.GetValues(typeof(MetaDataType)))
       {
-        ret.Add(elem.ToString(), _mbApiInterface.NowPlaying_GetFileTag(elem));
+        ret.Add(elem.ToString(), string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileTag(elem) : _mbApiInterface.Library_GetFileTag(fileUrl, elem));
       }
       ret.Add("PlayState", _mbApiInterface.Player_GetPlayState().ToString());
       ret.Add("Volume", Convert.ToInt32(_mbApiInterface.Player_GetVolume() * 100.0f).ToString());
@@ -376,7 +386,7 @@ namespace MusicBeePlugin
       else
       {
         Debug.WriteLine("Setting new Presence...", "DiscordBee");
-        _discordClient.SetPresence(_discordPresence, _mbApiInterface.NowPlaying_GetArtwork());
+        Task.Run(() => _discordClient.SetPresence(_discordPresence, GetAlbumCoverData(_mbApiInterface.NowPlaying_GetArtwork(), metaDataDict)));
       }
     }
   }

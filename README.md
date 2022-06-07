@@ -1,9 +1,9 @@
+# DiscordBee
 
 [![Github All Releases](https://img.shields.io/github/downloads/sll552/DiscordBee/total.svg)](https://github.com/sll552/DiscordBee/releases)
 [![AppVeyor](https://img.shields.io/appveyor/ci/sll552/DiscordBee.svg)](https://ci.appveyor.com/project/sll552/discordbee)
 [![GitHub license](https://img.shields.io/github/license/sll552/DiscordBee.svg)](https://github.com/sll552/DiscordBee/blob/master/LICENSE)
-
-# DiscordBee
+[![Discord](https://img.shields.io/discord/993112078153961523?color=5865f2&logo=discord)](https://discord.gg/nmj3e2nhTd)
 
 MusicBee plugin that updates your Discord status with the currently playing track
 
@@ -14,6 +14,23 @@ Just copy all plugin files into your MusicBee Plugins directory (usually "C:\Pro
 ### Microsoft Store Version of MusicBee
 
 If you are using the Store version of MusicBee please use the "Add Plugin" button in MusicBee -> Settings -> Plugins and select the latest release .zip. It may display an error message (something like "... initialise Method not found ..."), ignore it and restart MusicBee. The Plugin should be loaded now.
+
+### Migration from v2.x to v3.x
+
+#### Pre - Installation
+
+If you have currently installed some version 2.x of this plugin please delete all the plugin files from the plugin directory `(x86)\MusicBee\Plugins` before installing version 3.x of the plugin. The files to be removed are:
+
+- `mb_DiscordBee.dll`
+- `mb_DiscordBee.dll.config`
+- `DiscordRPC.dll`
+- `Newtonsoft.Json.dll`
+
+This will **not** remove any custom settings you have made.
+
+#### Settings
+
+The separators setting will be reset to default upon first start of version 3.x. This happens only one time and you can reset it to your previous setting immediately.
 
 ## Usage
 
@@ -31,30 +48,43 @@ The settings window is designed after the Discord profile view and has all eleme
 
 To see which fields are available press the "Placeholders" button and a window will open containing a table with all fields and their values for the current song.
 
-You can also change which characters are treated as seperators. Seperator characters will be stripped in certain conditions e.g. a field is empty and the seperator would be at the end.
+You can also change which characters are treated as separators. Separator characters will be stripped in certain conditions e.g. a field is empty and the separator would be at the end.
 
 If you are unhappy with your changes, you can always restore the defaults and save again.
 
 ### Album Covers
 
-For displaying album covers instead of the MusicBee logo you have to register your own Discord Application.
+If the cover upload feature is enabled your album covers will be uploaded to an anonymous Imgur album. This album is unique to every instance of the plugin, so nothing is shared between users of the plugin.
+You don't need an Imgur account for this feature to work.
 
-Got to https://discord.com/developers/applications/ and login using the account that the plugin is used with.
-Create a new application with a name of your choice using the button on the top right. After doing so you will get an overview of your new application, here you can copy your application ID.
+When enabling this feature it can take a few minutes until the uploads are working (suspectedly because of a delay in album creation). This only happens when the album is created the first time.
 
-![Create an application](Screenshots/discordbee_setup_1.gif)
+Imgur has rate limits regarding uploads, those are handled by the plugin. There is a global rate limit per application as well as per user. That means even if you did not upload any covers today, it might still not work for you. You can check the status of the uploader in MusicBee under `tools -> DiscordBee -> Uploader Health`.
 
-Insert the just copied application ID in the DiscordBee settings and enable the cover upload checkbox. After pressing save DicordBee will automatically start to upload all required icons (e.g. logo, play, pause, ...). After this process is finished album covers will be automatically uploaded and shown on the presence.
+![Tools Menu](Screenshots/tools_menu.png)
 
-![Configure DiscordBee](Screenshots/discordbee_setup_2.gif)
+If the uploader becomes unhealthy only cached covers will work until it becomes healthy again.
 
-After reaching a certain number of assets DiscordBee will automatically remove old ones. So you should never hit the 300 asset limit that is enforced by Discord.
+### Buttons
 
-**Attention**:
-The API used to upload assets for the Discord application is inconsistent which leads to high delays for newly uploaded assets. It can take up to 10-15 minutes for assets to be available after the upload finished. This includes the asset list in the Discord Developer Dashboard.
-So if you don't see any assets in the dashboard or in your discord client after enabling this feature it is mostly due to these issues. There seems to be no way to circumvent this and other developers have also reported this to Discord ([Topic](https://support.discord.com/hc/en-us/community/posts/360050294314-Assets-not-saving-in-Rich-Presence-tab), [Issue](https://github.com/discord/discord-api-docs/issues/2220), [Discussion](https://github.com/discord/discord-api-docs/discussions/3279)).
+If you configure a custom button and would like to test it, you cannot click on the button yourself in the Discord client, this is per design and a limitation by Discord.
+You can however use the browser version of Discord to test your button.
 
-When switching Discord accounts you have to delete `%APPDATA%/discord/Local Storage/leveldb` otherwise the new token cannot be reliably extracted. So log out with your old account, close Discord, delete the folder, open Discord and log in with your new account.
+### Custom Discord App ID
+
+You can use your own Discord "Application" with this plugin. This enables you to change the default pictures and the name above the presence (which defaults to "MusicBee").
+
+If you want to use a custom App Id you have to create one. Got to https://discord.com/developers/applications/ and login using the account that the plugin is used with. Create a new application with a name of your choice using the button on the top right. After doing so you will get an overview of your new application, here you can copy your `Application ID`.
+
+For your new Application to be useable with the plugin you need to upload the assets that are defined in https://github.com/sll552/DiscordBee/blob/master/DiscordTools/AssetManager.cs#L10-L13
+That means you need to upload one picture for each asset, all assets must be present with their defined names. For example to change the logo which is displayed if album covers are not enabled you need to:
+  
+  1. Open the Discord developer Dashboard
+  1. Select a picture that meets the requirements.
+  1. Upload this picture and name the asset `logo`
+  1. Upload all the other assets from the [Resources Folder](Resources/Icons/) with their respective names.
+
+When you are done uploading the assets you can take your `Application ID` from the dashboard and insert it in the DiscordBee settings. Now DiscordBee will use your custom Name and assets.
 
 ## Screenshots
 

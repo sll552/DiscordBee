@@ -1,4 +1,4 @@
-namespace MusicBeePlugin
+namespace MusicBeePlugin.UI
 {
   partial class SettingsWindow
   {
@@ -188,6 +188,7 @@ namespace MusicBeePlugin
       // checkBoxTextOnly
       // 
       this.checkBoxTextOnly.AutoSize = true;
+      this.checkBoxTextOnly.ForeColor = System.Drawing.Color.Black;
       this.checkBoxTextOnly.Location = new System.Drawing.Point(266, 91);
       this.checkBoxTextOnly.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxTextOnly.Name = "checkBoxTextOnly";
@@ -200,6 +201,7 @@ namespace MusicBeePlugin
       // checkBoxShowRemainingTime
       // 
       this.checkBoxShowRemainingTime.AutoSize = true;
+      this.checkBoxShowRemainingTime.ForeColor = System.Drawing.Color.Black;
       this.checkBoxShowRemainingTime.Location = new System.Drawing.Point(266, 64);
       this.checkBoxShowRemainingTime.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowRemainingTime.Name = "checkBoxShowRemainingTime";
@@ -212,6 +214,7 @@ namespace MusicBeePlugin
       // checkBoxPresenceUpdate
       // 
       this.checkBoxPresenceUpdate.AutoSize = true;
+      this.checkBoxPresenceUpdate.ForeColor = System.Drawing.Color.Black;
       this.checkBoxPresenceUpdate.Location = new System.Drawing.Point(266, 6);
       this.checkBoxPresenceUpdate.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxPresenceUpdate.Name = "checkBoxPresenceUpdate";
@@ -221,11 +224,11 @@ namespace MusicBeePlugin
       this.checkBoxPresenceUpdate.Text = "Show presence when no music is playing";
       this.checkBoxPresenceUpdate.UseVisualStyleBackColor = true;
       // 
-      // textBoxSeperator
+      // textBoxSeparator
       // 
       this.textBoxSeparator.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.textBoxSeparator.Location = new System.Drawing.Point(87, 3);
-      this.textBoxSeparator.Name = "textBoxSeperator";
+      this.textBoxSeparator.Name = "textBoxSeparator";
       this.textBoxSeparator.Size = new System.Drawing.Size(87, 25);
       this.textBoxSeparator.TabIndex = 4;
       // 
@@ -233,6 +236,7 @@ namespace MusicBeePlugin
       // 
       this.label5.AutoSize = true;
       this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label5.ForeColor = System.Drawing.Color.Black;
       this.label5.Location = new System.Drawing.Point(14, 7);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(70, 15);
@@ -288,6 +292,7 @@ namespace MusicBeePlugin
       // 
       this.panel2.AutoSize = true;
       this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.panel2.BackColor = System.Drawing.Color.Transparent;
       this.panel2.Controls.Add(this.customButtonToggle);
       this.panel2.Controls.Add(this.checkBoxShowOnlyNonPlayingState);
       this.panel2.Controls.Add(this.checkBoxShowPlayState);
@@ -310,6 +315,7 @@ namespace MusicBeePlugin
       // customButtonToggle
       // 
       this.customButtonToggle.AutoSize = true;
+      this.customButtonToggle.ForeColor = System.Drawing.Color.Black;
       this.customButtonToggle.Location = new System.Drawing.Point(266, 118);
       this.customButtonToggle.Margin = new System.Windows.Forms.Padding(4);
       this.customButtonToggle.Name = "customButtonToggle";
@@ -324,6 +330,7 @@ namespace MusicBeePlugin
       this.checkBoxShowOnlyNonPlayingState.AutoSize = true;
       this.checkBoxShowOnlyNonPlayingState.Checked = true;
       this.checkBoxShowOnlyNonPlayingState.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxShowOnlyNonPlayingState.ForeColor = System.Drawing.Color.Black;
       this.checkBoxShowOnlyNonPlayingState.Location = new System.Drawing.Point(17, 118);
       this.checkBoxShowOnlyNonPlayingState.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowOnlyNonPlayingState.Name = "checkBoxShowOnlyNonPlayingState";
@@ -338,6 +345,7 @@ namespace MusicBeePlugin
       this.checkBoxShowPlayState.AutoSize = true;
       this.checkBoxShowPlayState.Checked = true;
       this.checkBoxShowPlayState.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxShowPlayState.ForeColor = System.Drawing.Color.Black;
       this.checkBoxShowPlayState.Location = new System.Drawing.Point(17, 91);
       this.checkBoxShowPlayState.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowPlayState.Name = "checkBoxShowPlayState";
@@ -352,6 +360,7 @@ namespace MusicBeePlugin
       this.checkBoxShowTime.AutoSize = true;
       this.checkBoxShowTime.Checked = true;
       this.checkBoxShowTime.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.checkBoxShowTime.ForeColor = System.Drawing.Color.Black;
       this.checkBoxShowTime.Location = new System.Drawing.Point(266, 34);
       this.checkBoxShowTime.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowTime.Name = "checkBoxShowTime";
@@ -364,14 +373,15 @@ namespace MusicBeePlugin
       // checkBoxArtworkUpload
       // 
       this.checkBoxArtworkUpload.AutoSize = true;
-      this.checkBoxArtworkUpload.BackColor = System.Drawing.Color.White;
+      this.checkBoxArtworkUpload.BackColor = System.Drawing.Color.Transparent;
+      this.checkBoxArtworkUpload.ForeColor = System.Drawing.Color.Black;
       this.checkBoxArtworkUpload.Location = new System.Drawing.Point(17, 64);
       this.checkBoxArtworkUpload.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxArtworkUpload.Name = "checkBoxArtworkUpload";
       this.checkBoxArtworkUpload.Padding = new System.Windows.Forms.Padding(2);
-      this.checkBoxArtworkUpload.Size = new System.Drawing.Size(249, 21);
+      this.checkBoxArtworkUpload.Size = new System.Drawing.Size(130, 21);
       this.checkBoxArtworkUpload.TabIndex = 10;
-      this.checkBoxArtworkUpload.Text = "Upload album covers (requires custom App ID)";
+      this.checkBoxArtworkUpload.Text = "Upload album covers";
       this.checkBoxArtworkUpload.UseVisualStyleBackColor = false;
       this.checkBoxArtworkUpload.CheckedChanged += new System.EventHandler(this.checkBoxArtworkUpload_CheckedChanged);
       // 
@@ -379,7 +389,8 @@ namespace MusicBeePlugin
       // 
       this.labelDiscordAppId.AutoSize = true;
       this.labelDiscordAppId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.labelDiscordAppId.Location = new System.Drawing.Point(14, 36);
+      this.labelDiscordAppId.ForeColor = System.Drawing.Color.Black;
+      this.labelDiscordAppId.Location = new System.Drawing.Point(14, 35);
       this.labelDiscordAppId.Name = "labelDiscordAppId";
       this.labelDiscordAppId.Size = new System.Drawing.Size(91, 15);
       this.labelDiscordAppId.TabIndex = 8;
@@ -399,6 +410,7 @@ namespace MusicBeePlugin
       this.panel3.AutoScroll = true;
       this.panel3.AutoSize = true;
       this.panel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.panel3.BackColor = System.Drawing.Color.Transparent;
       this.panel3.Controls.Add(this.buttonRestoreDefaults);
       this.panel3.Controls.Add(this.buttonPlaceholders);
       this.panel3.Controls.Add(this.buttonSaveClose);

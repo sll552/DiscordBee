@@ -1,4 +1,4 @@
-﻿namespace MusicBeePlugin
+namespace MusicBeePlugin.UI
 {
   using System.Collections.Generic;
   using System.Linq;
