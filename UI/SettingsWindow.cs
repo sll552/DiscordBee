@@ -1,4 +1,4 @@
-namespace MusicBeePlugin
+namespace MusicBeePlugin.UI
 {
   using System;
   using System.Drawing;
@@ -183,7 +183,7 @@ namespace MusicBeePlugin
 
     private void ResetErrorIndications()
     {
-      textBoxDiscordAppId.BackColor = Color.White;
+      textBoxDiscordAppId.BackColor = SystemColors.Window;
       customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
     }
 

@@ -3,11 +3,9 @@ namespace MusicBeePlugin
   using System;
   using System.Collections.Generic;
   using System.IO;
-  using System.Linq;
   using System.Reflection;
   using System.Runtime.Serialization;
   using System.Xml;
-  using DiscordRPC;
 
   [DataContract]
   public class Settings
@@ -36,13 +34,12 @@ namespace MusicBeePlugin
 
     #region Settings
 
-    // Cant rename this without breaking saved settings so spelling is bad for now
-    [DataMember] private string _seperator;
+    [DataMember] private string _separator;
 
     public string Separator
     {
-      get => _seperator ?? defaults["Separator"];
-      set => SetIfChanged("_seperator", value);
+      get => _separator ?? defaults["Separator"];
+      set => SetIfChanged("_separator", value);
     }
 
     [DataMember] private string _largeImageText;
