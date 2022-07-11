@@ -47,7 +47,7 @@ namespace MusicBeePlugin.DiscordTools.Assets.Uploader
 
       foreach (var image in images)
       {
-        ret.Add(image.Title, image.Link);
+        ret[image.Title] = image.Link;
       }
 
       return ret;
