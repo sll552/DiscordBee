@@ -214,6 +214,7 @@ namespace MusicBeePlugin
       {
         ret.Add(elem.ToString(), string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileProperty(elem) : _mbApiInterface.Library_GetFileProperty(fileUrl, elem));
       }
+      ret.Add("Extension", Path.GetExtension(string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileUrl() : fileUrl).TrimStart('.').ToUpper());
       ret.Add("PlayState", _mbApiInterface.Player_GetPlayState().ToString());
       ret.Add("Volume", Convert.ToInt32(_mbApiInterface.Player_GetVolume() * 100.0f).ToString());
 
