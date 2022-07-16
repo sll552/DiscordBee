@@ -47,6 +47,8 @@ namespace MusicBeePlugin.UI
       this.buttonSaveClose = new System.Windows.Forms.Button();
       this.buttonPlaceholders = new System.Windows.Forms.Button();
       this.panel2 = new System.Windows.Forms.Panel();
+      this.labelImgurClientId = new System.Windows.Forms.Label();
+      this.textBoxImgurClientId = new System.Windows.Forms.TextBox();
       this.customButtonToggle = new System.Windows.Forms.CheckBox();
       this.checkBoxShowOnlyNonPlayingState = new System.Windows.Forms.CheckBox();
       this.checkBoxShowPlayState = new System.Windows.Forms.CheckBox();
@@ -60,8 +62,6 @@ namespace MusicBeePlugin.UI
       this.customButtonUrl = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
       this.customButtonLabel = new System.Windows.Forms.TextBox();
-      this.labelImgurClientId = new System.Windows.Forms.Label();
-      this.textBoxImgurClientId = new System.Windows.Forms.TextBox();
       this.panel2.SuspendLayout();
       this.panel3.SuspendLayout();
       this.panel4.SuspendLayout();
@@ -316,6 +316,26 @@ namespace MusicBeePlugin.UI
       this.panel2.Size = new System.Drawing.Size(524, 204);
       this.panel2.TabIndex = 1;
       // 
+      // labelImgurClientId
+      // 
+      this.labelImgurClientId.AutoSize = true;
+      this.labelImgurClientId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.labelImgurClientId.ForeColor = System.Drawing.Color.Black;
+      this.labelImgurClientId.Location = new System.Drawing.Point(14, 65);
+      this.labelImgurClientId.Name = "labelImgurClientId";
+      this.labelImgurClientId.Size = new System.Drawing.Size(88, 15);
+      this.labelImgurClientId.TabIndex = 19;
+      this.labelImgurClientId.Text = "Imgur Client ID";
+      // 
+      // textBoxImgurClientId
+      // 
+      this.textBoxImgurClientId.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxImgurClientId.Location = new System.Drawing.Point(108, 62);
+      this.textBoxImgurClientId.Name = "textBoxImgurClientId";
+      this.textBoxImgurClientId.Size = new System.Drawing.Size(151, 25);
+      this.textBoxImgurClientId.TabIndex = 20;
+      this.textBoxImgurClientId.TextChanged += new System.EventHandler(this.textBoxImgurClientId_TextChanged);
+      // 
       // customButtonToggle
       // 
       this.customButtonToggle.AutoSize = true;
@@ -493,25 +513,6 @@ namespace MusicBeePlugin.UI
       this.customButtonLabel.Name = "customButtonLabel";
       this.customButtonLabel.Size = new System.Drawing.Size(177, 25);
       this.customButtonLabel.TabIndex = 10;
-      // 
-      // labelImgurClientId
-      // 
-      this.labelImgurClientId.AutoSize = true;
-      this.labelImgurClientId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.labelImgurClientId.ForeColor = System.Drawing.Color.Black;
-      this.labelImgurClientId.Location = new System.Drawing.Point(14, 65);
-      this.labelImgurClientId.Name = "labelImgurClientId";
-      this.labelImgurClientId.Size = new System.Drawing.Size(88, 15);
-      this.labelImgurClientId.TabIndex = 19;
-      this.labelImgurClientId.Text = "Imgur Client ID";
-      // 
-      // textBoxImgurClientId
-      // 
-      this.textBoxImgurClientId.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.textBoxImgurClientId.Location = new System.Drawing.Point(108, 62);
-      this.textBoxImgurClientId.Name = "textBoxImgurClientId";
-      this.textBoxImgurClientId.Size = new System.Drawing.Size(151, 25);
-      this.textBoxImgurClientId.TabIndex = 20;
       // 
       // SettingsWindow
       // 

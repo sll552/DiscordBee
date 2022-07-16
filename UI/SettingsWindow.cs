@@ -140,7 +140,7 @@ namespace MusicBeePlugin.UI
 
       bool validateDiscordId()
       {
-        if (textBoxDiscordAppId.Text.Length != Settings.defaults["DiscordAppId"].Length
+        if (textBoxDiscordAppId.Text.Length < 18 || textBoxDiscordAppId.Text.Length > 19
           || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
           || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
         {
@@ -213,6 +213,11 @@ namespace MusicBeePlugin.UI
     }
 
     private void customButtonUrl_TextChanged(object sender, EventArgs e)
+    {
+      ValidateInputs();
+    }
+
+    private void textBoxImgurClientId_TextChanged(object sender, EventArgs e)
     {
       ValidateInputs();
     }
