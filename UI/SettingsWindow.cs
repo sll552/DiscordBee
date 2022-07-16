@@ -201,6 +201,5 @@ namespace MusicBeePlugin.UI
     {
       ValidateInputs();
     }
-
   }
 }
