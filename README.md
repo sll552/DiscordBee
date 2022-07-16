@@ -91,7 +91,7 @@ When you are done uploading the assets you can take your `Application ID` from t
 To circumvent the global rate limits you can use your own Imgur Client ID. This is only recommended if you experience that the uploader health is immediately (after first upload) false even if you haven't used DiscordBee for a day.
 
 To get a client ID you must register an application at Imgur. You need an account for that.
-Go to the [Registration Page](https://api.imgur.com/oauth2/addclient) and fill out the form by selecting the 3rd option for `Authorization type` (Anonymous). You will receive a Client Id and a secret, you will only need the ID.
+Go to the [Registration Page](https://api.imgur.com/oauth2/addclient) and fill out the form by first selecting the 2nd option then selecting the 3rd for `Authorization type` (Anonymous), this dance is required for the form to ignore the URL that you don't need. You will receive a Client Id and a secret, you will only need the ID.
 
 Copy the ID and insert it in the DiscordBee Settings. The new Client ID will be used after changing the current song.
 
