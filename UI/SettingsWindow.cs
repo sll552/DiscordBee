@@ -138,9 +138,9 @@ namespace MusicBeePlugin.UI
 
       bool validateDiscordId()
       {
-        if (textBoxDiscordAppId.Text.Length != Settings.defaults["DiscordAppId"].Length
-          || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
-          || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
+        if ((textBoxDiscordAppId.Text.Length != 18 && textBoxDiscordAppId.Text.Length != 19)
+            || textBoxDiscordAppId.Text.Equals(Settings.defaults["DiscordAppId"])
+            || !ContainsDigitsOnly(textBoxDiscordAppId.Text))
         {
           textBoxDiscordAppId.BackColor = Color.PaleVioletRed;
           return false;
@@ -201,5 +201,6 @@ namespace MusicBeePlugin.UI
     {
       ValidateInputs();
     }
+
   }
 }
