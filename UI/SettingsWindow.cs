@@ -58,6 +58,7 @@ namespace MusicBeePlugin.UI
       textBoxSmallImage.Text = settings.SmallImageText;
       textBoxSeparator.Text = settings.Separator;
       textBoxDiscordAppId.Text = settings.DiscordAppId.Equals(Settings.defaults["DiscordAppId"]) ? "" : settings.DiscordAppId;
+      textBoxImgurClientId.Text = settings.ImgurClientId.Equals(Settings.defaults["ImgurClientId"]) ? "" : settings.ImgurClientId;
       checkBoxPresenceUpdate.Checked = settings.UpdatePresenceWhenStopped;
       checkBoxShowTime.Checked = settings.ShowTime;
       checkBoxShowRemainingTime.Checked = settings.ShowRemainingTime;
@@ -101,6 +102,7 @@ namespace MusicBeePlugin.UI
       _settings.SmallImageText = textBoxSmallImage.Text;
       _settings.Separator = textBoxSeparator.Text;
       _settings.DiscordAppId = string.IsNullOrWhiteSpace(textBoxDiscordAppId.Text) ? null : textBoxDiscordAppId.Text;
+      _settings.ImgurClientId = string.IsNullOrWhiteSpace(textBoxImgurClientId.Text) ? null : textBoxImgurClientId.Text;
       _settings.UpdatePresenceWhenStopped = checkBoxPresenceUpdate.Checked;
       _settings.ShowTime = checkBoxShowTime.Checked;
       _settings.ShowRemainingTime = checkBoxShowRemainingTime.Checked;
@@ -149,12 +151,24 @@ namespace MusicBeePlugin.UI
         return true;
       }
 
-      if (checkBoxArtworkUpload.Checked && !validateDiscordId())
+      if (textBoxDiscordAppId.Text.Length > 0 && !validateDiscordId())
       {
         return false;
       }
 
-      if (textBoxDiscordAppId.Text.Length > 0 && !validateDiscordId())
+      bool validateImgurClientId()
+      {
+        if (textBoxImgurClientId.Text.Length != Settings.defaults["ImgurClientId"].Length
+          || textBoxImgurClientId.Text.Equals(Settings.defaults["ImgurClientId"]))
+        {
+          textBoxImgurClientId.BackColor = Color.PaleVioletRed;
+          return false;
+        }
+        textBoxImgurClientId.BackColor = Color.White;
+        return true;
+      }
+
+      if (checkBoxArtworkUpload.Checked && textBoxImgurClientId.Text.Length > 0 && !validateImgurClientId())
       {
         return false;
       }
@@ -184,6 +198,7 @@ namespace MusicBeePlugin.UI
     private void ResetErrorIndications()
     {
       textBoxDiscordAppId.BackColor = SystemColors.Window;
+      textBoxImgurClientId.BackColor = SystemColors.Window;
       customButtonUrl.BackColor = Color.FromArgb(114, 137, 218);
     }
 

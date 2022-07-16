@@ -26,6 +26,7 @@ namespace MusicBeePlugin
       {"ButtonUrl", "https://www.last.fm/music/[Artist]/_/[TrackTitle]"},
       {"DiscordAppId", "409394531948298250"}, // prod
       //{"DiscordAppId", "408977077799354379"}, // dev
+      {"ImgurClientId", "09bef4c058080cd"},
     };
 
     public event EventHandler<SettingChangedEventArgs> SettingChanged;
@@ -103,6 +104,22 @@ namespace MusicBeePlugin
           return;
         }
         SetIfChanged("_discordAppId", value);
+      }
+    }
+
+    [DataMember] private string _imgurClientId;
+
+    public string ImgurClientId
+    {
+      get => _imgurClientId ?? defaults["ImgurClientId"];
+      set
+      {
+        if (value?.Equals(defaults["ImgurClientId"]) == true)
+        {
+          _imgurClientId = null;
+          return;
+        }
+        SetIfChanged("_imgurClientId", value);
       }
     }
 

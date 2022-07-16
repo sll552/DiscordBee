@@ -60,6 +60,8 @@ namespace MusicBeePlugin.UI
       this.customButtonUrl = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
       this.customButtonLabel = new System.Windows.Forms.TextBox();
+      this.labelImgurClientId = new System.Windows.Forms.Label();
+      this.textBoxImgurClientId = new System.Windows.Forms.TextBox();
       this.panel2.SuspendLayout();
       this.panel3.SuspendLayout();
       this.panel4.SuspendLayout();
@@ -293,6 +295,8 @@ namespace MusicBeePlugin.UI
       this.panel2.AutoSize = true;
       this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
       this.panel2.BackColor = System.Drawing.Color.Transparent;
+      this.panel2.Controls.Add(this.labelImgurClientId);
+      this.panel2.Controls.Add(this.textBoxImgurClientId);
       this.panel2.Controls.Add(this.customButtonToggle);
       this.panel2.Controls.Add(this.checkBoxShowOnlyNonPlayingState);
       this.panel2.Controls.Add(this.checkBoxShowPlayState);
@@ -309,7 +313,7 @@ namespace MusicBeePlugin.UI
       this.panel2.Location = new System.Drawing.Point(0, 157);
       this.panel2.MinimumSize = new System.Drawing.Size(0, 100);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(524, 159);
+      this.panel2.Size = new System.Drawing.Size(524, 204);
       this.panel2.TabIndex = 1;
       // 
       // customButtonToggle
@@ -331,7 +335,7 @@ namespace MusicBeePlugin.UI
       this.checkBoxShowOnlyNonPlayingState.Checked = true;
       this.checkBoxShowOnlyNonPlayingState.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkBoxShowOnlyNonPlayingState.ForeColor = System.Drawing.Color.Black;
-      this.checkBoxShowOnlyNonPlayingState.Location = new System.Drawing.Point(17, 118);
+      this.checkBoxShowOnlyNonPlayingState.Location = new System.Drawing.Point(17, 145);
       this.checkBoxShowOnlyNonPlayingState.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowOnlyNonPlayingState.Name = "checkBoxShowOnlyNonPlayingState";
       this.checkBoxShowOnlyNonPlayingState.Padding = new System.Windows.Forms.Padding(2);
@@ -346,7 +350,7 @@ namespace MusicBeePlugin.UI
       this.checkBoxShowPlayState.Checked = true;
       this.checkBoxShowPlayState.CheckState = System.Windows.Forms.CheckState.Checked;
       this.checkBoxShowPlayState.ForeColor = System.Drawing.Color.Black;
-      this.checkBoxShowPlayState.Location = new System.Drawing.Point(17, 91);
+      this.checkBoxShowPlayState.Location = new System.Drawing.Point(17, 118);
       this.checkBoxShowPlayState.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxShowPlayState.Name = "checkBoxShowPlayState";
       this.checkBoxShowPlayState.Padding = new System.Windows.Forms.Padding(2);
@@ -375,7 +379,7 @@ namespace MusicBeePlugin.UI
       this.checkBoxArtworkUpload.AutoSize = true;
       this.checkBoxArtworkUpload.BackColor = System.Drawing.Color.Transparent;
       this.checkBoxArtworkUpload.ForeColor = System.Drawing.Color.Black;
-      this.checkBoxArtworkUpload.Location = new System.Drawing.Point(17, 64);
+      this.checkBoxArtworkUpload.Location = new System.Drawing.Point(17, 91);
       this.checkBoxArtworkUpload.Margin = new System.Windows.Forms.Padding(4);
       this.checkBoxArtworkUpload.Name = "checkBoxArtworkUpload";
       this.checkBoxArtworkUpload.Padding = new System.Windows.Forms.Padding(2);
@@ -415,7 +419,7 @@ namespace MusicBeePlugin.UI
       this.panel3.Controls.Add(this.buttonPlaceholders);
       this.panel3.Controls.Add(this.buttonSaveClose);
       this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.panel3.Location = new System.Drawing.Point(0, 316);
+      this.panel3.Location = new System.Drawing.Point(0, 361);
       this.panel3.MinimumSize = new System.Drawing.Size(0, 30);
       this.panel3.Name = "panel3";
       this.panel3.Size = new System.Drawing.Size(524, 30);
@@ -490,13 +494,32 @@ namespace MusicBeePlugin.UI
       this.customButtonLabel.Size = new System.Drawing.Size(177, 25);
       this.customButtonLabel.TabIndex = 10;
       // 
+      // labelImgurClientId
+      // 
+      this.labelImgurClientId.AutoSize = true;
+      this.labelImgurClientId.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.labelImgurClientId.ForeColor = System.Drawing.Color.Black;
+      this.labelImgurClientId.Location = new System.Drawing.Point(14, 65);
+      this.labelImgurClientId.Name = "labelImgurClientId";
+      this.labelImgurClientId.Size = new System.Drawing.Size(88, 15);
+      this.labelImgurClientId.TabIndex = 19;
+      this.labelImgurClientId.Text = "Imgur Client ID";
+      // 
+      // textBoxImgurClientId
+      // 
+      this.textBoxImgurClientId.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.textBoxImgurClientId.Location = new System.Drawing.Point(108, 62);
+      this.textBoxImgurClientId.Name = "textBoxImgurClientId";
+      this.textBoxImgurClientId.Size = new System.Drawing.Size(151, 25);
+      this.textBoxImgurClientId.TabIndex = 20;
+      // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSize = true;
       this.BackColor = System.Drawing.Color.White;
-      this.ClientSize = new System.Drawing.Size(524, 346);
+      this.ClientSize = new System.Drawing.Size(524, 391);
       this.Controls.Add(this.panel2);
       this.Controls.Add(this.panel3);
       this.Controls.Add(this.panel4);
@@ -549,5 +572,7 @@ namespace MusicBeePlugin.UI
     private System.Windows.Forms.CheckBox checkBoxShowTime;
     private System.Windows.Forms.CheckBox checkBoxShowPlayState;
     private System.Windows.Forms.CheckBox checkBoxShowOnlyNonPlayingState;
-  }
+        private System.Windows.Forms.Label labelImgurClientId;
+        private System.Windows.Forms.TextBox textBoxImgurClientId;
+    }
 }

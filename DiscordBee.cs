@@ -28,6 +28,8 @@ namespace MusicBeePlugin
     private Settings _settings;
     private SettingsWindow _settingsWindow;
     private readonly Timer _updateTimer = new Timer(300);
+    private string _imgurAssetCachePath;
+    private string _imgurAlbum;
 
     public Plugin()
     {
@@ -75,8 +77,8 @@ namespace MusicBeePlugin
 
       var workingDir = _mbApiInterface.Setting_GetPersistentStoragePath() + _about.Name;
       var settingsFilePath = $"{workingDir}\\{_about.Name}.settings";
-      var imgurAssetCachePath = $"{workingDir}\\{_about.Name}-Imgur.cache";
-      var imgurAlbum = $"{workingDir}\\{_about.Name}-Imgur.album";
+      _imgurAssetCachePath = $"{workingDir}\\{_about.Name}-Imgur.cache";
+      _imgurAlbum = $"{workingDir}\\{_about.Name}-Imgur.album";
 
       _settings = Settings.GetInstance(settingsFilePath);
       _settings.SettingChanged += SettingChangedCallback;
@@ -84,10 +86,7 @@ namespace MusicBeePlugin
 
       _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
       _discordClient.DiscordId = _settings.DiscordAppId;
-      ImgurUploader assetUploader = new ImgurUploader(imgurAlbum, "34debbc0ae4077e");
-      _discordClient.AssetManager = new AssetManager(new ResizingUploader(new CachingUploader(imgurAssetCachePath, assetUploader)));
-
-      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader>{ assetUploader });
+      UpdateAssetManager(_imgurAssetCachePath, new ImgurUploader(_imgurAlbum, _settings.ImgurClientId));
       ToolStripMenuItem mainMenuItem = (ToolStripMenuItem)_mbApiInterface.MB_AddMenuItem($"mnuTools/{_about.Name}", null, null);
       mainMenuItem.DropDown.Items.Add("Uploader Health", null, ShowUploaderHealth);
 
@@ -101,6 +100,13 @@ namespace MusicBeePlugin
       Debug.WriteLine(_about.Name + " loaded");
 
       return _about;
+    }
+
+    private void UpdateAssetManager(string cachePath, IAssetUploader actualUploader)
+    {
+      _discordClient.AssetManager = new AssetManager(new ResizingUploader(new CachingUploader(cachePath, actualUploader)));
+      _uploaderStatusWindow?.Dispose();
+      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader> { actualUploader });
     }
 
     private void ShowUploaderHealth(object sender, EventArgs e)
@@ -123,6 +129,10 @@ namespace MusicBeePlugin
       if (e.SettingProperty.Equals("UploadArtwork"))
       {
         _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
+      }
+      if (e.SettingProperty.Equals("ImgurClientId"))
+      {
+        UpdateAssetManager(_imgurAssetCachePath, new ImgurUploader(_imgurAlbum, _settings.ImgurClientId));
       }
     }
 
