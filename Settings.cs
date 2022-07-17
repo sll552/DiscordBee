@@ -176,25 +176,7 @@ namespace MusicBeePlugin
     public bool UploadArtwork
     {
       get => _uploadArtwork == true;
-      set
-      {
-        if (!DiscordAppId.Equals(defaults["DiscordAppId"]))
-        {
-          SetIfChanged("_uploadArtwork", value);
-        }
-        else
-        {
-          var eventArgs = new SettingChangedEventArgs
-          {
-            SettingProperty = "UploadArtwork",
-            OldValue = _uploadArtwork,
-            NewValue = null
-          };
-          _uploadArtwork = null;
-          IsDirty = true;
-          OnSettingChanged(eventArgs);
-        }
-      }
+      set => SetIfChanged("_uploadArtwork", value);
     }
 
     [DataMember] private string _buttonLabel;
