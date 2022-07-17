@@ -69,7 +69,7 @@ namespace MusicBeePlugin
       _about.Type = PluginType.General;
       _about.VersionMajor = 3;  // your plugin version
       _about.VersionMinor = 0;
-      _about.Revision = 2;
+      _about.Revision = 3;
       _about.MinInterfaceVersion = MinInterfaceVersion;
       _about.MinApiRevision = MinApiRevision;
       _about.ReceiveNotifications = ReceiveNotificationFlags.PlayerEvents;
