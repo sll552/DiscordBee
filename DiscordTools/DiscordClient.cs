@@ -6,6 +6,7 @@ namespace MusicBeePlugin.DiscordTools
   using MusicBeePlugin.DiscordTools.Assets;
   using System;
   using System.Diagnostics;
+  using System.Threading;
   using System.Threading.Tasks;
 
   public class DiscordClient : IDisposable
@@ -16,6 +17,7 @@ namespace MusicBeePlugin.DiscordTools
     private string _discordId;
     private volatile string _currentArtworkHash;
     private volatile bool _artworkUploadEnabled;
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public string DiscordId
     {
@@ -127,24 +129,40 @@ namespace MusicBeePlugin.DiscordTools
           return;
         }
         // Update Cover if it matches current song
-        if (upload.Hash?.Equals(_currentArtworkHash) == true)
+        _semaphore.Wait();
+        try
         {
-          if (upload.Success)
+          if (upload.Hash?.Equals(_currentArtworkHash) == true && _discordPresence != null)
           {
-            _discordPresence.Assets.LargeImageKey = upload.Link;
+            if (upload.Success)
+            {
+              _discordPresence.Assets.LargeImageKey = upload.Link;
+            }
+            else
+            {
+              _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
+            }
+            UpdatePresence();
           }
-          else
-          {
-            _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
-          }
-          UpdatePresence();
+        }
+        finally
+        {
+          _semaphore.Release();
         }
       }
     }
 
     public void SetPresence(RichPresence desired, AlbumCoverData artworkData)
     {
-      _discordPresence = desired.Clone();
+      _semaphore.Wait();
+      try
+      {
+        _discordPresence = desired.Clone();
+      }
+      finally
+      {
+        _semaphore.Release();
+      }
       _currentArtworkHash = artworkData.Hash;
 
       if (IsConnected)
@@ -153,8 +171,16 @@ namespace MusicBeePlugin.DiscordTools
         {
           if (!_assetManager.IsAssetCached(artworkData))
           {
-            _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
-            UpdatePresence();
+            _semaphore.Wait();
+            try
+            {
+              _discordPresence.Assets.LargeImageKey = AssetManager.ASSET_LOGO;
+              UpdatePresence();
+            }
+            finally
+            {
+              _semaphore.Release();
+            }
           }
           UploadArtwork(artworkData);
         }
@@ -173,7 +199,16 @@ namespace MusicBeePlugin.DiscordTools
     {
       if (IsConnected)
       {
-        _discordPresence = null;
+        _semaphore.Wait();
+        try
+        {
+          _discordPresence = null;
+        }
+        finally
+        {
+          _semaphore.Release();
+        }
+
         _discordClient.ClearPresence();
       }
     }
@@ -210,9 +245,17 @@ namespace MusicBeePlugin.DiscordTools
       {
         Task.Run(() => _assetManager.Init());
       }
-      if (_discordPresence != null)
+      _semaphore.Wait();
+      try
       {
-        UpdatePresence();
+        if (_discordPresence != null)
+        {
+          UpdatePresence();
+        }
+      }
+      finally
+      {
+        _semaphore.Release();
       }
     }
 
