@@ -4,8 +4,9 @@ namespace MusicBeePlugin
   using System.Collections.Generic;
   using System.Net;
   using System.Text.RegularExpressions;
+  using System.Windows.Forms.VisualStyles;
 
-  class LayoutHandler
+  public class LayoutHandler
   {
     private readonly Regex _layoutElementRegex;
 
@@ -56,8 +57,7 @@ namespace MusicBeePlugin
 
     private string Replace(string input, Dictionary<string, string> values)
     {
-      var matches = _layoutElementRegex.Matches(input);
-      foreach (Match match in matches)
+      foreach (Match match in _layoutElementRegex.Matches(input))
       {
         // complete match is group 0 so we need exactly 2 groups to be able to replace correctly
         if (match.Groups.Count != 2)
@@ -92,14 +92,42 @@ namespace MusicBeePlugin
     /// <param name="url">URL with layout elements</param>
     /// <param name="values">Value dictionary to use</param>
     /// <returns>The rendered URL as string</returns>
-    public string RenderUrl(string url, Dictionary<string, string> values)
+    public string RenderUrl(string url, Dictionary<string, string> values, char escapeCharacter)
     {
       var finalUrl = url;
       foreach (Match placeholder in _layoutElementRegex.Matches(url))
       {
-        var render = WebUtility.UrlEncode(Render(placeholder.Value, values, ""));
+        var render = UnEscapeUrl(WebUtility.UrlEncode(Render(placeholder.Value, values, "")), "###", escapeCharacter);
         finalUrl = finalUrl.Replace(placeholder.Value, render);
       }
+
+      return finalUrl;
+    }
+
+    private string UnEscapeUrl(string url, string trigger, char escChar)
+    {
+      // The url must start with a trigger string to prevent unescaping where it's not wanted, e.g. artist names etc.
+      // Virtual Tags that need to use this feature must start with this string for escaping to work.
+      if (!url.StartsWith(WebUtility.UrlEncode(trigger)))
+      {
+        return url;
+      }
+
+      var finalUrl = url.Substring(WebUtility.UrlEncode(trigger).Length);
+      var escCharEnc = WebUtility.UrlEncode(escChar.ToString());
+      finalUrl = finalUrl.Replace(escCharEnc+escCharEnc, escChar.ToString());
+      string[] split = finalUrl.Split(new string[] {escCharEnc}, StringSplitOptions.None);
+      for (int i = 0; i < split.Length; i++)
+      {
+        if (i > 0 && split[i].StartsWith("%"))
+        {
+          var decoded = WebUtility.UrlDecode(split[i]);
+          var firstCharEnc = WebUtility.UrlEncode(decoded[0].ToString());
+          split[i] = decoded[0] + split[i].Substring(firstCharEnc.Length);
+        }
+      }
+
+      finalUrl = string.Join(null, split);
 
       return finalUrl;
     }
