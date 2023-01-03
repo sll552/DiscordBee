@@ -246,7 +246,7 @@ namespace MusicBeePlugin
       if (target != null)
       {
         PropertyInfo targetProp = GetType().GetProperty(GetPropertyNameForField(target.Name), BindingFlags.Instance | BindingFlags.Public);
-        object old = targetProp.GetValue(this, null);
+        object old = targetProp?.GetValue(this, null);
         if (targetProp != null && !old.Equals(value))
         {
           target.SetValue(this, value);
