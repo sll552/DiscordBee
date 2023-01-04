@@ -6,7 +6,7 @@ namespace Tests
   [TestClass]
   public class LayoutHandlerTests
   {
-    private Dictionary<string, string> _placeholders = new Dictionary<string, string>()
+    private Dictionary<string, string> _placeholders = new()
     {
       {"Album", "..**!§$%&/(-.,asdfASDFöäü#+" },
       {"Artist", "Name Lastname" }
