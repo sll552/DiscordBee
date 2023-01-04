@@ -1,7 +1,6 @@
 version: '{build}'
-image: Visual Studio 2019
+image: Visual Studio 2022
 configuration: Release
-platform: Any CPU
 before_build:
 - ps: nuget restore
 build:
@@ -10,9 +9,9 @@ build:
 after_build:
 - ps: >-
     if ($env:APPVEYOR_REPO_TAG -eq "false") {
-      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH-$env:APPVEYOR_BUILD_NUMBER.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*", "-xr!*.pdb"
+      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH-$env:APPVEYOR_BUILD_NUMBER.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*"
     } else {
-      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_REPO_TAG_NAME.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*", "-xr!*.pdb"
+      Start-Process -FilePath "7z" -ArgumentList "a", "$env:APPVEYOR_PROJECT_NAME-$env:CONFIGURATION-$env:APPVEYOR_REPO_TAG_NAME.zip", "$env:APPVEYOR_BUILD_FOLDER\bin\$env:CONFIGURATION\*"
     }
 artifacts:
 - path: bin/$(configuration)/**/*

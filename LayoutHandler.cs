@@ -4,7 +4,6 @@ namespace MusicBeePlugin
   using System.Collections.Generic;
   using System.Net;
   using System.Text.RegularExpressions;
-  using System.Windows.Forms.VisualStyles;
 
   public class LayoutHandler
   {
@@ -127,9 +126,7 @@ namespace MusicBeePlugin
         }
       }
 
-      finalUrl = string.Join(null, split);
-
-      return finalUrl;
+      return string.Join(null, split);
     }
   }
 }
