@@ -1,5 +1,6 @@
 namespace MusicBeePlugin.ImgurClient
 {
+  using System.Collections.Generic;
   using System.Linq;
   using System.Net.Http;
   using System.Threading;
@@ -7,12 +8,16 @@ namespace MusicBeePlugin.ImgurClient
 
   public class RateLimitHandler : DelegatingHandler
   {
-    public const string UserRateLimitHeader = "X-RateLimit-UserRemaining";
-    public const string AppRateLimitHeader = "X-RateLimit-ClientRemaining";
-    private readonly string[] _rateLimitHeader = { UserRateLimitHeader, AppRateLimitHeader };
+    private readonly Dictionary<string, string> _rateLimitHeader = new Dictionary<string, string>() {
+      { "X-RateLimit-UserRemaining", "IP is rate limited" },
+      { "X-RateLimit-ClientRemaining", "Imgur app is rate limited" },
+      { "X-Post-Rate-Limit-Remaining", "Post requests are rate limited" }
+    };
+    private string rateLimitInfo;
     // 20 because one upload uses 10 tokens
     public const int MinTokensLeft = 20;
     public bool IsRateLimited { get; private set; }
+    public string RateLimitInfo => IsRateLimited ? rateLimitInfo : "";
 
     public RateLimitHandler(HttpMessageHandler innerHandler) : base(innerHandler)
     {
@@ -25,7 +30,7 @@ namespace MusicBeePlugin.ImgurClient
 
       if (response != null)
       {
-        foreach (var header in _rateLimitHeader)
+        foreach (var header in _rateLimitHeader.Keys)
         {
           if (response.Headers.Contains(header))
           {
@@ -33,6 +38,7 @@ namespace MusicBeePlugin.ImgurClient
             IsRateLimited = tokensLeft <= MinTokensLeft;
             if (IsRateLimited)
             {
+              rateLimitInfo = _rateLimitHeader[header];
               break;
             }
           }

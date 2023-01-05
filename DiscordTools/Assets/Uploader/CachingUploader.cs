@@ -78,9 +78,18 @@ namespace MusicBeePlugin.DiscordTools.Assets.Uploader
       return _cache.ContainsKey(assetData.Hash) || base.IsAssetCached(assetData);
     }
 
-    public override bool IsHealthy()
+    public override UploaderHealthInfo GetHealth()
     {
-      return !_cache.IsEmpty || base.IsHealthy();
+      var health = new UploaderHealthInfo(base.GetHealth());
+      if (!_cache.IsEmpty || health.IsHealthy)
+      {
+        health.IsHealthy = true;
+      } else
+      {
+        health.IsHealthy = false;
+        health.AddInfo("Cache is empty");
+      }
+      return health;
     }
 
     public override Task<UploadResult> UploadAsset(AlbumCoverData assetData)

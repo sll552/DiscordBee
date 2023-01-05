@@ -38,14 +38,14 @@ namespace MusicBeePlugin.DiscordTools.Assets.Uploader
       return _innerUploader?.IsAssetCached(assetData) == true;
     }
 
-    public virtual bool IsHealthy()
+    public virtual UploaderHealthInfo GetHealth()
     {
-      return _innerUploader?.IsHealthy() == true;
+      return _innerUploader?.GetHealth();
     }
 
     public virtual Task<UploadResult> UploadAsset(AlbumCoverData assetData)
     {
-      if (_innerUploader?.IsHealthy() == true)
+      if (_innerUploader?.GetHealth().IsHealthy == true)
       {
         return _innerUploader?.UploadAsset(assetData) ?? Task.FromResult<UploadResult>(new UploadResult { Hash = assetData.Hash, Link = null });
       }

@@ -10,7 +10,7 @@ namespace MusicBeePlugin.DiscordTools.Assets
     Task<UploadResult> UploadAsset(AlbumCoverData assetData);
     Task<bool> DeleteAsset(AlbumCoverData assetData);
     Task<Dictionary<string, string>> GetAssets();
-    bool IsHealthy();
+    UploaderHealthInfo GetHealth();
     Task<bool> Init();
   }
 }

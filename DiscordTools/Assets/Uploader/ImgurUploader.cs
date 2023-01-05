@@ -125,9 +125,15 @@ namespace MusicBeePlugin.DiscordTools.Assets.Uploader
       return false;
     }
 
-    public bool IsHealthy()
+    public UploaderHealthInfo GetHealth()
     {
-      return _client?.IsRateLimited() == false;
+      var health = new UploaderHealthInfo();
+      var (status, info) = _client.IsRateLimited();
+
+      health.IsHealthy = !status;
+      health.AddInfo(info);
+
+      return health;
     }
 
     public async Task<UploadResult> UploadAsset(AlbumCoverData assetData)
