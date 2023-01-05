@@ -2,18 +2,27 @@ namespace MusicBeePlugin.UI
 {
   using MusicBeePlugin.DiscordTools.Assets;
   using System.Collections.Generic;
-  using System.Linq;
   using System.Windows.Forms;
 
   public partial class UploaderHealth : Form
   {
     private readonly List<IAssetUploader> _uploader;
+    private readonly BindingSource _source = new BindingSource();
     public UploaderHealth(List<IAssetUploader> uploader)
     {
       InitializeComponent();
       _uploader = uploader;
+
+      SetupGridView();
+
       VisibleChanged += UploaderHealth_VisibleChanged;
       FormClosing += UploaderHealth_FormClosing;
+    }
+
+    private void SetupGridView()
+    {
+      dataGridView1.AutoGenerateColumns = true;
+      dataGridView1.DataSource = _source;
     }
 
     private void UploaderHealth_FormClosing(object sender, FormClosingEventArgs e)
@@ -41,21 +50,14 @@ namespace MusicBeePlugin.UI
     }
     private void RefreshStatus()
     {
-      var newData = new Dictionary<string, string>();
+      _source.Clear();
 
       foreach (var uploader in _uploader)
       {
-        newData.Add(uploader.GetType().Name, $"Healthy: {uploader.IsHealthy()}");
+        UploaderHealthInfo uploaderHealthInfo = uploader.GetHealth();
+        _source.Add(new UploaderHealthState(uploader.GetType().Name, uploaderHealthInfo.IsHealthy, string.Join(";\n", uploaderHealthInfo.AdditionalInfo)));
       }
 
-      dataGridView1.DataSource = null;
-      dataGridView1.Columns.Clear();
-      dataGridView1.Rows.Clear();
-      dataGridView1.Refresh();
-
-      dataGridView1.AutoGenerateColumns = true;
-      dataGridView1.DataSource = newData.ToList().ToSortableBindingList();
-      dataGridView1.Refresh();
       var lastcol = dataGridView1.Columns.GetLastColumn(DataGridViewElementStates.Visible, DataGridViewElementStates.None);
       if (lastcol != null)
       {
@@ -67,5 +69,19 @@ namespace MusicBeePlugin.UI
         col.SortMode = DataGridViewColumnSortMode.Automatic;
       }
     }
+  }
+
+  internal class UploaderHealthState
+  {
+    public UploaderHealthState(string name, bool isHealthy, string info)
+    {
+      Name = name;
+      Healthy = isHealthy;
+      Info = info;
+    }
+
+    public string Name { get; }
+    public bool Healthy { get; }
+    public string Info { get; }
   }
 }

@@ -93,6 +93,7 @@
     <Compile Include="DiscordTools\AlbumCoverData.cs" />
     <Compile Include="DiscordTools\Assets\AssetManager.cs" />
     <Compile Include="DiscordTools\Assets\IAssetUploader.cs" />
+    <Compile Include="DiscordTools\Assets\UploaderHealthInfo.cs" />
     <Compile Include="DiscordTools\Assets\Uploader\CachingUploader.cs" />
     <Compile Include="DiscordTools\Assets\Uploader\DelegatingUploader.cs" />
     <Compile Include="DiscordTools\Assets\Uploader\ImgurUploader.cs" />

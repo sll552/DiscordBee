@@ -87,9 +87,9 @@ namespace MusicBeePlugin.ImgurClient
       return default;
     }
 
-    public bool IsRateLimited()
+    public (bool status, string info) IsRateLimited()
     {
-      return _rateLimitHandler?.IsRateLimited == true;
+      return (_rateLimitHandler?.IsRateLimited == true, _rateLimitHandler?.RateLimitInfo);
     }
 
     public void Dispose()

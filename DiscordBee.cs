@@ -104,9 +104,10 @@ namespace MusicBeePlugin
 
     private void UpdateAssetManager(string cachePath, IAssetUploader actualUploader)
     {
-      _discordClient.AssetManager = new AssetManager(new ResizingUploader(new CachingUploader(cachePath, actualUploader)));
+      ResizingUploader uploader = new ResizingUploader(new CachingUploader(cachePath, actualUploader));
+      _discordClient.AssetManager = new AssetManager(uploader);
       _uploaderStatusWindow?.Dispose();
-      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader> { actualUploader });
+      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader> { actualUploader, uploader });
     }
 
     private void ShowUploaderHealth(object sender, EventArgs e)
