@@ -5,6 +5,8 @@ namespace MusicBeePlugin
   using MusicBeePlugin.DiscordTools.Assets;
   using MusicBeePlugin.DiscordTools.Assets.Uploader;
   using MusicBeePlugin.UI;
+  using Serilog;
+  using Serilog.Core;
   using System;
   using System.Collections.Generic;
   using System.Diagnostics;
@@ -30,6 +32,7 @@ namespace MusicBeePlugin
     private readonly Timer _updateTimer = new Timer(300);
     private string _imgurAssetCachePath;
     private string _imgurAlbum;
+    private LoggingLevelSwitch _loggingLevelSwitch;
 
     public Plugin()
     {
@@ -59,6 +62,8 @@ namespace MusicBeePlugin
 
     public PluginInfo Initialise(IntPtr apiInterfacePtr)
     {
+      Log.Debug("Initialization of plugin started");
+
       _mbApiInterface = new MusicBeeApiInterface();
       _mbApiInterface.Initialise(apiInterfacePtr);
       _about.PluginInfoVersion = PluginInfoVersion;
@@ -80,12 +85,28 @@ namespace MusicBeePlugin
       _imgurAssetCachePath = $"{workingDir}\\{_about.Name}-Imgur.cache";
       _imgurAlbum = $"{workingDir}\\{_about.Name}-Imgur.album";
 
+      // Logging
+      _loggingLevelSwitch = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Verbose);
+      Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.ControlledBy(_loggingLevelSwitch)
+        .Enrich.FromLogContext()
+        .Enrich.WithThreadId()
+        .WriteTo.Debug(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] <{ThreadId}> {Message:lj}{NewLine}{Exception}")
+        .WriteTo.Async(l => l.File(path: $"{workingDir}\\log\\DiscordBee-log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit:14, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] <{ThreadId}> {Message:lj}{NewLine}{Exception}"))
+        .CreateLogger();
+
+      // Settings
+      Log.Verbose("Reading settings from {SettingsFilePath}", settingsFilePath);
       _settings = Settings.GetInstance(settingsFilePath);
       _settings.SettingChanged += SettingChangedCallback;
       _settingsWindow = new SettingsWindow(this, _settings);
+      // TODO set loglevel based on loaded settings
 
+      // Discord
+      Log.Verbose("Setting up the discord client");
       _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
       _discordClient.DiscordId = _settings.DiscordAppId;
+      Log.Verbose("Setting up the asset uploader");
       UpdateAssetManager(_imgurAssetCachePath, new ImgurUploader(_imgurAlbum, _settings.ImgurClientId));
       ToolStripMenuItem mainMenuItem = (ToolStripMenuItem)_mbApiInterface.MB_AddMenuItem($"mnuTools/{_about.Name}", null, null);
       mainMenuItem.DropDown.Items.Add("Uploader Health", null, ShowUploaderHealth);
@@ -97,17 +118,19 @@ namespace MusicBeePlugin
       _updateTimer.AutoReset = false;
       _updateTimer.Stop();
 
-      Debug.WriteLine(_about.Name + " loaded");
+      Log.Information("Initialization of plugin {Name} finished", _about.Name);
 
       return _about;
     }
 
     private void UpdateAssetManager(string cachePath, IAssetUploader actualUploader)
     {
+      Log.Debug("Updating asset manager instance with cachePath: {CachePath}", cachePath);
       ResizingUploader uploader = new ResizingUploader(new CachingUploader(cachePath, actualUploader));
       _discordClient.AssetManager = new AssetManager(uploader);
       _uploaderStatusWindow?.Dispose();
       _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader> { actualUploader, uploader });
+      Log.Debug("Updating asset manager finished");
     }
 
     private void ShowUploaderHealth(object sender, EventArgs e)
@@ -158,12 +181,15 @@ namespace MusicBeePlugin
     // MusicBee is closing the plugin (plugin is being disabled by user or MusicBee is shutting down)
     public void Close(PluginCloseReason _)
     {
+      Log.Information("Plugin {Name} is closing", _about.Name);
       _discordClient.Dispose();
+      Log.CloseAndFlush();
     }
 
-    // uninstall this plugin - clean up any persisted files
+    // Uninstall this plugin - clean up any persisted files
     public void Uninstall()
     {
+      Log.Information("Plugin {Name} uninstalling, deleting settings", _about.Name);
       _settings.Delete();
     }
 
@@ -171,8 +197,8 @@ namespace MusicBeePlugin
     // you need to set about.ReceiveNotificationFlags = PlayerEvents to receive all notifications, and not just the startup event
     public void ReceiveNotification(string _, NotificationType type)
     {
-      Debug.WriteLine("DiscordBee: Received Notification {0}", type);
-      Debug.WriteLine("    DiscordRpcClient IsConnected: {0}", _discordClient.IsConnected);
+      Log.Debug("Received Notification: {Type}", type);
+      Log.Debug("  DiscordRpcClient IsConnected: {IsConnected}", _discordClient.IsConnected);
 
       // perform some action depending on the notification type
       switch (type)
@@ -234,7 +260,7 @@ namespace MusicBeePlugin
 
     private void UpdateDiscordPresence(PlayState playerGetPlayState)
     {
-      Debug.WriteLine("DiscordBee: Updating Presence with PlayState {0}...", playerGetPlayState);
+      Log.Debug("DiscordBee: Updating presence with playState: {0}", playerGetPlayState);
       var metaDataDict = GenerateMetaDataDictionary();
       RichPresence _discordPresence = new RichPresence
       {
@@ -279,7 +305,7 @@ namespace MusicBeePlugin
       if (_settings.ShowButton)
       {
         var uri = _layoutHandler.RenderUrl(_settings.ButtonUrl, metaDataDict, '\\');
-        Debug.WriteLine($"Url: {uri}");
+        Log.Debug("Presence button URL is: {Uri}", uri);
 
         // Validate the URL again.
         if (ValidationHelpers.ValidateUri(uri))
@@ -394,12 +420,12 @@ namespace MusicBeePlugin
 
       if (!_settings.UpdatePresenceWhenStopped && (playerGetPlayState == PlayState.Paused || playerGetPlayState == PlayState.Stopped))
       {
-        Debug.WriteLine("Clearing Presence...", "DiscordBee");
+        Log.Debug("Clearing Presence");
         _discordClient.ClearPresence();
       }
       else
       {
-        Debug.WriteLine("Setting new Presence...", "DiscordBee");
+        Log.Debug("Setting new Presence");
         Task.Run(() => _discordClient.SetPresence(_discordPresence, GetAlbumCoverData(_mbApiInterface.NowPlaying_GetArtwork(), metaDataDict)));
       }
     }
