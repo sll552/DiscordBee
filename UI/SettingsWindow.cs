@@ -1,5 +1,6 @@
 namespace MusicBeePlugin.UI
 {
+  using Serilog.Events;
   using System;
   using System.Drawing;
   using System.Windows.Forms;
@@ -16,6 +17,9 @@ namespace MusicBeePlugin.UI
       _parent = parent;
       _settings = settings;
       InitializeComponent();
+
+      comboBoxLogLevel.DataSource = Enum.GetValues(typeof(LogEventLevel));
+
       UpdateValues(_settings);
       Text += " (v" + parent.GetVersionString() + ")";
 
@@ -69,6 +73,7 @@ namespace MusicBeePlugin.UI
       customButtonLabel.Text = settings.ButtonLabel;
       customButtonUrl.Text = settings.ButtonUrl;
       customButtonToggle.Checked = settings.ShowButton;
+      comboBoxLogLevel.SelectedItem = settings.LogLevel;
 
       ValidateInputs();
     }
@@ -113,6 +118,7 @@ namespace MusicBeePlugin.UI
       _settings.ButtonUrl = customButtonUrl.Text;
       _settings.ButtonLabel = customButtonLabel.Text;
       _settings.ShowButton = customButtonToggle.Checked;
+      _settings.LogLevel = (LogEventLevel)comboBoxLogLevel.SelectedItem;
 
       if (_defaultsRestored && !_settings.IsDirty)
       {

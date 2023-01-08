@@ -62,6 +62,8 @@ namespace MusicBeePlugin.UI
       this.customButtonUrl = new System.Windows.Forms.TextBox();
       this.label8 = new System.Windows.Forms.Label();
       this.customButtonLabel = new System.Windows.Forms.TextBox();
+      this.comboBoxLogLevel = new System.Windows.Forms.ComboBox();
+      this.labelLogLevel = new System.Windows.Forms.Label();
       this.panel2.SuspendLayout();
       this.panel3.SuspendLayout();
       this.panel4.SuspendLayout();
@@ -295,6 +297,8 @@ namespace MusicBeePlugin.UI
       this.panel2.AutoSize = true;
       this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
       this.panel2.BackColor = System.Drawing.Color.Transparent;
+      this.panel2.Controls.Add(this.labelLogLevel);
+      this.panel2.Controls.Add(this.comboBoxLogLevel);
       this.panel2.Controls.Add(this.labelImgurClientId);
       this.panel2.Controls.Add(this.textBoxImgurClientId);
       this.panel2.Controls.Add(this.customButtonToggle);
@@ -323,9 +327,9 @@ namespace MusicBeePlugin.UI
       this.labelImgurClientId.ForeColor = System.Drawing.Color.Black;
       this.labelImgurClientId.Location = new System.Drawing.Point(14, 65);
       this.labelImgurClientId.Name = "labelImgurClientId";
-      this.labelImgurClientId.Size = new System.Drawing.Size(88, 15);
+      this.labelImgurClientId.Size = new System.Drawing.Size(91, 15);
       this.labelImgurClientId.TabIndex = 19;
-      this.labelImgurClientId.Text = "Imgur Client ID";
+      this.labelImgurClientId.Text = "Imgur Client ID:";
       // 
       // textBoxImgurClientId
       // 
@@ -514,6 +518,23 @@ namespace MusicBeePlugin.UI
       this.customButtonLabel.Size = new System.Drawing.Size(177, 25);
       this.customButtonLabel.TabIndex = 10;
       // 
+      // comboBoxLogLevel
+      // 
+      this.comboBoxLogLevel.FormattingEnabled = true;
+      this.comboBoxLogLevel.Location = new System.Drawing.Point(318, 145);
+      this.comboBoxLogLevel.Name = "comboBoxLogLevel";
+      this.comboBoxLogLevel.Size = new System.Drawing.Size(90, 21);
+      this.comboBoxLogLevel.TabIndex = 21;
+      // 
+      // labelLogLevel
+      // 
+      this.labelLogLevel.AutoSize = true;
+      this.labelLogLevel.Location = new System.Drawing.Point(263, 148);
+      this.labelLogLevel.Name = "labelLogLevel";
+      this.labelLogLevel.Size = new System.Drawing.Size(50, 13);
+      this.labelLogLevel.TabIndex = 22;
+      this.labelLogLevel.Text = "Log level";
+      // 
       // SettingsWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -575,5 +596,7 @@ namespace MusicBeePlugin.UI
     private System.Windows.Forms.CheckBox checkBoxShowOnlyNonPlayingState;
         private System.Windows.Forms.Label labelImgurClientId;
         private System.Windows.Forms.TextBox textBoxImgurClientId;
-    }
+    private System.Windows.Forms.ComboBox comboBoxLogLevel;
+    private System.Windows.Forms.Label labelLogLevel;
+  }
 }

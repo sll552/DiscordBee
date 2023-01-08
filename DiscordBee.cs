@@ -92,7 +92,7 @@ namespace MusicBeePlugin
         .Enrich.FromLogContext()
         .Enrich.WithThreadId()
         .WriteTo.Debug(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] <{ThreadId}> {Message:lj}{NewLine}{Exception}")
-        .WriteTo.Async(l => l.File(path: $"{workingDir}\\log\\DiscordBee-log.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit:14, outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] <{ThreadId}> {Message:lj}{NewLine}{Exception}"))
+        .WriteTo.Async(l => l.File(path: $"{workingDir}\\log\\DiscordBee-log.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] <{ThreadId}> {Message:lj}{NewLine}{Exception}", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
         .CreateLogger();
 
       // Settings
@@ -157,6 +157,10 @@ namespace MusicBeePlugin
       if (e.SettingProperty.Equals("ImgurClientId"))
       {
         UpdateAssetManager(_imgurAssetCachePath, new ImgurUploader(_imgurAlbum, _settings.ImgurClientId));
+      }
+      if (e.SettingProperty.Equals("LogLevel"))
+      {
+        _loggingLevelSwitch.MinimumLevel = _settings.LogLevel;
       }
     }
 

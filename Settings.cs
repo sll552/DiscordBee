@@ -1,5 +1,6 @@
 namespace MusicBeePlugin
 {
+  using Serilog.Events;
   using System;
   using System.Collections.Generic;
   using System.IO;
@@ -217,6 +218,14 @@ namespace MusicBeePlugin
     {
       get => _showButton == true;
       set => SetIfChanged("_showButton", value);
+    }
+
+    [DataMember] private LogEventLevel _logLevel = LogEventLevel.Information;
+
+    public LogEventLevel LogLevel
+    {
+      get => _logLevel;
+      set => SetIfChanged("_logLevel", value);
     }
 
     #endregion
