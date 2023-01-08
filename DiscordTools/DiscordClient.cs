@@ -198,6 +198,7 @@ namespace MusicBeePlugin.DiscordTools
 
     public void ClearPresence()
     {
+      Log.Debug("Clearing Presence");
       if (IsConnected)
       {
         _semaphore.Wait();
@@ -212,6 +213,7 @@ namespace MusicBeePlugin.DiscordTools
 
         _discordClient.ClearPresence();
       }
+      Log.Debug("Clearing Presence finished");
     }
 
     private void EnsureInit()

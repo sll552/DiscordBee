@@ -146,6 +146,8 @@ namespace MusicBeePlugin
 
     private void SettingChangedCallback(object sender, Settings.SettingChangedEventArgs e)
     {
+      Log.Debug("Setting changed event received for property: {SettingProperty} old: {OldValue} new: {NewValue}", e.SettingProperty, e.OldValue, e.NewValue);
+
       if (e.SettingProperty.Equals("DiscordAppId"))
       {
         _discordClient.DiscordId = _settings.DiscordAppId;
@@ -245,18 +247,24 @@ namespace MusicBeePlugin
 
     public Dictionary<string, string> GenerateMetaDataDictionary(string fileUrl = null)
     {
+      Log.Verbose("GenerateMetaDataDictionary called with fileUrl: {FileUrl}", fileUrl);
       var ret = new Dictionary<string, string>(Enum.GetNames(typeof(MetaDataType)).Length + Enum.GetNames(typeof(FilePropertyType)).Length);
 
       foreach (MetaDataType elem in Enum.GetValues(typeof(MetaDataType)))
       {
+        Log.Verbose("Getting Metadata {Elem} NP_FileTag: {1}", elem, _mbApiInterface.NowPlaying_GetFileTag(elem));
         ret.Add(elem.ToString(), string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileTag(elem) : _mbApiInterface.Library_GetFileTag(fileUrl, elem));
       }
       foreach (FilePropertyType elem in Enum.GetValues(typeof(FilePropertyType)))
       {
+        Log.Verbose("Getting Property {Elem} NP_FileProperty: {1}", elem, _mbApiInterface.NowPlaying_GetFileProperty(elem));
         ret.Add(elem.ToString(), string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileProperty(elem) : _mbApiInterface.Library_GetFileProperty(fileUrl, elem));
       }
+      Log.Verbose("Getting file extension NP_FileUrl: {0}", _mbApiInterface.NowPlaying_GetFileUrl());
       ret.Add("Extension", Path.GetExtension(string.IsNullOrWhiteSpace(fileUrl) ? _mbApiInterface.NowPlaying_GetFileUrl() : fileUrl).TrimStart('.').ToUpper());
+      Log.Verbose("Getting PlayState");
       ret.Add("PlayState", _mbApiInterface.Player_GetPlayState().ToString());
+      Log.Verbose("Getting Volume raw value: {0}", _mbApiInterface.Player_GetVolume());
       ret.Add("Volume", Convert.ToInt32(_mbApiInterface.Player_GetVolume() * 100.0f).ToString());
 
       return ret;
@@ -264,7 +272,7 @@ namespace MusicBeePlugin
 
     private void UpdateDiscordPresence(PlayState playerGetPlayState)
     {
-      Log.Debug("DiscordBee: Updating presence with playState: {0}", playerGetPlayState);
+      Log.Debug("DiscordBee: Updating presence with playState: {playerGetPlayState}", playerGetPlayState);
       var metaDataDict = GenerateMetaDataDictionary();
       RichPresence _discordPresence = new RichPresence
       {
@@ -424,12 +432,11 @@ namespace MusicBeePlugin
 
       if (!_settings.UpdatePresenceWhenStopped && (playerGetPlayState == PlayState.Paused || playerGetPlayState == PlayState.Stopped))
       {
-        Log.Debug("Clearing Presence");
         _discordClient.ClearPresence();
       }
       else
       {
-        Log.Debug("Setting new Presence");
+        Log.Debug("Setting new Presence in Background");
         Task.Run(() => _discordClient.SetPresence(_discordPresence, GetAlbumCoverData(_mbApiInterface.NowPlaying_GetArtwork(), metaDataDict)));
       }
     }

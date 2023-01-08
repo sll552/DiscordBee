@@ -4,8 +4,6 @@ namespace MusicBeePlugin.ImgurClient
   using RestSharp;
   using RestSharp.Serializers.NewtonsoftJson;
   using System;
-  using System.Net;
-  using System.Threading;
   using System.Threading.Tasks;
 
   public class ImgurClient : IDisposable
