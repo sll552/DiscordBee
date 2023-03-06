@@ -76,7 +76,7 @@ You can use your own Discord "Application" with this plugin. This enables you to
 
 If you want to use a custom App Id you have to create one. Got to https://discord.com/developers/applications/ and login using the account that the plugin is used with. Create a new application with a name of your choice using the button on the top right. After doing so you will get an overview of your new application, here you can copy your `Application ID`.
 
-For your new Application to be useable with the plugin you need to upload the assets that are defined in https://github.com/sll552/DiscordBee/blob/master/DiscordTools/AssetManager.cs#L10-L13
+For your new Application to be useable with the plugin you need to upload the assets that are defined [here](https://github.com/sll552/DiscordBee/blob/master/DiscordTools/Assets/AssetManager.cs#L11-L14).
 That means you need to upload one picture for each asset, all assets must be present with their defined names. For example to change the logo which is displayed if album covers are not enabled you need to:
   
   1. Open the Discord developer Dashboard
