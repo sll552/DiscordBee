@@ -23,6 +23,7 @@ namespace MusicBeePlugin
     private MusicBeeApiInterface _mbApiInterface;
     private readonly PluginInfo _about = new PluginInfo();
     private readonly DiscordClient _discordClient = new DiscordClient();
+    private List<IAssetUploader> _assetUploaders = new List<IAssetUploader>();
     private UploaderHealth _uploaderStatusWindow;
     private LayoutHandler _layoutHandler;
     private Settings _settings;
@@ -82,7 +83,6 @@ namespace MusicBeePlugin
 
       _settings = Settings.GetInstance(settingsFilePath);
       _settings.SettingChanged += SettingChangedCallback;
-      _settingsWindow = new SettingsWindow(this, _settings);
 
       _discordClient.ArtworkUploadEnabled = _settings.UploadArtwork;
       _discordClient.DiscordId = _settings.DiscordAppId;
@@ -106,13 +106,20 @@ namespace MusicBeePlugin
     {
       ResizingUploader uploader = new ResizingUploader(new CachingUploader(cachePath, actualUploader));
       _discordClient.AssetManager = new AssetManager(uploader);
-      _uploaderStatusWindow?.Dispose();
-      _uploaderStatusWindow = new UploaderHealth(new List<IAssetUploader> { actualUploader, uploader });
+
+      _assetUploaders.Clear();
+      _assetUploaders.Add(actualUploader);
+      _assetUploaders.Add(uploader);
     }
 
     private void ShowUploaderHealth(object sender, EventArgs e)
     {
-      _uploaderStatusWindow?.Show();
+      if (_uploaderStatusWindow == null)
+      {
+        _uploaderStatusWindow = new UploaderHealth(_assetUploaders);
+      }
+
+      _uploaderStatusWindow.Show();
     }
 
     private void UpdateTimerElapsedCallback(object sender, ElapsedEventArgs e)
@@ -144,6 +151,11 @@ namespace MusicBeePlugin
 
     public bool Configure(IntPtr _)
     {
+      if (_settingsWindow == null)
+      {
+        _settingsWindow = new SettingsWindow(this, _settings);
+      }
+
       _settingsWindow.Show();
       return true;
     }
