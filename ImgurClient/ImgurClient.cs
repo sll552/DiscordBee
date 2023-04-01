@@ -27,11 +27,10 @@ namespace MusicBeePlugin.ImgurClient
         {
           _rateLimitHandler = new RateLimitHandler(orig);
           return _rateLimitHandler;
-        }
+        },
+        Authenticator = new ImgurAuthenticator(clientId)
       };
-      _client = new RestClient(options);
-      _client.UseAuthenticator(new ImgurAuthenticator(clientId));
-      _client.UseNewtonsoftJson();
+      _client = new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson());
     }
 
     public async Task<ImgurAlbum> CreateAlbum()

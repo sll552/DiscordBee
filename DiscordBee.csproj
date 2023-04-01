@@ -178,10 +178,10 @@
       <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
-      <Version>[108.0.3]</Version>
+      <Version>109.0.1</Version>
     </PackageReference>
     <PackageReference Include="RestSharp.Serializers.NewtonsoftJson">
-      <Version>108.0.3</Version>
+      <Version>109.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
