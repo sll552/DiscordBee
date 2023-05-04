@@ -2,7 +2,6 @@ namespace MusicBeePlugin
 {
   using System;
   using System.Collections.Generic;
-  using System.Net;
   using System.Text.RegularExpressions;
 
   public class LayoutHandler
@@ -96,7 +95,7 @@ namespace MusicBeePlugin
       var finalUrl = url;
       foreach (Match placeholder in _layoutElementRegex.Matches(url))
       {
-        var render = UnEscapeUrl(WebUtility.UrlEncode(Render(placeholder.Value, values, "")), "###", escapeCharacter);
+        var render = UnEscapeUrl(Uri.EscapeDataString(Render(placeholder.Value, values, "")), "###", escapeCharacter);
         finalUrl = finalUrl.Replace(placeholder.Value, render);
       }
 
@@ -107,21 +106,21 @@ namespace MusicBeePlugin
     {
       // The url must start with a trigger string to prevent unescaping where it's not wanted, e.g. artist names etc.
       // Virtual Tags that need to use this feature must start with this string for escaping to work.
-      if (!url.StartsWith(WebUtility.UrlEncode(trigger)))
+      if (!url.StartsWith(Uri.EscapeDataString(trigger)))
       {
         return url;
       }
 
-      var finalUrl = url.Substring(WebUtility.UrlEncode(trigger).Length);
-      var escCharEnc = WebUtility.UrlEncode(escChar.ToString());
+      var finalUrl = url.Substring(Uri.EscapeDataString(trigger).Length);
+      var escCharEnc = Uri.EscapeDataString(escChar.ToString());
       finalUrl = finalUrl.Replace(escCharEnc+escCharEnc, escChar.ToString());
       string[] split = finalUrl.Split(new string[] {escCharEnc}, StringSplitOptions.None);
       for (int i = 0; i < split.Length; i++)
       {
         if (i > 0 && split[i].StartsWith("%"))
         {
-          var decoded = WebUtility.UrlDecode(split[i]);
-          var firstCharEnc = WebUtility.UrlEncode(decoded[0].ToString());
+          var decoded = Uri.UnescapeDataString(split[i]);
+          var firstCharEnc = Uri.EscapeDataString(decoded[0].ToString());
           split[i] = decoded[0] + split[i].Substring(firstCharEnc.Length);
         }
       }
